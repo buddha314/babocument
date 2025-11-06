@@ -2,7 +2,7 @@
 
 **Repository:** https://github.com/buddha314/babocument/issues
 
-**Last Updated:** 2025-11-06 (Synced with GitHub - Issues #1-3, #12 completed; #14 added)
+**Last Updated:** 2025-11-06 (Issues #1-3, #12 completed; #14-15 added; run-server.ps1 fixed)
 
 ## Overview
 
@@ -280,6 +280,75 @@ Evaluate and select specific local LLM models for different agent tasks in the m
 
 ---
 
+### [Issue #15: Implement REST API endpoints for document and repository management](https://github.com/buddha314/babocument/issues/15)
+**Status:** 🟡 Open | **Priority:** High | **Type:** Feature
+
+**User Story:**
+> As a developer/user, I need REST API endpoints to view, save, and manage documents and repositories, so that the multi-agent system can perform document operations programmatically.
+
+**Problem:**
+Currently, the server has only basic health check endpoints. Document management functions are either not implemented or not exposed via API, making it impossible to:
+- List available documents in the corpus
+- Retrieve document metadata and content
+- Upload new documents to the system
+- Search across documents
+- Manage repository connections
+- Track document processing status
+
+**Required API Endpoints:**
+
+**Document Operations:**
+- `GET /api/v1/documents` - List all documents with pagination
+- `GET /api/v1/documents/{id}` - Get document details and metadata
+- `GET /api/v1/documents/{id}/content` - Get full document content
+- `POST /api/v1/documents` - Upload new document(s)
+- `DELETE /api/v1/documents/{id}` - Remove document from system
+- `GET /api/v1/documents/search` - Search documents by keyword/semantic query
+
+**Repository Operations:**
+- `GET /api/v1/repositories` - List connected repositories (MCP servers)
+- `GET /api/v1/repositories/{id}/status` - Check repository connection status
+- `POST /api/v1/repositories/sync` - Trigger repository synchronization
+- `GET /api/v1/repositories/{id}/documents` - List documents from specific repository
+
+**Statistics & Status:**
+- `GET /api/v1/stats` - System statistics (doc count, embeddings, storage)
+- `GET /api/v1/status/processing` - Check document processing queue status
+
+**Acceptance Criteria:**
+- [ ] All endpoints documented in OpenAPI/Swagger (`/docs`)
+- [ ] Proper error handling with meaningful HTTP status codes
+- [ ] Request validation using Pydantic models
+- [ ] Pagination support for list endpoints (limit/offset or cursor)
+- [ ] Authentication/authorization framework (even if initially permissive)
+- [ ] Unit tests for each endpoint
+- [ ] Integration tests for end-to-end workflows
+- [ ] Rate limiting considerations documented
+
+**Technical Implementation:**
+- FastAPI router structure in `server/app/api/`
+- Separate routers for documents, repositories, stats
+- Service layer for business logic
+- Database/VectorDB integration for data access
+- Background tasks for async operations (upload processing)
+
+**Dependencies:**
+- [#4](#issue-4-vector-database-selection) (ChromaDB integration)
+- [#9](#issue-9-initialize-vector-database-with-local-papers) (Vector DB populated)
+- [#10](#issue-10-phase-1---set-up-fastagent-backend) (Backend framework)
+
+**Phases:** Phase 1 (Backend), Phase 2 (MCP Integration)
+
+**Priority Rationale:** 
+High priority because this blocks agent functionality. Agents need these APIs to access and manipulate documents. Without this, the multi-agent system cannot perform its core functions.
+
+**Documentation Requirements:**
+- OpenAPI schema auto-generated from FastAPI
+- README section with example API calls
+- Postman/Thunder Client collection for testing
+
+---
+
 ## Epic Issues (Multi-task)
 
 ### [Issue #10: Phase 1 - Set up FastAgent backend](https://github.com/buddha314/babocument/issues/10)
@@ -332,19 +401,19 @@ Build immersive data visualization UI with Plotly.js in BabylonJS
 
 ## Issue Status Summary
 
-**Total Issues:** 14
+**Total Issues:** 15
 
 **Completed:** 6 (Issues #1, #2, #3, #4, #5, #12)
 
 **By Type:**
 - 🔷 Decisions: 7 (Issues #1-#6, #14) - 5 decided, 2 open
 - 🔶 Setup: 1 (Issue #7)
-- ⚙️ Features: 2 (Issues #8-#9)
+- ⚙️ Features: 3 (Issues #8-#9, #15)
 - 📦 Epics: 2 (Issues #10-#11)
 - 🛠️ DevOps: 1 (Issue #12) - completed
 
 **By Priority:**
-- 🔴 High: 12 (6 decided, 6 open)
+- 🔴 High: 13 (6 decided, 7 open)
 - 🟡 Medium: 2
 
 **By Phase:**
