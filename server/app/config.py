@@ -50,6 +50,11 @@ class Settings(BaseSettings):
     embedding_model: str = Field(
         default="all-MiniLM-L6-v2", alias="EMBEDDING_MODEL"
     )
+    
+    # Document Storage
+    document_storage_path: str = Field(
+        default="./data/documents", alias="DOCUMENT_STORAGE_PATH"
+    )
 
     # Redis (Event Bus & Caching)
     redis_host: str = Field(default="localhost", alias="REDIS_HOST")

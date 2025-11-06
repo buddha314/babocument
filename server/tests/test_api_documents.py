@@ -9,14 +9,50 @@ from fastapi.testclient import TestClient
 from datetime import datetime
 from unittest.mock import Mock, patch, MagicMock
 from io import BytesIO
+import tempfile
+import shutil
+from pathlib import Path
 
 from app.main import app
+from app.services.vector_db import get_vector_db, VectorDatabase
+from app.services.llm_client import get_llm_client, LLMClient
 
 
 @pytest.fixture
-def client():
-    """Create test client"""
-    return TestClient(app)
+def temp_storage_path():
+    """Create temporary directory for document storage"""
+    temp_dir = tempfile.mkdtemp()
+    yield Path(temp_dir)
+    shutil.rmtree(temp_dir, ignore_errors=True)
+
+
+@pytest.fixture
+def client(vector_db, temp_storage_path, monkeypatch):
+    """Create test client with dependency overrides"""
+    # Override config for document storage
+    monkeypatch.setenv("DOCUMENT_STORAGE_PATH", str(temp_storage_path))
+    
+    # Override vector DB dependency
+    def override_get_vector_db():
+        return vector_db
+    
+    # Mock LLM client
+    mock_llm = Mock(spec=LLMClient)
+    mock_llm.generate = Mock(return_value={
+        "text": "SUMMARY: This is a test summary.\n\nKEY POINTS:\n- Point 1\n- Point 2\n- Point 3"
+    })
+    
+    def override_get_llm_client():
+        return mock_llm
+    
+    app.dependency_overrides[get_vector_db] = override_get_vector_db
+    app.dependency_overrides[get_llm_client] = override_get_llm_client
+    
+    client = TestClient(app)
+    yield client
+    
+    # Cleanup
+    app.dependency_overrides.clear()
 
 
 @pytest.fixture
@@ -94,12 +130,18 @@ class TestGetDocument:
         assert response.status_code == 404
         assert "not found" in response.json()["detail"].lower()
     
-    def test_get_document_success(self, client, mock_document_metadata):
+    def test_get_document_success(self, client, vector_db, sample_papers):
         """Test successful document retrieval"""
-        # TODO: Mock the database response when implemented
-        response = client.get("/api/v1/documents/doc-123")
-        # Currently returns 404, will return 200 when implemented
-        assert response.status_code in [200, 404]
+        # Add a paper to the vector DB
+        vector_db.add_papers([sample_papers[0]])
+        
+        response = client.get(f"/api/v1/documents/{sample_papers[0]['id']}")
+        assert response.status_code == 200
+        
+        data = response.json()
+        assert data["id"] == sample_papers[0]["id"]
+        assert data["title"] == sample_papers[0]["title"]
+        assert data["indexed"] is True
 
 
 class TestGetDocumentContent:
@@ -110,15 +152,19 @@ class TestGetDocumentContent:
         response = client.get("/api/v1/documents/nonexistent-id/content")
         assert response.status_code == 404
     
-    def test_get_content_structure(self, client):
+    def test_get_content_structure(self, client, vector_db, sample_papers):
         """Test response structure for document content"""
-        response = client.get("/api/v1/documents/doc-123/content")
-        # Currently returns 404, check structure when implemented
-        if response.status_code == 200:
-            data = response.json()
-            assert "metadata" in data
-            assert "content" in data
-            assert "sections" in data or data["sections"] is None
+        # Add a paper
+        vector_db.add_papers([sample_papers[0]])
+        
+        response = client.get(f"/api/v1/documents/{sample_papers[0]['id']}/content")
+        assert response.status_code == 200
+        
+        data = response.json()
+        assert "metadata" in data
+        assert "content" in data
+        assert data["metadata"]["id"] == sample_papers[0]["id"]
+        assert len(data["content"]) > 0
 
 
 class TestUploadDocument:
@@ -178,19 +224,30 @@ class TestDeleteDocument:
         response = client.delete("/api/v1/documents/nonexistent-id")
         assert response.status_code == 404
     
-    def test_delete_document_success(self, client):
+    def test_delete_document_success(self, client, vector_db, sample_papers):
         """Test successful document deletion"""
-        # TODO: Mock database when implemented
-        response = client.delete("/api/v1/documents/doc-123")
-        # Currently returns 404, will return 200 when implemented
-        assert response.status_code in [200, 204, 404]
+        # Add a paper
+        vector_db.add_papers([sample_papers[0]])
+        
+        # Verify it exists
+        assert vector_db.get_paper(sample_papers[0]["id"]) is not None
+        
+        # Delete it
+        response = client.delete(f"/api/v1/documents/{sample_papers[0]['id']}")
+        assert response.status_code == 200
+        
+        # Verify it's gone
+        assert vector_db.get_paper(sample_papers[0]["id"]) is None
 
 
 class TestSearchDocuments:
     """Tests for POST /api/v1/documents/search"""
     
-    def test_search_semantic(self, client):
+    def test_search_semantic(self, client, vector_db, sample_papers):
         """Test semantic search"""
+        # Add papers to vector DB
+        vector_db.add_papers(sample_papers)
+        
         search_query = {
             "query": "bioink formulations",
             "limit": 10,
@@ -207,6 +264,7 @@ class TestSearchDocuments:
         assert "total" in data
         assert "execution_time_ms" in data
         assert data["search_type"] == "semantic"
+        assert len(data["results"]) > 0  # Should find relevant papers
     
     def test_search_keyword(self, client):
         """Test keyword search"""
@@ -283,3 +341,38 @@ class TestSearchDocuments:
         assert isinstance(data["total"], int)
         assert isinstance(data["execution_time_ms"], (int, float))
         assert data["execution_time_ms"] >= 0
+
+
+class TestDocumentSummary:
+    """Tests for GET /api/v1/documents/{document_id}/summary"""
+    
+    def test_summary_not_found(self, client):
+        """Test generating summary for non-existent document"""
+        response = client.get("/api/v1/documents/nonexistent-id/summary")
+        assert response.status_code == 404
+    
+    def test_generate_summary(self, client, vector_db, sample_papers):
+        """Test successful summary generation"""
+        # Add a paper
+        vector_db.add_papers([sample_papers[0]])
+        
+        response = client.get(f"/api/v1/documents/{sample_papers[0]['id']}/summary")
+        assert response.status_code == 200
+        
+        data = response.json()
+        assert "document_id" in data
+        assert "summary" in data
+        assert "key_points" in data
+        assert "generated_at" in data
+        assert data["document_id"] == sample_papers[0]["id"]
+        assert len(data["summary"]) > 0
+        assert isinstance(data["key_points"], list)
+    
+    def test_summary_with_max_length(self, client, vector_db, sample_papers):
+        """Test summary with custom max length"""
+        vector_db.add_papers([sample_papers[0]])
+        
+        response = client.get(
+            f"/api/v1/documents/{sample_papers[0]['id']}/summary?max_length=200"
+        )
+        assert response.status_code == 200

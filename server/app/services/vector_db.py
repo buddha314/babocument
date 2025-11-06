@@ -238,6 +238,59 @@ class VectorDatabase:
             logger.error("get_paper_error", error=str(e), paper_id=paper_id)
             raise
 
+    def get_all_papers(
+        self,
+        limit: int = 100,
+        offset: int = 0,
+        filters: dict[str, Any] | None = None,
+    ) -> tuple[list[dict[str, Any]], int]:
+        """
+        Get all papers with pagination and optional filtering.
+        
+        Args:
+            limit: Maximum number of papers to return
+            offset: Number of papers to skip
+            filters: Optional filters (year, source, etc.)
+        
+        Returns:
+            Tuple of (papers list, total count)
+        """
+        try:
+            # Build where clause
+            where = self._build_filters(filters) if filters else None
+            
+            # Get total count
+            total = self.collection.count()
+            
+            # Get papers with pagination
+            # ChromaDB doesn't support offset/limit in get(), so we get all and slice
+            # TODO: This is inefficient for large collections, consider alternative approach
+            result = self.collection.get(
+                where=where,
+                include=["documents", "metadatas"],
+            )
+            
+            if not result["ids"]:
+                return [], 0
+            
+            # Apply pagination manually
+            start_idx = min(offset, len(result["ids"]))
+            end_idx = min(offset + limit, len(result["ids"]))
+            
+            papers = []
+            for i in range(start_idx, end_idx):
+                papers.append({
+                    "id": result["ids"][i],
+                    "document": result["documents"][i] if result["documents"] else "",
+                    "metadata": result["metadatas"][i] if result["metadatas"] else {},
+                })
+            
+            return papers, total
+            
+        except Exception as e:
+            logger.error("get_all_papers_error", error=str(e))
+            raise
+
     def delete_paper(self, paper_id: str) -> bool:
         """
         Delete a paper from the database.
