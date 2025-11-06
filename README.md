@@ -6,55 +6,25 @@ Babocument combines cutting-edge 3D visualization with AI-powered research assis
 
 ## Quick Start
 
-### Automated Launch (Recommended)
+### Development Setup
 
-Use the unified launch script to start both client and server with automatic dependency management:
-
+**Server (Phase 1 - 65% Complete):**
 ```powershell
-# Launch both server and client (when server is implemented)
-.\launch.ps1
-
-# Launch only the client (current phase - server not yet implemented)
-.\launch.ps1 -ClientOnly
-
-# Launch without dependency checks
-.\launch.ps1 -NoInstall
-
-# Custom ports
-.\launch.ps1 -ClientPort 3001 -ServerPort 8001
+cd server
+.\venv\Scripts\Activate.ps1
+python -m uvicorn app.main:app --reload --port 8000
+# Visit http://localhost:8000/docs for API
 ```
 
-The launch script will:
-- ✓ Validate Node.js, npm, and Python installations
-- ✓ Check and install dependencies automatically
-- ✓ Start services on configurable ports
-- ✓ Handle graceful shutdown with Ctrl+C
-
-**Current Status:** Server is not yet implemented (Phase 1). Use `-ClientOnly` flag or the script will automatically detect and launch client only.
-
-### Manual Launch
-
-#### Client (BabylonJS + Next.js)
-```bash
+**Client (BabylonJS + Next.js):**
+```powershell
 cd client
 npm install
 npm run dev
-```
-Visit [http://localhost:3000](http://localhost:3000)
-
-#### Server (FastAgent - Coming Soon)
-```bash
-cd server
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-python -m fastagent.app
+# Visit http://localhost:3000
 ```
 
-### Documentation
-See [specs/](specs/) for detailed project documentation:
-- [Project Status](specs/PROJECT_STATUS.md) - Current implementation state
-- [Task Tracking](specs/TASKS.md) - Development roadmap and task lists
+**See [HANDOFF.md](HANDOFF.md) for complete setup and status.**
 
 ## Architecture
 
@@ -182,27 +152,22 @@ The backend employs specialized AI agents working in concert:
 
 ## Project Status
 
-**Phase:** Foundation & Planning
+**Phase:** Phase 1 Backend (65% Complete)
 **Last Updated:** 2025-11-06
 
 **Completed:**
-- ✅ Git repository initialization
-- ✅ Project structure and configuration
-- ✅ Client scaffolding with BabylonJS Editor
-- ✅ Documentation framework
-
-**In Progress:**
-- 🟡 Technical architecture decisions
-- 🟡 API design and specifications
+- ✅ Architecture decisions (Phase 0: 86%)
+- ✅ Vector DB with 4 papers indexed
+- ✅ LLM Client (Ollama integration)
+- ✅ REST API (17 endpoints)
+- ✅ Test suite (60 tests, 84% coverage)
 
 **Next Steps:**
-- Communication protocol decision (WebSockets vs REST) - [Issue #1](https://github.com/buddha314/babocument/issues/1)
-- Multi-agent architecture design - [Issue #2](https://github.com/buddha314/babocument/issues/2)
-- Vector database selection - [Issue #4](https://github.com/buddha314/babocument/issues/4)
-- ✅ **MCP integration strategy** - [Issue #5](https://github.com/buddha314/babocument/issues/5) - **DECIDED: Hybrid approach with BioMCP, arXiv, and bioRxiv community servers**
-- Server implementation kickoff - [Issue #10](https://github.com/buddha314/babocument/issues/10)
+- CI/CD pipeline - [Issue #18](https://github.com/buddha314/babocument/issues/18)
+- Event Bus (Redis)
+- Service integration
 
-See [specs/PROJECT_STATUS.md](specs/PROJECT_STATUS.md) for detailed status and [specs/TASKS.md](specs/TASKS.md) for the complete roadmap.
+**For detailed status, see [HANDOFF.md](HANDOFF.md)**
 
 ## Contributing
 
