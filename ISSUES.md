@@ -186,6 +186,64 @@ Create initialization script to populate vector database from data/papers direct
 
 ---
 
+### [Issue #12: Create launch script for server and client](https://github.com/buddha314/babocument/issues/12)
+**Status:** 🟡 Open | **Priority:** Critical | **Type:** DevOps
+
+Create unified launch script to start both server and client with proper dependencies and environment setup
+
+**Requirements:**
+- Check/install Python dependencies for server
+- Check/install Node.js dependencies for client
+- Start FastAgent server (when implemented)
+- Start Next.js dev server for client
+- Handle port configuration
+- Support Windows PowerShell
+- Graceful shutdown of both processes
+
+**Deliverables:**
+- `launch.ps1` - PowerShell script for Windows
+- `launch.sh` - Bash script for Linux/macOS (optional)
+- Documentation in README.md
+
+**Script Features:**
+- Environment validation (Python, Node.js, package managers)
+- Dependency installation prompts
+- Parallel process management
+- Clear console output with status indicators
+- Error handling and recovery
+- Optional flags: `--server-only`, `--client-only`, `--no-install`
+
+**Example Usage:**
+```powershell
+# Launch both server and client
+.\launch.ps1
+
+# Launch only client (for Phase 0-3 work)
+.\launch.ps1 --client-only
+
+# Launch without checking dependencies
+.\launch.ps1 --no-install
+```
+
+**Implementation Notes:**
+- Server path: `server/` (FastAgent app - not yet implemented)
+- Client path: `client/` (Next.js app on port 3000)
+- Server default port: 8000 (configurable)
+- Use `Start-Process` for background processes in PowerShell
+- Trap `Ctrl+C` for graceful shutdown
+
+**Phases:** 0 (DevOps), applies to all phases
+
+**Priority Rationale:** 
+- Streamlines development workflow
+- Reduces onboarding friction
+- Critical for Phase 1+ when server is implemented
+- Immediate value for client-only development
+
+**Dependencies:** None (can implement immediately)
+
+---
+
 ## Epic Issues (Multi-task)
 
 ### [Issue #10: Phase 1 - Set up FastAgent backend](https://github.com/buddha314/babocument/issues/10)
@@ -238,15 +296,17 @@ Build immersive data visualization UI with Plotly.js in BabylonJS
 
 ## Issue Status Summary
 
-**Total Issues:** 11
+**Total Issues:** 12
 
 **By Type:**
 - 🔷 Decisions: 6 (Issues #1-#6)
 - 🔶 Setup: 1 (Issue #7)
 - ⚙️ Features: 2 (Issues #8-#9)
 - 📦 Epics: 2 (Issues #10-#11)
+- 🛠️ DevOps: 1 (Issue #12)
 
 **By Priority:**
+- 🔴 Critical: 1 (Issue #12)
 - 🔴 High: 8
 - 🟡 Medium: 3
 

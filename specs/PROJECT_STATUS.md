@@ -139,6 +139,13 @@ client/
 
 ## Immediate Next Steps
 
+### Phase 0: DevOps & Setup (NEW - Critical Priority) ⭐
+- [ ] Create unified launch script - [Issue #12](https://github.com/buddha314/babocument/issues/12) - **CRITICAL**
+  - PowerShell script for Windows development
+  - Start server and client with single command
+  - Environment validation and dependency checks
+  - Supports `--client-only` flag for current work
+
 ### Phase 0 Decisions
 - [ ] Define communication protocol (WebSockets vs REST) - [Issue #1](https://github.com/buddha314/babocument/issues/1)
 - [ ] Design agent architecture - [Issue #2](https://github.com/buddha314/babocument/issues/2)

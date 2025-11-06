@@ -12,7 +12,15 @@
       "Bash(gh issue list:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh issue comment 1 --body \"$(cat <<''EOF''\n## Decision Made: Hybrid REST + WebSocket Approach\n\nAfter thorough analysis, the recommended approach is a **hybrid architecture**:\n\n### Implementation Strategy\n\n**REST API for:**\n- Authentication and authorization\n- CRUD operations (workspaces, documents)\n- File uploads/downloads\n- Search initiation\n- Standard resource management\n\n**WebSockets for:**\n- Real-time agent status updates\n- Live chat with Librarian character\n- Streaming agent responses\n- Live visualization updates\n- Future collaborative features\n\n### Key Benefits\n\n1. **Best of both worlds** - REST simplicity + WebSocket real-time capabilities\n2. **Incremental rollout** - Start with REST, add WS progressively\n3. **Proven pattern** - Used by Slack, Discord, GitHub\n4. **Developer experience** - Standard HTTP debugging tools\n5. **User experience** - Real-time updates without polling inefficiency\n6. **FastAPI native** - Both protocols supported out-of-box\n\n### Technical Stack\n\n- Backend: FastAPI (REST endpoints + WebSocket handlers)\n- Frontend: Next.js (fetch API + native WebSocket)\n- Real-time: WebSocket events for agent task updates\n\n### Implementation Phases\n\n1. **Phase 1:** REST API foundation (auth, CRUD)\n2. **Phase 2:** WebSocket infrastructure for agent updates  \n3. **Phase 3:** Chat and visualization streams\n\n### Documentation\n\nFull analysis and specifications available in: `specs/COMMUNICATION_PROTOCOL_DECISION.md`\n\nThis decision unblocks server implementation in Phase 1.\n\n**Status:** ✅ Decision finalized\nEOF\n)\")",
+      "Bash(gh issue close:*)",
+      "Bash(git merge:*)",
+      "Bash(gh issue comment:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
