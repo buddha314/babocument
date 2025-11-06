@@ -1,105 +1,233 @@
 # Task Tracking - Babocument
 
-**Session Start:** 2025-11-06
-**Status:** Planning Phase
+**Last Updated:** 2025-11-06
+**Current Phase:** Phase 1 (Server Foundation) - 45% Complete
+**Status:** Active Development - Vector DB Complete
+
+## Project Status Summary
+
+**Phase 0 (Planning):** 86% Complete (6/7 decisions made)
+- ✅ Communication Protocol (REST + WebSocket)
+- ✅ Multi-Agent Architecture (Event-driven coordinator)
+- ✅ LLM Hosting (Ollama + LiteLLM)
+- ✅ Vector Database (ChromaDB)
+- ✅ MCP Integration (Community servers)
+- ✅ Launch Script (PowerShell)
+- 🟡 Plotly Integration (analysis complete, decision pending)
+- 🟡 Blender Pipeline (planning stage)
+- 🆕 Issue #14: LLM Model Selection (new, depends on Issue #3)
+
+**Phase 1 (Backend):** 45% Complete (foundation + Vector DB complete)
+- ✅ Python environment configured
+- ✅ FastAPI application structure
+- ✅ Agent base classes and coordinator
+- ✅ Vector DB service (ChromaDB with 4 papers indexed)
+- 🟡 LLM Client, Event Bus services (next priorities)
+
+**Next Milestones:**
+1. Complete Phase 1 backend services (✅ Vector DB, LLM Client, Event Bus)
+2. Implement Phase 2 MCP server integrations
+3. ✅ Initialize vector database with local papers (Issue #9 - COMPLETE)
+4. Begin Phase 3 client visualization work
+
+**Documentation:**
+- ISSUES.md - Synced with GitHub (Issues #1-14)
+- SESSION_HANDOFF.md - Latest session details
+- Decision docs in specs/ - Complete for Phase 0
 
 ## Critical Path Tasks
 
-### Phase 0: Foundation & Planning (Current)
+### Phase 0: Foundation & Planning (86% Complete)
 **Goal:** Establish technical foundation and make key architectural decisions
 
 - [x] Initialize git repository
 - [x] Create .gitignore for project stack
 - [x] Document current project state
-- [ ] **DECISION REQUIRED:** Choose client-server communication protocol
-  - WebSockets vs REST API with async
-  - Impact: Backend architecture, real-time capabilities
-  - Blocking: Server implementation
-- [ ] **DECISION REQUIRED:** Design multi-agent architecture
-  - Agent roles and responsibilities
-  - Communication patterns between agents
-  - State management approach
-  - Blocking: Server implementation
-- [ ] Define API contract/specifications
-- [ ] Create technical architecture document
+- [x] **DECISION COMPLETE:** Choose client-server communication protocol
+  - ✅ **Decision:** Hybrid REST + WebSocket approach
+  - REST for CRUD operations, WebSocket for real-time agent updates
+  - Documentation: specs/COMMUNICATION_PROTOCOL_DECISION.md
+  - Issue #1: https://github.com/buddha314/babocument/issues/1
+- [x] **DECISION COMPLETE:** Design multi-agent architecture
+  - ✅ **Decision:** Event-driven coordinator pattern with FastAgent
+  - Agent roles: Research, Analysis, Summary, Recommendation
+  - Redis pub/sub for event bus
+  - Documentation: specs/MULTI_AGENT_ARCHITECTURE.md
+  - Issue #2: https://github.com/buddha314/babocument/issues/2
+- [x] **DECISION COMPLETE:** Choose local LLM hosting solution
+  - ✅ **Decision:** Ollama with LiteLLM gateway
+  - Models: llama3.2:3b (summaries), qwen2.5:7b (chat), mistral:7b (instructions)
+  - Zero cloud costs, privacy-first, easy model switching
+  - Documentation: specs/LLM_HOSTING_DECISION.md
+  - Issue #3: https://github.com/buddha314/babocument/issues/3
+- [x] **DECISION COMPLETE:** Vector database selection and configuration
+  - ✅ **Decision:** ChromaDB with Sentence Transformers (all-MiniLM-L6-v2)
+  - Embedded database, no separate server required
+  - 384-dimensional embeddings, ~3000 sentences/sec on CPU
+  - Storage: server/data/chroma/
+  - Documentation: specs/VECTOR_DATABASE_DECISION.md
+  - Issue #4: https://github.com/buddha314/babocument/issues/4
+- [x] **DECISION COMPLETE:** MCP integration for document repositories
+  - ✅ **Decision:** Hybrid approach using community MCP servers
+  - BioMCP (PubMed + ClinicalTrials.gov), arXiv API MCP, bioRxiv/medRxiv MCP
+  - Custom extensions only for Babocument-specific features
+  - Documentation: specs/MCP_INTEGRATION_DECISION.md
+  - Issue #5: https://github.com/buddha314/babocument/issues/5
+- [x] **COMPLETED:** Launch script for unified development workflow
+  - ✅ PowerShell script: launch.ps1
+  - Starts client and server with dependency checks
+  - Supports --client-only flag for current phase
+  - Documentation: ISSUE_12_LAUNCH_SCRIPT.md
+  - Issue #12: https://github.com/buddha314/babocument/issues/12
+- [ ] **DECISION REQUIRED:** Select optimal local LLMs for research paper analysis
+  - Evaluate specific models for each agent task
+  - Consider: Llama 3.1, Mistral, Qwen, domain-specific models
+  - Balance model size vs performance trade-offs
+  - Issue #14: https://github.com/buddha314/babocument/issues/14
+  - Depends on Issue #3 (hosting solution) - COMPLETED
+- [ ] **DECISION REQUIRED:** Plotly integration strategy for 3D visualization
+  - Determine Plotly.js integration with BabylonJS
+  - Options: Canvas texture mapping, HTML overlay, or native BabylonJS
+  - Impact: Visualization capabilities, performance, VR/desktop UX
+  - Documentation: docs/PLOTLY_BABYLONJS_INTEGRATION.md (analysis complete)
+  - Issue #6: https://github.com/buddha314/babocument/issues/6
 - [ ] **Set up Blender asset pipeline**
   - Establish directory structure for `.blend` source files and `.glb` exports
   - Document GLTF 2.0 export workflow for BabylonJS
   - Update .gitignore for Blender files
-  - See: BLENDER_INTEGRATION_PLAN.md for full details
-- [ ] **DECISION REQUIRED:** Choose local LLM hosting solution
-  - Ollama (local inference, easy setup)
-  - HuggingFace (transformers library, model hub access)
-  - LangGraph (agentic workflows, state management)
-  - Impact: Agent intelligence capabilities, deployment complexity
-  - Consider: Performance, model selection, integration with FastAgent
-- [ ] **DECISION REQUIRED:** Plotly integration strategy for 3D visualization
-  - Determine Plotly.js integration with BabylonJS
-  - 3D plots rendered natively in BabylonJS scene vs HTML overlay
-  - WebGL context sharing strategy
-  - Impact: Visualization capabilities, performance, UX
-  - Consider: Plotly 3D scatter/surface plots, texture mapping to meshes
-- [ ] **DECISION REQUIRED:** MCP integration for document repositories
-  - Review MCP servers for arXiv, PubMed, and other journal sources
-  - Evaluate available MCP servers (community or build custom)
-  - Determine which repositories to support (arXiv, PubMed, bioRxiv, etc.)
-  - Design agent access patterns to MCP servers
-  - Impact: Data source availability, agent capabilities, maintenance burden
-  - Consider: API rate limits, full-text access, metadata richness
-- [ ] **DECISION REQUIRED:** Vector database selection and configuration
-  - Choose vector DB: Chroma, Weaviate, Qdrant, Pinecone, or Milvus
-  - Design configurable local paths for dev environments
-  - Plan embedding strategy (OpenAI, local models, etc.)
-  - Define initialization process for data/papers corpus
-  - Impact: Search performance, semantic search quality, deployment complexity
-  - Consider: Local-first development, embedding costs, scalability
+  - Documentation: BLENDER_INTEGRATION_PLAN.md, docs/BLENDER_WORKFLOW.md
+  - Issue #7: https://github.com/buddha314/babocument/issues/7
+- [ ] Define API contract/specifications (can start now)
+- [ ] Create technical architecture document (partially complete)
 
-### Phase 1: Server Foundation
+### Phase 1: Server Foundation (30% Complete - In Progress)
 **Goal:** Set up FastAgent backend with basic agent coordination
 
-**Prerequisites:** Phase 0 decisions complete
+**Prerequisites:** ✅ Phase 0 decisions complete (6/7 decided)
 
-- [ ] Initialize Python project structure in /server
-- [ ] Set up FastAgent framework
-- [ ] Implement agent coordinator/orchestrator
-- [ ] Create base agent classes
-- [ ] Define API endpoints (REST or WebSocket handlers)
-- [ ] Set up development environment configuration
-- [ ] Implement basic logging and monitoring
-- [ ] Configure vector database integration
-  - Install chosen vector DB (Chroma/Weaviate/Qdrant/etc.)
-  - Create configurable storage paths for local dev
-  - Set up embedding pipeline
-  - Define collection/index schema for documents
-  - Create initialization script for data/papers ingestion
+**Environment Setup:**
+- [x] Initialize Python project structure in /server
+- [x] Set up Python virtual environment (server/venv/)
+- [x] Install all dependencies (FastAPI, ChromaDB, LiteLLM, PyTorch, etc.)
+- [x] Configure environment variables (.env, .env.example)
+- [x] Create comprehensive setup documentation (server/README.md, server/SETUP.md)
 
-**Estimated Timeline:** 1-2 weeks
+**Core Backend:**
+- [x] Set up FastAPI application (server/app/main.py)
+  - Structured logging with structlog
+  - CORS configuration
+  - Health check endpoints
+- [x] Implement Pydantic configuration management (server/app/config.py)
+- [x] Create base agent class with event publishing (server/app/agents/base.py)
+- [x] Implement agent coordinator skeleton (server/app/agents/coordinator.py)
+- [x] Create Research Agent skeleton (server/app/agents/research.py)
+- [x] Set up package structure (api, models, services, utils)
+
+**Remaining Tasks:**
+- [x] Implement Vector Database Client (server/app/services/vector_db.py)
+  - ✅ ChromaDB wrapper with initialization
+  - ✅ Document ingestion from data/papers/
+  - ✅ Semantic search implementation
+  - ✅ Issue #9: https://github.com/buddha314/babocument/issues/9
+  - ✅ Initialization script (server/scripts/init_vector_db.py)
+  - ✅ Search testing (4 papers indexed, semantic search working)
+- [ ] Implement LLM Client (server/app/services/llm_client.py)
+  - LiteLLM wrapper with Ollama integration
+  - Model selection per agent type
+  - Summarization and chat functions
+- [ ] Implement Event Bus (server/app/utils/event_bus.py)
+  - Redis pub/sub for agent coordination
+  - Event publishing/subscribing
+  - Task progress updates
+- [ ] Define REST API endpoints (server/app/api/rest.py)
+  - POST /api/v1/search (initiate search)
+  - GET /api/v1/search/{task_id} (get status)
+  - POST /api/v1/summarize (summarize document)
+  - GET /api/v1/agents/status (agent health)
+- [ ] Implement WebSocket handler (server/app/api/websocket.py)
+  - /ws/agents (real-time task updates)
+  - Subscribe to task progress events
+  - Broadcast to connected clients
+- [ ] Complete agent implementations
+  - Research Agent - Vector DB + MCP search
+  - Analysis Agent - Trend analysis (Issue #8)
+  - Summary Agent - LLM summarization
+  - Recommendation Agent - Related papers
+- [ ] Set up required services
+  - Redis server for event bus
+  - Ollama with downloaded models
+- [x] Implement basic logging and monitoring (structlog integrated)
+- [x] Create initialization script for data/papers ingestion
+
+**Current Status:** Vector DB complete and tested! Ready for LLM Client implementation.
+
+**Next Steps:**
+1. ✅ Vector DB Client implemented and tested (4 papers indexed)
+2. Implement LLM Client (priority #1 - next)
+3. Start Redis server: `docker run -d -p 6379:6379 --name babocument-redis redis:7-alpine`
+4. Download Ollama models: `ollama pull llama3.2:3b`, `ollama pull qwen2.5:7b`
+5. Implement Event Bus (priority #2)
+6. Build REST API endpoints
+
+**Documentation:**
+- Session details: SESSION_2025-11-06_PHASE1_INIT.md
+- Setup guide: server/README.md, server/SETUP.md
+- Architecture: specs/MULTI_AGENT_ARCHITECTURE.md
+
+**Estimated Timeline:** 1-2 weeks remaining (started 2025-11-06)
 
 ### Phase 2: Data Source Integration
 **Goal:** Connect to external research data sources
 
 **Prerequisites:** Phase 1 complete
 
-- [ ] Set up MCP server integrations for document repositories
-  - Evaluate and select MCP servers (arXiv, PubMed, bioRxiv)
-  - Configure MCP server connections
-  - Expose MCP tools to Research Agent
-  - Test full-text retrieval and metadata extraction
-- [ ] Implement journal repository integrations
-  - arXiv API integration (via MCP or direct)
-  - PubMed/PubMed Central integration
-  - bioRxiv for preprints
-  - Additional sources from editable list
-- [ ] Implement ClinicalTrials.gov API integration
-- [ ] Create web search capability for scientific topics
+**MCP Server Integration** (Based on Issue #5 Decision):
+- [ ] Set up BioMCP server (Primary biomedical source)
+  - Install and configure BioMCP
+  - Configure NCBI API key
+  - PubMed access
+  - ClinicalTrials.gov integration
+  - MyVariant.info support
+- [ ] Set up arXiv API MCP server
+  - Install arXiv MCP server
+  - Configure rate limiting (1 req per 3 sec)
+  - LaTeX/math support for complex equations
+- [ ] Set up bioRxiv/medRxiv MCP servers
+  - Install bioRxiv MCP server
+  - Install medRxiv MCP server
+  - Configure preprint access
+- [ ] Implement unified Research Agent interface
+  - Multi-source search coordination
+  - Result deduplication by DOI
+  - Standardized metadata format
+  - Rate limiting and retry logic
 - [ ] Build data normalization/transformation layer
-- [ ] Implement caching strategy for API responses
-- [ ] Add rate limiting and error handling
-- [ ] Initialize vector database with local papers
+  - Convert MCP responses to standard format
+  - Extract and normalize metadata
+  - Handle missing fields gracefully
+
+**Vector Database Integration:**
+- [ ] Initialize vector database with local papers (Issue #9)
   - Parse PDFs from data/papers directory
   - Extract text and metadata
-  - Generate embeddings
-  - Store in vector database for semantic search
+  - Generate embeddings using all-MiniLM-L6-v2
+  - Store in ChromaDB for semantic search
+  - Create initialization script: server/scripts/init_vector_db.py
+- [ ] Implement caching strategy
+  - Cache paper metadata in vector DB
+  - Cache full-text content
+  - Semantic search across cached papers
+  - Cache hit rate monitoring
+
+**API Development:**
+- [ ] Create REST API endpoints
+  - POST /api/papers/search (multi-source search)
+  - GET /api/papers/{paper_id} (get full paper)
+  - GET /api/papers/sources (list available sources)
+- [ ] Add error handling and logging
+- [ ] Implement rate limiting middleware
+
+**Documentation:** specs/MCP_INTEGRATION_DECISION.md, specs/VECTOR_DATABASE_DECISION.md
 
 **Estimated Timeline:** 1-2 weeks
 
@@ -165,21 +293,34 @@
 
 - [ ] Research Agent
   - Query understanding and parsing
-  - Multi-source search coordination
-  - Result ranking and relevance
+  - Multi-source search coordination (MCP + Vector DB)
+  - Result ranking and relevance scoring
+  - Deduplication across sources
 - [ ] Analysis Agent
   - Trend analysis over time
-  - Word cloud generation
-  - Keyword trend line graphs (temporal visualization)
-  - Correlation detection
+  - Word cloud generation from corpus
+  - **Keyword trend line graphs (Issue #8)**
+    - Track keyword frequency over time
+    - Compare up to 10 keywords simultaneously
+    - Interactive visualization (hover, zoom, pan)
+    - Export as PNG/SVG and CSV/JSON
+    - Desktop (HTML overlay) and VR (3D texture) modes
+  - Correlation detection across papers
+  - Temporal pattern recognition
 - [ ] Summary Agent
-  - Article summarization
+  - Article summarization using LLM
   - Key insight extraction
   - Workspace summary generation
+  - Abstract generation
 - [ ] Recommendation Agent
-  - Related paper suggestions
+  - Related paper suggestions based on similarity
   - Research direction recommendations
-  - Gap identification
+  - Gap identification in literature
+  - Citation network analysis
+
+**Documentation:** 
+- specs/VISUALIZATION_REQUIREMENTS.md (keyword trends)
+- specs/MULTI_AGENT_ARCHITECTURE.md (agent design)
 
 **Estimated Timeline:** 3-4 weeks
 
@@ -190,37 +331,50 @@
 
 - [ ] Workspace system
   - Create workspace API
-  - Workspace persistence
+  - Workspace persistence (database)
   - Workspace sharing/collaboration
-- [ ] **Journal repository management**
+  - Workspace metadata and settings
+- [ ] **Journal repository management** (NEW - added 2025-11-06)
   - List all configured repositories
   - Add/edit/remove journal repositories dynamically
-  - Test repository connectivity
-  - Repository configuration UI
+  - Test repository connectivity and health
+  - Repository configuration UI/API
   - Enable/disable repositories per workspace
-- [ ] **Workspace-scoped repository collections**
+  - API: GET/POST/PUT/DELETE /api/repositories
+  - Documentation: specs/VISUALIZATION_REQUIREMENTS.md Section 4
+- [ ] **Workspace-scoped repository collections** (NEW - added 2025-11-06)
   - Assign repositories to workspaces
   - Configure workspace-specific source sets
   - Track repository usage per workspace
   - Repository contribution analytics
+  - API: GET/PUT /api/workspaces/{id}/repositories
 - [ ] Document operations
-  - Open and view documents
-  - Annotation system
+  - Open and view documents in VR environment
+  - Annotation system for papers
   - Save document summaries
-  - Tag and categorize
+  - Tag and categorize documents
+  - Document versioning
 - [ ] Association tracking
   - Link documents to workspaces
-  - Track document relationships
+  - Track document relationships (citations, references)
   - Visualize connection graphs
+  - Document clustering by topic
 - [ ] Search and filter
-  - Full-text search
-  - Metadata filtering
-  - Timeline-based queries
+  - Full-text search across cached papers
+  - Metadata filtering (year, author, journal)
+  - Timeline-based queries (papers by year)
   - **Repository-scoped searches per workspace**
+  - Advanced query syntax
 - [ ] Analytics and visualization
   - Generate word clouds from corpus
-  - Display keyword trend line graphs over time
+  - Display keyword trend line graphs over time (Issue #8)
   - Export trend data and visualizations
+  - Citation network visualization
+  - Research landscape heatmaps
+
+**Documentation:**
+- specs/VISUALIZATION_REQUIREMENTS.md (Section 4: Repository Management)
+- Updated: README.md, PROJECT_STATUS.md (repository features)
 
 **Estimated Timeline:** 2-3 weeks
 
@@ -286,27 +440,66 @@
 
 ## Blocked Tasks
 
-**None currently** - Awaiting architectural decisions in Phase 0
+**Phase 0 Blockers - RESOLVED ✅**
+- ✅ Issue #1 (Communication Protocol) - DECIDED
+- ✅ Issue #2 (Multi-Agent Architecture) - DECIDED
+- ✅ Issue #3 (LLM Hosting) - DECIDED
+- ✅ Issue #4 (Vector Database) - DECIDED
+- ✅ Issue #5 (MCP Integration) - DECIDED
+
+**Phase 1 - UNBLOCKED - Ready to Implement ✅**
+- All critical decisions complete
+- Python environment configured
+- Backend structure initialized
+- Next: Implement services (Vector DB, LLM, Event Bus)
+
+**Currently Blocked (Lower Priority):**
+- **Phase 3 (Client Visualization)** - Needs Issue #6 (Plotly integration strategy)
+- **Phase 4 & 7 (3D Assets)** - Needs Issue #7 (Blender asset pipeline)
+
+**Not Blocking Critical Path:**
+- Issue #14 (Select specific LLM models) - Can proceed with default models from Issue #3
 
 ## Questions to Resolve
 
-1. **Communication Protocol:** WebSockets vs REST+async?
-   - Consider: Real-time requirements, complexity, scalability
+### High Priority (Affects Current Work)
 
-2. **Agent Framework:** Custom vs existing FastAgent patterns?
-   - Consider: Learning curve, flexibility, maintenance
+1. ✅ **Communication Protocol:** WebSockets vs REST+async? **RESOLVED**
+   - Decision: Hybrid approach (REST + WebSocket)
+   - Documentation: specs/COMMUNICATION_PROTOCOL_DECISION.md
 
-3. **3D Asset Strategy:** In-house modeling vs asset marketplace?
-   - Consider: Quality, customization, timeline, cost
+2. ✅ **Agent Framework:** Custom vs existing FastAgent patterns? **RESOLVED**
+   - Decision: Event-driven coordinator with Redis pub/sub
+   - Documentation: specs/MULTI_AGENT_ARCHITECTURE.md
 
-4. **VR/XR Priority:** Desktop-first or VR-first?
-   - Consider: User accessibility, development complexity
+3. ✅ **Vector Database:** Which vector DB and embedding model? **RESOLVED**
+   - Decision: ChromaDB with all-MiniLM-L6-v2
+   - Documentation: specs/VECTOR_DATABASE_DECISION.md
 
-5. **Database:** SQL vs NoSQL vs hybrid?
-   - Consider: Query patterns, document structure, scalability
+4. ✅ **LLM Hosting:** Local vs cloud? **RESOLVED**
+   - Decision: Ollama with LiteLLM gateway
+   - Documentation: specs/LLM_HOSTING_DECISION.md
 
-6. **Authentication:** Custom vs OAuth vs SSO?
-   - Consider: User base, security requirements, integration
+5. ✅ **MCP Integration:** Build custom vs use community servers? **RESOLVED**
+   - Decision: Hybrid - use community servers (BioMCP, arXiv, bioRxiv)
+   - Documentation: specs/MCP_INTEGRATION_DECISION.md
+
+### Medium Priority (Can Decide Later)
+
+6. **Plotly Integration:** How to integrate with BabylonJS?
+   - Options analyzed: Canvas texture, HTML overlay, native conversion
+   - Documentation: docs/PLOTLY_BABYLONJS_INTEGRATION.md (analysis complete)
+   - Decision pending: Issue #6
+
+7. **3D Asset Pipeline:** Blender workflow and optimization?
+   - Affects: Phase 4 (Librarian) and Phase 7 (Lab equipment)
+   - Documentation: BLENDER_INTEGRATION_PLAN.md, docs/BLENDER_WORKFLOW.md
+   - Decision pending: Issue #7
+
+8. **LLM Model Selection:** Which specific models for each agent?
+   - Base recommendation from Issue #3, can refine
+   - Affects: Agent performance and quality
+   - Can test and iterate: Issue #14
 
 ## Definition of Done
 
@@ -325,3 +518,19 @@ A task is considered "done" when:
 - Dependencies may shift as architecture solidifies
 - Regular reviews recommended at end of each phase
 - Beabadoo persona should inform all UX decisions
+
+## Maintenance
+
+**This document should be kept in sync with:**
+- ISSUES.md - GitHub issues index (check for new/closed issues)
+- SESSION_HANDOFF.md - Latest session work and status
+- PROJECT_STATUS.md - Overall project state
+- Decision documents in specs/ - Architectural decisions
+
+**Update triggers:**
+- When GitHub issues are created/updated/closed
+- After completing major milestones or phases
+- When architectural decisions are made
+- At the end of each development session
+
+**Last sync:** 2025-11-06 - Synced with GitHub issues #1-14 and session handoff
