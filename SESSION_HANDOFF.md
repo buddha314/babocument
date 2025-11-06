@@ -1,13 +1,43 @@
 # Session Handoff - Ready for Next Session
 
 **Date:** 2025-11-06
-**Last Updated:** 2025-11-06 (Issue #4 Vector Database Decision complete)
-**Last Commit:** a7a5ccd - "docs: Resolve Issue #4 - Vector Database Selection Decision (ChromaDB)"
+**Last Updated:** 2025-11-06 (GitHub Sync + Issues #1-3, #12 Completed)
+**Last Commit:** [Check git log]
 **Branch:** main
+
+## 🔔 IMPORTANT MAINTENANCE TASK
+
+**Always verify before handoff:**
+- ✅ Check that `ISSUES.md` is synced with actual GitHub issues
+- ✅ Update issue statuses (Open, Decided, Completed)
+- ✅ Add any new issues created on GitHub
+- ✅ Verify issue numbers match GitHub issue numbers
+- ✅ Update completion counts and statistics
+
+**This session:** Synced ISSUES.md with GitHub - discovered Issues #1-3, #12 were closed/completed on GitHub but still marked as Open in local docs.
 
 ## Most Recent Work
 
-### Issue #4: Vector Database Selection ✅ COMPLETED
+### GitHub Issues Sync ✅ COMPLETED
+
+**Task:** Synchronized ISSUES.md with actual GitHub repository state
+
+**Changes Made:**
+- ✅ Issue #1 (Communication Protocol) - Updated to **DECIDED** (was Open)
+- ✅ Issue #2 (Multi-agent Architecture) - Updated to **DECIDED** (was Open) 
+- ✅ Issue #3 (LLM Hosting) - Updated to **DECIDED** (was Open)
+- ✅ Issue #12 - Corrected description: **Develop devcontainer** (not launch script)
+- ➕ Issue #14 - Added: **Select optimal local LLMs for research paper analysis** (New, Open)
+
+**Statistics Updated:**
+- Total issues: 12 → **14**
+- Completed issues: 3 → **6** (Issues #1, #2, #3, #4, #5, #12)
+- Decision issues: 6 → **7** (5 decided, 2 open)
+- Dependencies graph updated
+
+**Impact:** Documentation now accurately reflects GitHub repository state
+
+### Issue #4: Vector Database Selection ✅ COMPLETED (Previous Session)
 
 **Decision Made:** Use **ChromaDB** with **Sentence Transformers** (all-MiniLM-L6-v2)
 - **Status:** ✅ Decision complete, ready for Phase 1 implementation
@@ -89,50 +119,85 @@ nothing to commit, working tree clean
 
 ### Phase 0: Foundation & Planning Decisions
 
-**Completed (3/7):**
-- ✅ **Issue #4** - Vector Database Selection (ChromaDB) - NEW!
+**Completed (6/7):** 🎉 Phase 0 is 86% complete!
+- ✅ **Issue #1** - Communication Protocol (WebSockets vs REST) - DECIDED!
+- ✅ **Issue #2** - Multi-Agent Architecture Design - DECIDED!
+- ✅ **Issue #3** - LLM Hosting Solution (Ollama, HuggingFace, LangGraph) - DECIDED!
+- ✅ **Issue #4** - Vector Database Selection (ChromaDB)
 - ✅ **Issue #5** - MCP Integration Strategy (Hybrid community servers)
-- ✅ **Issue #12** - Launch Script (DevOps)
+- ✅ **Issue #12** - Devcontainer for Server (DevOps)
 
-**In Progress (4/7):**
-- 🟡 **Issue #1** - Communication Protocol (WebSockets vs REST)
-- 🟡 **Issue #2** - Multi-Agent Architecture Design
-- 🟡 **Issue #3** - LLM Hosting Solution
+**In Progress (2/7):**
 - 🟡 **Issue #6** - Plotly.js Integration Strategy
 - 🟡 **Issue #7** - Blender Asset Pipeline
 
+**New Issue:**
+- 🆕 **Issue #14** - Select Optimal Local LLMs (depends on Issue #3)
+
 ## Next Session Recommendations
 
-### Priority 1: Complete Remaining Phase 0 Decisions
+### 🎯 Phase 0 Almost Complete! (86% Done)
 
-Continue working through architectural decisions to unblock Phase 1 implementation:
+With Issues #1, #2, and #3 now decided, **Phase 1 implementation is unblocked!**
 
-1. **Issue #2: Multi-Agent Architecture** (Highest Priority Now)
-   - Defines Research Agent structure
-   - Needed for Phase 1 backend setup
-   - Some work already done in `specs/MULTI_AGENT_ARCHITECTURE.md`
-   - Directly impacts how ChromaDB and MCP servers are integrated
+### Priority 1: Complete Final Phase 0 Decisions (Optional)
 
-2. **Issue #1: Communication Protocol**
-   - Affects overall system architecture
-   - Has decision doc: `specs/COMMUNICATION_PROTOCOL_DECISION.md`
-   - Needed before API implementation
+These are lower priority and can be done in parallel with Phase 1:
 
-3. **Issue #3: LLM Hosting Solution**
-   - Choose between Ollama, HuggingFace, LangGraph
-   - Affects agent intelligence capabilities
-   - Can proceed in parallel with other decisions
+1. **Issue #6: Plotly.js Integration Strategy** (Medium Priority)
+   - Has comprehensive spec: `docs/PLOTLY_BABYLONJS_INTEGRATION.md`
+   - Affects Phase 3 visualization UI
+   - Can be decided while backend work proceeds
 
-### Priority 2: Begin Phase 1 Implementation
+2. **Issue #7: Blender Asset Pipeline** (Medium Priority)
+   - Has documentation: `BLENDER_INTEGRATION_PLAN.md`, `docs/BLENDER_WORKFLOW.md`
+   - Affects Phase 4 (Librarian character) and Phase 7 (Lab equipment)
+   - Can be set up independently
 
-Once Issues #2 is decided (Issue #1 and #3 can proceed in parallel):
-- Set up Python project structure in `/server`
-- Install ChromaDB and sentence-transformers
-- Implement VectorDatabase wrapper class
-- Create initialization script for `data/papers/`
-- Install and test BioMCP server
-- Install and test arXiv MCP server
-- Create Research Agent skeleton
+3. **Issue #14: Select Optimal Local LLMs** (High Priority, depends on #3)
+   - Choose specific models for each agent type
+   - Needed before Phase 1 agent implementation
+   - Can review LLM hosting decision docs first
+
+### Priority 2: BEGIN PHASE 1 BACKEND IMPLEMENTATION! 🚀
+
+**All critical Phase 0 decisions are now complete.** Ready to start building:
+
+1. **Set up Python project structure** in `/server`
+   - Initialize FastAPI/FastAgent project
+   - Set up virtual environment
+   - Install base dependencies
+
+2. **Install and configure ChromaDB**
+   ```bash
+   pip install chromadb sentence-transformers
+   ```
+   - Implement VectorDatabase wrapper class
+   - Configure storage at `server/data/chroma/`
+   - Set up environment variables
+
+3. **Issue #9: Initialize vector database**
+   - Create `server/scripts/init_vector_db.py`
+   - Parse PDFs from `data/papers/`
+   - Generate embeddings with all-MiniLM-L6-v2
+   - Populate ChromaDB
+
+4. **Install and test MCP servers**
+   - BioMCP (PubMed + ClinicalTrials.gov)
+   - arXiv API MCP
+   - bioRxiv/medRxiv MCP
+   - Test connection and data retrieval
+
+5. **Implement agent architecture** (using Issue #2 decisions)
+   - Create base agent classes
+   - Implement agent coordinator/orchestrator
+   - Set up communication patterns
+   - Create Research Agent skeleton
+
+6. **Define API endpoints** (using Issue #1 protocol decision)
+   - Set up WebSockets or REST endpoints
+   - Implement request handlers
+   - Add error handling and logging
 
 ### Alternative: Work on Client Features
 
@@ -163,20 +228,24 @@ If backend decisions are still pending:
 
 ## Dependencies
 
-### Unblocked by Issue #4 (Vector Database Decision)
-- ✅ Issue #9 (Initialize vector DB) - can now implement with ChromaDB
-- ✅ Phase 1 (Backend) - ChromaDB ready for integration
-- ✅ Phase 2 (Data) - MCP caching layer has storage solution
-- ✅ Issue #8 (Keyword trends) - has semantic search foundation
+### ✅ Phase 1 Backend Implementation is UNBLOCKED!
 
-### Unblocked by Issue #5 (MCP Integration)
-- ✅ Phase 1 (Backend) can proceed with MCP servers identified
-- ✅ Phase 2 (Data) can begin with clear data sources
-- ✅ Issue #8 (Keyword trends) has data source defined
+All critical dependencies for Phase 1 are now resolved:
+- ✅ Issue #1 (Communication Protocol) - DECIDED
+- ✅ Issue #2 (Multi-Agent Architecture) - DECIDED  
+- ✅ Issue #3 (LLM Hosting) - DECIDED
+- ✅ Issue #4 (Vector Database) - DECIDED (ChromaDB)
+- ✅ Issue #5 (MCP Integration) - DECIDED (Hybrid approach)
 
-### Still Blocked Until Decided
-- Issue #10 (Phase 1 backend) - needs Issues #1, #2 decided first
-- Full MCP implementation - waiting on Phase 1 backend structure
+### Ready to Implement
+- ✅ Issue #9 (Initialize vector DB) - ChromaDB and embedding model selected
+- ✅ Issue #10 (Phase 1 Backend Setup) - All decisions made
+- ✅ Phase 2 (Data Integration) - MCP servers identified, vector DB ready
+
+### Still Needs Decision
+- 🟡 Issue #14 (Select specific LLM models) - depends on Issue #3 decision
+- 🟡 Issue #6 (Plotly integration) - affects Phase 3 visualization
+- 🟡 Issue #7 (Blender pipeline) - affects Phase 4 & 7 assets
 
 ## Quick Start Commands
 
@@ -198,28 +267,29 @@ git checkout -b feature/issue-2-agent-architecture
 
 ## Session Statistics
 
-- **Issues Completed:** 1 (Issue #4 - Vector Database Selection)
-- **Issues Previously Completed:** 2 (Issue #5 - MCP Integration, Issue #12 - Launch Script)
-- **Documents Updated:** 2 (ISSUES.md, specs/PROJECT_STATUS.md)
-- **Documents Reviewed:** 2 (specs/VECTOR_DATABASE_DECISION.md, specs/VECTOR_DATABASE_SPEC.md)
-- **Commits Made:** 1 (Issue #4 decision documentation)
-- **Implementation Time:** ~15 minutes (decision review & documentation)
-- **Phase 0 Progress:** 3/7 decisions complete (43%)
+- **Issues Synced:** 5 status updates (Issues #1, #2, #3, #12, #14)
+- **Issues Now Completed:** 6 total (Issues #1, #2, #3, #4, #5, #12)
+- **Issues Previously Completed:** 3 (Issues #4, #5, #12)
+- **New Issues Added:** 1 (Issue #14 - Select optimal LLMs)
+- **Documents Updated:** 1 (ISSUES.md - comprehensive sync)
+- **Phase 0 Progress:** 6/7 decisions complete (86% - was 43%)
+- **Critical Milestone:** Phase 1 Backend Implementation UNBLOCKED! 🚀
 
 ## Notes for Next Session
 
-1. **✅ Issue #4 (Vector Database) is decided** - ChromaDB with Sentence Transformers selected
-2. **Next Priority:** Issue #2 (Multi-Agent Architecture) - defines how agents coordinate
-3. Phase 0 is now 43% complete (3/7 decisions made)
-4. Vector DB decision unblocks Issue #9 (initialization script implementation)
-5. Both Issue #4 and #5 decisions provide detailed code examples for implementation
-6. ChromaDB can be installed immediately: `pip install chromadb sentence-transformers`
-7. Storage will be in `server/data/chroma/` (configurable via .env)
-8. Issue #2 (agents) and Issue #1 (communication) are critical path for Phase 1 backend
-9. Issues #3, #6, #7 can be decided in parallel with backend work
+1. **🎉 MAJOR MILESTONE:** Phase 0 is 86% complete - Phase 1 can begin!
+2. **✅ All critical blocking issues resolved** - Issues #1, #2, #3 decided on GitHub
+3. **Next Priority:** Start Phase 1 Backend Implementation (Issue #10)
+4. **Alternative:** Decide Issue #14 (select specific LLM models) first
+5. Issues #6 and #7 are lower priority, can be done in parallel
+6. **IMPORTANT:** Always sync ISSUES.md with GitHub before handoff
+7. Check for decision documents on GitHub that may have been created
+8. ChromaDB installation ready: `pip install chromadb sentence-transformers`
+9. MCP servers ready to install and test (BioMCP, arXiv, bioRxiv)
+10. Vector DB will use `server/data/chroma/` with configurable paths
 
 ---
 
 **Ready for Next Session** ✅
 
-Issue #4 decision is documented and related files are updated. Changes are ready to commit. Recommend starting with Issue #2 (Multi-Agent Architecture) to continue unblocking Phase 1 backend implementation.
+GitHub issues are synced with ISSUES.md. Phase 0 is 86% complete with all critical blocking decisions resolved. **Phase 1 Backend Implementation is ready to begin!** Recommend starting with Issue #10 (Phase 1 Backend Setup) or Issue #14 (Select specific LLMs) as the next priority.

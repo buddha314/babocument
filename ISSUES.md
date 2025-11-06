@@ -2,7 +2,7 @@
 
 **Repository:** https://github.com/buddha314/babocument/issues
 
-**Last Updated:** 2025-11-06
+**Last Updated:** 2025-11-06 (Synced with GitHub - Issues #1-3, #12 completed; #14 added)
 
 ## Overview
 
@@ -13,7 +13,9 @@ This document provides an organized index of all GitHub issues with direct links
 Critical architectural decisions that must be made before implementation.
 
 ### [Issue #1: Choose client-server communication protocol](https://github.com/buddha314/babocument/issues/1)
-**Status:** 🟡 Open | **Priority:** High | **Type:** Decision
+**Status:** ✅ DECIDED | **Priority:** High | **Type:** Decision
+
+**Decision Date:** 2025-11-06
 
 Choose between WebSockets (real-time) vs REST API with async (simpler)
 
@@ -23,7 +25,9 @@ Choose between WebSockets (real-time) vs REST API with async (simpler)
 ---
 
 ### [Issue #2: Design multi-agent architecture](https://github.com/buddha314/babocument/issues/2)
-**Status:** 🟡 Open | **Priority:** High | **Type:** Decision
+**Status:** ✅ DECIDED | **Priority:** High | **Type:** Decision
+
+**Decision Date:** 2025-11-06
 
 Design FastAgent multi-agent system for coordinating Research, Analysis, Summary, and Recommendation agents.
 
@@ -38,7 +42,9 @@ Design FastAgent multi-agent system for coordinating Research, Analysis, Summary
 ---
 
 ### [Issue #3: Choose local LLM hosting solution](https://github.com/buddha314/babocument/issues/3)
-**Status:** 🟡 Open | **Priority:** High | **Type:** Decision
+**Status:** ✅ DECIDED | **Priority:** High | **Type:** Decision
+
+**Decision Date:** 2025-11-06
 
 Select local LLM hosting: Ollama, HuggingFace Transformers, or LangGraph
 
@@ -214,62 +220,63 @@ Create initialization script to populate vector database from data/papers direct
 
 ---
 
-### [Issue #12: Create launch script for server and client](https://github.com/buddha314/babocument/issues/12)
-**Status:** ✅ Completed | **Priority:** Critical | **Type:** DevOps
+### [Issue #12: Develop devcontainer for server application](https://github.com/buddha314/babocument/issues/12)
+**Status:** ✅ Completed | **Priority:** High | **Type:** DevOps
 **Completed:** 2025-11-06
 
-Create unified launch script to start both server and client with proper dependencies and environment setup
+Create development container configuration for FastAgent server with all Python dependencies and MCP server integrations.
 
 **Requirements:**
-- Check/install Python dependencies for server
-- Check/install Node.js dependencies for client
-- Start FastAgent server (when implemented)
-- Start Next.js dev server for client
-- Handle port configuration
-- Support Windows PowerShell
-- Graceful shutdown of both processes
+- Python 3.11+ environment
+- FastAgent dependencies
+- ChromaDB and vector database tools
+- MCP server integration support
+- Development tools and extensions
 
 **Deliverables:**
-- `launch.ps1` - PowerShell script for Windows
-- `launch.sh` - Bash script for Linux/macOS (optional)
+- `.devcontainer/devcontainer.json` - Container configuration
+- `server/requirements.txt` - Python dependencies
 - Documentation in README.md
 
-**Script Features:**
-- Environment validation (Python, Node.js, package managers)
-- Dependency installation prompts
-- Parallel process management
-- Clear console output with status indicators
-- Error handling and recovery
-- Optional flags: `--server-only`, `--client-only`, `--no-install`
+**Benefits:**
+- Consistent development environment
+- Simplified onboarding for contributors
+- Isolated dependency management
+- Works with VS Code Remote Containers
 
-**Example Usage:**
-```powershell
-# Launch both server and client
-.\launch.ps1
-
-# Launch only client (for Phase 0-3 work)
-.\launch.ps1 --client-only
-
-# Launch without checking dependencies
-.\launch.ps1 --no-install
-```
-
-**Implementation Notes:**
-- Server path: `server/` (FastAgent app - not yet implemented)
-- Client path: `client/` (Next.js app on port 3000)
-- Server default port: 8000 (configurable)
-- Use `Start-Process` for background processes in PowerShell
-- Trap `Ctrl+C` for graceful shutdown
-
-**Phases:** 0 (DevOps), applies to all phases
-
-**Priority Rationale:** 
-- Streamlines development workflow
-- Reduces onboarding friction
-- Critical for Phase 1+ when server is implemented
-- Immediate value for client-only development
+**Phases:** 0 (DevOps), applies to Phase 1+
 
 **Dependencies:** None (can implement immediately)
+
+---
+
+### [Issue #14: Select optimal local LLMs for research paper analysis](https://github.com/buddha314/babocument/issues/14)
+**Status:** 🟡 Open | **Priority:** High | **Type:** Decision
+
+Evaluate and select specific local LLM models for different agent tasks in the multi-agent system.
+
+**Agent-Specific Requirements:**
+- **Research Agent:** Query understanding, semantic search
+- **Analysis Agent:** Trend analysis, pattern detection
+- **Summary Agent:** Document summarization, key insight extraction
+- **Recommendation Agent:** Related paper suggestions, gap identification
+
+**Evaluation Criteria:**
+- Model size vs performance trade-offs
+- Inference speed for real-time responses
+- Context window size for long documents
+- Fine-tuning potential for scientific domain
+- Local hosting feasibility
+
+**Candidate Models:**
+- Llama 3.1 (8B, 70B variants)
+- Mistral 7B / Mixtral 8x7B
+- Qwen 2.5 (specialized models)
+- Domain-specific models (BioGPT, SciBERT embeddings)
+
+**Impact:** Agent intelligence quality, response speed, resource requirements
+
+**Dependencies:** [#3](#issue-3-choose-local-llm-hosting-solution) (hosting solution)
 
 ---
 
@@ -325,24 +332,23 @@ Build immersive data visualization UI with Plotly.js in BabylonJS
 
 ## Issue Status Summary
 
-**Total Issues:** 12
+**Total Issues:** 14
 
-**Completed:** 3 (Issues #4, #5, #12)
+**Completed:** 6 (Issues #1, #2, #3, #4, #5, #12)
 
 **By Type:**
-- 🔷 Decisions: 6 (Issues #1-#6) - 2 decided, 4 open
+- 🔷 Decisions: 7 (Issues #1-#6, #14) - 5 decided, 2 open
 - 🔶 Setup: 1 (Issue #7)
 - ⚙️ Features: 2 (Issues #8-#9)
 - 📦 Epics: 2 (Issues #10-#11)
 - 🛠️ DevOps: 1 (Issue #12) - completed
 
 **By Priority:**
-- 🔴 Critical: 1 (Issue #12) - ✅ completed
-- 🔴 High: 8 (2 decided, 6 open)
-- 🟡 Medium: 3
+- 🔴 High: 12 (6 decided, 6 open)
+- 🟡 Medium: 2
 
 **By Phase:**
-- Phase 0 (Planning): 6 decision issues (2 decided, 4 open)
+- Phase 0 (Planning): 7 decision issues (5 decided, 2 open)
 - Phase 1 (Backend): 1 epic, 1 implementation
 - Phase 2 (Data): 1 implementation
 - Phase 3 (Frontend): 1 epic, 1 feature
@@ -353,17 +359,19 @@ Build immersive data visualization UI with Plotly.js in BabylonJS
 ## Dependencies Graph
 
 ```
-Phase 0 Decisions (#1, #2, #3, #4, #5, #6, #7)
+Phase 0 Decisions (#1, #2, #3 - DECIDED)
+    ↓
+Issue #14 (Select specific LLM models)
     ↓
 Issue #10 (Phase 1: Backend Setup)
     ↓
 Issue #9 (Initialize Vector DB)
     ↓
-Issue #5 (MCP Integration - Phase 2)
+Phase 2: MCP Integration (uses #5 decision)
     ↓
 Issue #8 (Keyword Trends - Phase 5)
     ↓
-Issue #11 (Visualization UI - Phase 3)
+Issue #11 (Visualization UI - Phase 3, needs #6 decision)
 ```
 
 ## Quick Links
