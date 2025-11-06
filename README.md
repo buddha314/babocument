@@ -164,7 +164,7 @@ The backend employs specialized AI agents working in concert:
 - Communication protocol decision (WebSockets vs REST) - [Issue #1](https://github.com/buddha314/babocument/issues/1)
 - Multi-agent architecture design - [Issue #2](https://github.com/buddha314/babocument/issues/2)
 - Vector database selection - [Issue #4](https://github.com/buddha314/babocument/issues/4)
-- MCP integration strategy - [Issue #5](https://github.com/buddha314/babocument/issues/5)
+- ✅ **MCP integration strategy** - [Issue #5](https://github.com/buddha314/babocument/issues/5) - **DECIDED: Hybrid approach with BioMCP, arXiv, and bioRxiv community servers**
 - Server implementation kickoff - [Issue #10](https://github.com/buddha314/babocument/issues/10)
 
 See [specs/PROJECT_STATUS.md](specs/PROJECT_STATUS.md) for detailed status and [specs/TASKS.md](specs/TASKS.md) for the complete roadmap.

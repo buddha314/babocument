@@ -70,22 +70,35 @@ Choose vector database for semantic search: Chroma, Weaviate, Qdrant, Pinecone, 
 ---
 
 ### [Issue #5: MCP integration strategy for document repositories](https://github.com/buddha314/babocument/issues/5)
-**Status:** 🟡 Open | **Priority:** High | **Type:** Decision
+**Status:** ✅ DECIDED | **Priority:** High | **Type:** Decision
 
-Determine Model Context Protocol integration for arXiv, PubMed, bioRxiv access
+**Decision Date:** 2025-11-06
 
-**Repositories:**
-- **High Priority:** arXiv (2M+ papers), PubMed/PMC (36M+ citations)
-- **Medium Priority:** bioRxiv (biology preprints)
+**Decision:** Hybrid approach using community MCP servers with custom extensions
 
-**Strategy options:**
-- Use community MCP servers
-- Build custom MCP servers
-- Hybrid approach (recommended)
+**Selected Community Servers:**
+- **BioMCP** - Primary biomedical source (PubMed + ClinicalTrials.gov + MyVariant.info)
+- **arXiv API MCP** - Physics, CS, biology papers with LaTeX support
+- **bioRxiv/medRxiv MCP** - Biology and medicine preprints
 
-**Documentation:** [specs/MCP_INTEGRATION_SPEC.md](specs/MCP_INTEGRATION_SPEC.md) (14 KB)
+**Rationale:**
+- ✅ Leverage existing, maintained community servers
+- ✅ BioMCP purpose-built for biomedical research (perfect match)
+- ✅ Faster implementation (weeks vs months)
+- ✅ Focus development on Babocument-specific features
+- ✅ Build custom servers only when needed
 
-**Impact:** Data source availability, agent capabilities, maintenance burden
+**Documentation:** [specs/MCP_INTEGRATION_DECISION.md](specs/MCP_INTEGRATION_DECISION.md) (6 KB)
+
+**Implementation Plan:**
+- **Week 1-2:** Install and test 3 community MCP servers
+- **Week 3-4:** Build Research Agent with unified interface
+- **Week 5-6:** Integrate vector database and caching
+- **Week 7-8:** Create API endpoints
+
+**Impact:** Accelerates Phase 2 (data integration), enables Phase 5 (intelligence features)
+
+**Next Steps:** Begin Phase 1 MCP server installation and testing
 
 ---
 

@@ -112,10 +112,14 @@ client/
    - Embedding strategy selection
    - Initialize with data/papers corpus
 
-5. **MCP Integration for Document Repositories**
-   - Select MCP servers for arXiv, PubMed, bioRxiv
-   - Design agent access patterns
-   - Full-text vs metadata retrieval strategy
+5. **MCP Integration for Document Repositories** ✅ DECIDED
+   - **Decision:** Hybrid approach using community MCP servers
+   - **Primary Sources:**
+     - BioMCP (PubMed + ClinicalTrials.gov + MyVariant.info)
+     - arXiv API MCP with LaTeX support
+     - bioRxiv/medRxiv MCP servers
+   - **Documentation:** [MCP_INTEGRATION_DECISION.md](MCP_INTEGRATION_DECISION.md)
+   - **Next Step:** Begin Phase 1 implementation (Week 1-2)
 
 ### Medium Priority
 6. **Authentication & Authorization**
@@ -135,14 +139,22 @@ client/
 
 ## Immediate Next Steps
 
-### Before Next Session
+### Phase 0 Decisions
 - [ ] Define communication protocol (WebSockets vs REST) - [Issue #1](https://github.com/buddha314/babocument/issues/1)
 - [ ] Design agent architecture - [Issue #2](https://github.com/buddha314/babocument/issues/2)
 - [ ] Choose LLM hosting solution - [Issue #3](https://github.com/buddha314/babocument/issues/3)
 - [ ] Select vector database - [Issue #4](https://github.com/buddha314/babocument/issues/4)
-- [ ] Plan MCP integration - [Issue #5](https://github.com/buddha314/babocument/issues/5)
+- [x] Plan MCP integration - [Issue #5](https://github.com/buddha314/babocument/issues/5) ✅ COMPLETED
 - [ ] Decide Plotly integration - [Issue #6](https://github.com/buddha314/babocument/issues/6)
 - [ ] Set up Blender pipeline - [Issue #7](https://github.com/buddha314/babocument/issues/7)
+
+### MCP Integration (Phase 1 - Ready to Start)
+- [ ] Install and test BioMCP server
+- [ ] Install and test arXiv MCP server
+- [ ] Install and test bioRxiv/medRxiv MCP server
+- [ ] Create unified Research Agent interface
+- [ ] Integrate with vector database (pending Issue #4)
+- [ ] Build API endpoints for paper search
 
 ### Client Development
 - [ ] Design File Room virtual environment layout
