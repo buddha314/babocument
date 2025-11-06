@@ -22,7 +22,11 @@ import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 
 import "@babylonjs/core/Materials/PBR/pbrMaterial";
 import "@babylonjs/core/Materials/standardMaterial";
+
+// WebXR imports
+import { WebXRDefaultExperience } from "@babylonjs/core/XR/webXRDefaultExperience";
 import "@babylonjs/core/XR/features/WebXRDepthSensing";
+import "@babylonjs/core/Helpers/sceneHelpers";
 
 import "@babylonjs/core/Rendering/depthRendererSceneComponent";
 import "@babylonjs/core/Rendering/prePassRendererSceneComponent";
@@ -89,6 +93,24 @@ export default function Home() {
 
 		if (scene.activeCamera) {
 			scene.activeCamera.attachControl();
+		}
+
+		// Initialize WebXR with default experience
+		try {
+			const xrHelper = await WebXRDefaultExperience.CreateAsync(scene, {
+				floorMeshes: scene.meshes.filter((mesh) => mesh.name.toLowerCase().includes("ground") || mesh.name.toLowerCase().includes("floor")),
+				// Optional: Configure teleportation
+				optionalFeatures: true,
+			});
+
+			console.log("WebXR initialized successfully");
+
+			// Log when entering/exiting XR
+			xrHelper.baseExperience.onStateChangedObservable.add((state) => {
+				console.log("WebXR state changed:", state);
+			});
+		} catch (error) {
+			console.warn("WebXR not supported or failed to initialize:", error);
 		}
 
 		engine.runRenderLoop(() => {

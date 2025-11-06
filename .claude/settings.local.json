@@ -10,7 +10,9 @@
       "Bash(gh auth:*)",
       "Bash(gh issue create:*)",
       "Bash(gh issue list:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []
