@@ -26,6 +26,7 @@ Babocument is an agentic VR/XR document management application for reviewing syn
 - BabylonJS Editor Tools (latest)
 - TypeScript 5.8.3
 - Tailwind CSS 3.3.0
+- Plotly.js (planned - 3D scientific visualization)
 
 **Current Structure:**
 ```
@@ -72,7 +73,7 @@ client/
 
 **Components:**
 - MCP plugin for Blender
-- MCP plugin for Godot
+- BabylonJS Editor integration
 - Client-Server communication (WebSockets vs REST+async TBD)
 
 ### Documentation (/specs)
@@ -101,20 +102,31 @@ client/
    - State management approach
 
 3. **3D Asset Pipeline**
-   - Asset creation workflow (Blender/Godot)
-   - Import/export formats
+   - Asset creation workflow (Blender → BabylonJS)
+   - Import/export formats (GLB via GLTF 2.0)
    - Asset optimization strategy
 
+4. **Vector Database Selection**
+   - Choose vector DB (Chroma, Weaviate, Qdrant, Pinecone, Milvus)
+   - Configurable local storage paths
+   - Embedding strategy selection
+   - Initialize with data/papers corpus
+
+5. **MCP Integration for Document Repositories**
+   - Select MCP servers for arXiv, PubMed, bioRxiv
+   - Design agent access patterns
+   - Full-text vs metadata retrieval strategy
+
 ### Medium Priority
-4. **Authentication & Authorization**
+6. **Authentication & Authorization**
    - User management system
    - Workspace permissions
    - Data access controls
 
-5. **Database Selection**
-   - Document storage
+7. **Database Selection**
+   - Document storage (traditional DB)
    - Metadata management
-   - Search capabilities
+   - Workspace persistence
 
 6. **Deployment Strategy**
    - Development environment setup
@@ -124,9 +136,13 @@ client/
 ## Immediate Next Steps
 
 ### Before Next Session
-- [ ] Define communication protocol (WebSockets vs REST)
-- [ ] Design agent architecture
-- [ ] Create technical specification docs
+- [ ] Define communication protocol (WebSockets vs REST) - [Issue #1](https://github.com/buddha314/babocument/issues/1)
+- [ ] Design agent architecture - [Issue #2](https://github.com/buddha314/babocument/issues/2)
+- [ ] Choose LLM hosting solution - [Issue #3](https://github.com/buddha314/babocument/issues/3)
+- [ ] Select vector database - [Issue #4](https://github.com/buddha314/babocument/issues/4)
+- [ ] Plan MCP integration - [Issue #5](https://github.com/buddha314/babocument/issues/5)
+- [ ] Decide Plotly integration - [Issue #6](https://github.com/buddha314/babocument/issues/6)
+- [ ] Set up Blender pipeline - [Issue #7](https://github.com/buddha314/babocument/issues/7)
 
 ### Client Development
 - [ ] Design File Room virtual environment layout
@@ -145,7 +161,8 @@ client/
 ### Research & Discovery
 - Query bioinks and academic journals with timeline visualization
 - Timeline-sorted journal articles
-- Word clouds and trend analyses
+- Word clouds and keyword trend line graphs
+- Temporal trend analysis across research corpus
 - ClinicalTrials.gov correlation
 
 ### Document Management

@@ -45,7 +45,7 @@ See [specs/](specs/) for detailed project documentation:
 **Integration Layer** - *Planned*
 - MCP (Model Context Protocol) plugins
 - Blender integration for 3D assets
-- Godot integration for advanced scenes
+- BabylonJS Editor for scene composition
 
 **Communication** - *Decision Pending*
 - Option A: WebSockets (real-time, bidirectional)
@@ -79,7 +79,8 @@ Beabadoo is a computational researcher in biomanufacturing at a major synthetic 
 ### Research & Discovery
 - Query bioinks and academic journals with timeline visualization
 - Access sorted journal articles by publication year
-- Generate word clouds and trend analyses of research over time
+- Generate word clouds and keyword trend line graphs of research over time
+- Track keyword frequency and evolution across temporal corpus
 - Search and correlate ClinicalTrials.gov data with current research
 
 ### Document Management
@@ -133,6 +134,7 @@ The backend employs specialized AI agents working in concert:
 - Next.js 14.2.32 (React framework)
 - TypeScript 5.8.3
 - Tailwind CSS 3.3.0
+- Plotly.js (scientific visualization, 3D plots)
 
 **Backend:** *(Planned)*
 - FastAgent (Python)
@@ -141,8 +143,7 @@ The backend employs specialized AI agents working in concert:
 
 **Tools:**
 - BabylonJS Editor (scene creation)
-- Blender (3D modeling via MCP)
-- Godot (advanced scene integration via MCP)
+- Blender (3D modeling and GLB export)
 
 ## Project Status
 
@@ -160,9 +161,11 @@ The backend employs specialized AI agents working in concert:
 - 🟡 API design and specifications
 
 **Next Steps:**
-- Communication protocol decision (WebSockets vs REST)
-- Multi-agent architecture design
-- Server implementation kickoff
+- Communication protocol decision (WebSockets vs REST) - [Issue #1](https://github.com/buddha314/babocument/issues/1)
+- Multi-agent architecture design - [Issue #2](https://github.com/buddha314/babocument/issues/2)
+- Vector database selection - [Issue #4](https://github.com/buddha314/babocument/issues/4)
+- MCP integration strategy - [Issue #5](https://github.com/buddha314/babocument/issues/5)
+- Server implementation kickoff - [Issue #10](https://github.com/buddha314/babocument/issues/10)
 
 See [specs/PROJECT_STATUS.md](specs/PROJECT_STATUS.md) for detailed status and [specs/TASKS.md](specs/TASKS.md) for the complete roadmap.
 

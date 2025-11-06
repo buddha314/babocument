@@ -22,6 +22,37 @@
   - Blocking: Server implementation
 - [ ] Define API contract/specifications
 - [ ] Create technical architecture document
+- [ ] **Set up Blender asset pipeline**
+  - Establish directory structure for `.blend` source files and `.glb` exports
+  - Document GLTF 2.0 export workflow for BabylonJS
+  - Update .gitignore for Blender files
+  - See: BLENDER_INTEGRATION_PLAN.md for full details
+- [ ] **DECISION REQUIRED:** Choose local LLM hosting solution
+  - Ollama (local inference, easy setup)
+  - HuggingFace (transformers library, model hub access)
+  - LangGraph (agentic workflows, state management)
+  - Impact: Agent intelligence capabilities, deployment complexity
+  - Consider: Performance, model selection, integration with FastAgent
+- [ ] **DECISION REQUIRED:** Plotly integration strategy for 3D visualization
+  - Determine Plotly.js integration with BabylonJS
+  - 3D plots rendered natively in BabylonJS scene vs HTML overlay
+  - WebGL context sharing strategy
+  - Impact: Visualization capabilities, performance, UX
+  - Consider: Plotly 3D scatter/surface plots, texture mapping to meshes
+- [ ] **DECISION REQUIRED:** MCP integration for document repositories
+  - Review MCP servers for arXiv, PubMed, and other journal sources
+  - Evaluate available MCP servers (community or build custom)
+  - Determine which repositories to support (arXiv, PubMed, bioRxiv, etc.)
+  - Design agent access patterns to MCP servers
+  - Impact: Data source availability, agent capabilities, maintenance burden
+  - Consider: API rate limits, full-text access, metadata richness
+- [ ] **DECISION REQUIRED:** Vector database selection and configuration
+  - Choose vector DB: Chroma, Weaviate, Qdrant, Pinecone, or Milvus
+  - Design configurable local paths for dev environments
+  - Plan embedding strategy (OpenAI, local models, etc.)
+  - Define initialization process for data/papers corpus
+  - Impact: Search performance, semantic search quality, deployment complexity
+  - Consider: Local-first development, embedding costs, scalability
 
 ### Phase 1: Server Foundation
 **Goal:** Set up FastAgent backend with basic agent coordination
@@ -35,6 +66,12 @@
 - [ ] Define API endpoints (REST or WebSocket handlers)
 - [ ] Set up development environment configuration
 - [ ] Implement basic logging and monitoring
+- [ ] Configure vector database integration
+  - Install chosen vector DB (Chroma/Weaviate/Qdrant/etc.)
+  - Create configurable storage paths for local dev
+  - Set up embedding pipeline
+  - Define collection/index schema for documents
+  - Create initialization script for data/papers ingestion
 
 **Estimated Timeline:** 1-2 weeks
 
@@ -43,15 +80,26 @@
 
 **Prerequisites:** Phase 1 complete
 
+- [ ] Set up MCP server integrations for document repositories
+  - Evaluate and select MCP servers (arXiv, PubMed, bioRxiv)
+  - Configure MCP server connections
+  - Expose MCP tools to Research Agent
+  - Test full-text retrieval and metadata extraction
 - [ ] Implement journal repository integrations
-  - arXiv API integration
-  - PubMed integration
+  - arXiv API integration (via MCP or direct)
+  - PubMed/PubMed Central integration
+  - bioRxiv for preprints
   - Additional sources from editable list
 - [ ] Implement ClinicalTrials.gov API integration
 - [ ] Create web search capability for scientific topics
 - [ ] Build data normalization/transformation layer
 - [ ] Implement caching strategy for API responses
 - [ ] Add rate limiting and error handling
+- [ ] Initialize vector database with local papers
+  - Parse PDFs from data/papers directory
+  - Extract text and metadata
+  - Generate embeddings
+  - Store in vector database for semantic search
 
 **Estimated Timeline:** 1-2 weeks
 
@@ -76,6 +124,13 @@
   - Document cards/panels in 3D space
   - Hover effects and interactions
   - Selection and preview
+- [ ] Implement data visualization UI
+  - Word cloud display
+  - Keyword trend line graphs (2D and 3D)
+  - Interactive chart controls
+  - Plotly.js integration for scientific plotting
+  - 3D scatter plots, surface plots, and heatmaps
+  - Render plots as textures on 3D panels or native BabylonJS meshes
 - [ ] Add lighting and atmosphere
   - Ambient lighting design
   - Glass material shaders
@@ -115,6 +170,7 @@
 - [ ] Analysis Agent
   - Trend analysis over time
   - Word cloud generation
+  - Keyword trend line graphs (temporal visualization)
   - Correlation detection
 - [ ] Summary Agent
   - Article summarization
@@ -149,6 +205,10 @@
   - Full-text search
   - Metadata filtering
   - Timeline-based queries
+- [ ] Analytics and visualization
+  - Generate word clouds from corpus
+  - Display keyword trend line graphs over time
+  - Export trend data and visualizations
 
 **Estimated Timeline:** 2-3 weeks
 
@@ -184,9 +244,11 @@
   - Interactive timeline controls
   - Zoom and filter capabilities
   - Animation and transitions
+  - Keyword trend line graphs overlay
+  - Temporal data scrubbing
 - [ ] MCP integrations
   - Blender MCP plugin
-  - Godot MCP plugin
+  - BabylonJS Editor integration
   - Asset pipeline automation
 - [ ] Performance optimization
   - Asset loading optimization
