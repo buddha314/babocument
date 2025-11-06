@@ -131,19 +131,32 @@
   - ✅ Issue #9: https://github.com/buddha314/babocument/issues/9
   - ✅ Initialization script (server/scripts/init_vector_db.py)
   - ✅ Search testing (4 papers indexed, semantic search working)
-- [ ] Implement LLM Client (server/app/services/llm_client.py)
-  - LiteLLM wrapper with Ollama integration
-  - Model selection per agent type
-  - Summarization and chat functions
+- [x] Implement LLM Client (server/app/services/llm_client.py)
+  - ✅ LiteLLM wrapper with Ollama integration
+  - ✅ Model selection per agent type
+  - ✅ Summarization and chat functions
+  - ✅ Query parsing and keyword extraction
+  - ✅ Error handling and retries
+- [ ] Implement REST API endpoints (server/app/api/)
+  - Document CRUD operations (list, get, upload, delete)
+  - Repository management (list, status, sync)
+  - Search endpoints (keyword and semantic)
+  - Statistics and status endpoints
+  - Issue #15: https://github.com/buddha314/babocument/issues/15
 - [ ] Implement Event Bus (server/app/utils/event_bus.py)
   - Redis pub/sub for agent coordination
   - Event publishing/subscribing
   - Task progress updates
-- [ ] Define REST API endpoints (server/app/api/rest.py)
+- [ ] Implement Event Bus (server/app/utils/event_bus.py)
+  - Redis pub/sub for agent coordination
+  - Event publishing/subscribing
+  - Task progress updates
+- [ ] Implement REST API endpoints (server/app/api/rest.py)
   - POST /api/v1/search (initiate search)
   - GET /api/v1/search/{task_id} (get status)
   - POST /api/v1/summarize (summarize document)
   - GET /api/v1/agents/status (agent health)
+  - Issue #15: Document and repository management
 - [ ] Implement WebSocket handler (server/app/api/websocket.py)
   - /ws/agents (real-time task updates)
   - Subscribe to task progress events
@@ -159,15 +172,16 @@
 - [x] Implement basic logging and monitoring (structlog integrated)
 - [x] Create initialization script for data/papers ingestion
 
-**Current Status:** Vector DB complete and tested! Ready for LLM Client implementation.
+**Current Status:** Vector DB and LLM Client complete! Ready for Event Bus and REST API implementation.
 
 **Next Steps:**
 1. ✅ Vector DB Client implemented and tested (4 papers indexed)
-2. Implement LLM Client (priority #1 - next)
-3. Start Redis server: `docker run -d -p 6379:6379 --name babocument-redis redis:7-alpine`
-4. Download Ollama models: `ollama pull llama3.2:3b`, `ollama pull qwen2.5:7b`
-5. Implement Event Bus (priority #2)
-6. Build REST API endpoints
+2. ✅ LLM Client implemented (summarization, chat, keyword extraction, query parsing)
+3. Implement REST API endpoints (priority #1 - Issue #15)
+4. Start Redis server: `docker run -d -p 6379:6379 --name babocument-redis redis:7-alpine`
+5. Download Ollama models: `ollama pull llama3.2:3b`, `ollama pull qwen2.5:7b`
+6. Implement Event Bus (priority #2)
+7. Test end-to-end workflows
 
 **Documentation:**
 - Session details: SESSION_2025-11-06_PHASE1_INIT.md
@@ -521,6 +535,15 @@ A task is considered "done" when:
 
 ## Maintenance
 
+**⚠️ CRITICAL: START EVERY SESSION WITH SYNC CHECK ⚠️**
+
+Before starting any work, ALWAYS sync these three sources:
+1. **GitHub Issues** (run `gh issue list --state all`)
+2. **ISSUES.md** (update status, counts, timestamps)
+3. **TASKS.md** (mark checkboxes, update percentages)
+
+See SESSION_HANDOFF.md for complete sync checklist.
+
 **This document should be kept in sync with:**
 - ISSUES.md - GitHub issues index (check for new/closed issues)
 - SESSION_HANDOFF.md - Latest session work and status
@@ -528,9 +551,10 @@ A task is considered "done" when:
 - Decision documents in specs/ - Architectural decisions
 
 **Update triggers:**
+- **START OF EVERY SESSION** (mandatory sync check)
 - When GitHub issues are created/updated/closed
 - After completing major milestones or phases
 - When architectural decisions are made
 - At the end of each development session
 
-**Last sync:** 2025-11-06 - Synced with GitHub issues #1-14 and session handoff
+**Last sync:** 2025-11-06 - Vector DB complete, LLM Client complete, Issue #15 created for REST API
