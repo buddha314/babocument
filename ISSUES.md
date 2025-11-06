@@ -289,45 +289,37 @@ Evaluate and select specific local LLM models for different agent tasks in the m
 ---
 
 ### [Issue #15: Implement REST API endpoints for document and repository management](https://github.com/buddha314/babocument/issues/15)
-**Status:** ✅ COMPLETED | **Priority:** High | **Type:** Feature | **Completion Date:** 2025-11-06
+**Status:** 🟡 Open (API scaffolded, needs service integration) | **Priority:** HIGH - Critical Path | **Type:** Feature
 
-**User Story:**
-> As a developer/user, I need REST API endpoints to view, save, and manage documents and repositories, so that the multi-agent system can perform document operations programmatically.
+**Current State:** API structure complete, TODO comments for actual implementation
+**Completion Date:** Scaffolding done 2025-11-06, **integration pending**
 
-**Completed Implementation:**
+**What's Done:**
+- ✅ 17 REST endpoints defined with Pydantic models
+- ✅ OpenAPI/Swagger documentation
+- ✅ 60 tests with 84% coverage
+- ✅ Error handling and validation
 
-**API Modules Created:**
-- ✅ `server/app/api/documents.py` - 7 endpoints for document CRUD and search
-- ✅ `server/app/api/repositories.py` - 5 endpoints for repository management
-- ✅ `server/app/api/stats.py` - 5 endpoints for statistics and status
+**What's Needed:**
+- 🔄 Connect endpoints to Vector DB service
+- 🔄 Connect endpoints to LLM Client service
+- 🔄 Replace mock data with real service calls
+- 🔄 Add background task processing
+- 🔄 Implement actual file upload storage
 
-**Test Coverage:**
-- ✅ 60 passing tests across all endpoints
-- ✅ 84% code coverage (301 statements, 48 missed)
-- ✅ All response models validated with Pydantic
-- ✅ Error handling tested (404, 400, 422, 500)
+**Why Critical Path:** All other work depends on having functional APIs. Agent implementation, WebSocket updates, and user features all need working endpoints.
 
-**Documentation:**
-- ✅ OpenAPI/Swagger docs at `/docs`
-- ✅ SESSION_2025-11-06_REST_API_IMPLEMENTATION.md
-- ✅ SESSION_2025-11-06_REST_API_TESTS.md
-
-**Next Steps:**
-- Implement Event Bus for agent coordination
-- Connect endpoints to Vector DB and LLM services
-- Add database layer for metadata storage
+**Next Steps:** See Service Integration priority in HANDOFF.md
 
 ---
 
-## Phase 1: DevOps & Infrastructure
-
 ### [Issue #18: Implement CI/CD pipeline with GitHub Actions](https://github.com/buddha314/babocument/issues/18)
-**Status:** 🟡 Open | **Priority:** High | **Type:** Enhancement
+**Status:** 🟡 Open | **Priority:** Medium (Can be done anytime) | **Type:** Enhancement
+
+**Note:** Issues #16, #17, #18 appear to be duplicates - consolidate on GitHub
 
 **Summary:**
-Implement automated CI/CD pipeline using GitHub Actions to build, test, and validate both the server (Python/FastAPI) and client (Next.js/BabylonJS) components on every push and pull request.
-
-**Requirements:**
+Implement automated CI/CD pipeline using GitHub Actions for both server and client.
 
 **Server Pipeline:**
 - Run pytest with 84% coverage requirement
@@ -339,16 +331,12 @@ Implement automated CI/CD pipeline using GitHub Actions to build, test, and vali
 - Node.js 18+ environment
 - ESLint and TypeScript checking
 
+**Why Not Critical Path:** Doesn't block other work, helps with quality but not required for functionality
+
 **Deliverables:**
 - `.github/workflows/server-ci.yml`
 - `.github/workflows/client-ci.yml`
-- Coverage reports as artifacts
 - PR status checks
-- CI/CD badges in README
-
-**Dependencies:**
-- ✅ Issue #15 (REST API) - COMPLETED
-- ✅ API test suite - COMPLETED (60 tests, 84% coverage)
 
 **Estimated Effort:** 2-3 hours
 
@@ -472,51 +460,92 @@ Build immersive data visualization UI with Plotly.js in BabylonJS
 
 ## Issue Status Summary
 
-**Total Issues:** 15
+**Total Issues:** 18 (accounting for duplicates #16, #17, #18)
+**Actual Unique Issues:** 15
 
 **Completed:** 7 (Issues #1, #2, #3, #4, #5, #9, #12)
+**In Progress:** 1 (Issue #15 - API scaffolded, needs service integration)
+**Open:** 7 (Issues #6, #7, #8, #10, #11, #14, #18)
 
 **By Type:**
-- 🔷 Decisions: 7 (Issues #1-#6, #14) - 5 decided, 2 open
-- 🔶 Setup: 1 (Issue #7)
-- ⚙️ Features: 4 (Issues #8, #9, #15) - 1 completed, 3 open
-- 📦 Epics: 2 (Issues #10-#11)
-- 🛠️ DevOps: 1 (Issue #12) - completed
+- 🔷 Decisions: 7 total (5 completed: #1-5, 2 open: #6, #14)
+- 🔶 Setup: 1 (Issue #7 - open)
+- ⚙️ Features: 4 (Issue #9 completed, Issues #8, #15 in progress)
+- 📦 Epics: 2 (Issues #10, #11 - both open)
+- 🛠️ DevOps: 2 (Issue #12 completed, Issue #18 open)
 
 **By Priority:**
-- 🔴 High: 13 (7 completed, 6 open)
-- 🟡 Medium: 2
+- 🔴 **Critical Path:** 3 (Issue #15 Service Integration, Issue #10 Agents, Event Bus)
+- 🟡 **High (Supporting):** 2 (Issue #18 CI/CD, Database Layer)
+- 🟢 **Medium:** 7 (Issue #6 Plotly, #7 Blender, #8 Trends, #11 Viz UI, #14 LLMs, etc.)
 
 **By Phase:**
-- Phase 0 (Planning): 7 decision issues (5 decided, 2 open)
-- Phase 1 (Backend): 2 features (Issue #10 epic in progress, Issue #15 new), 1 implementation (completed)
-- Phase 2 (Data): 0 open
-- Phase 3 (Frontend): 1 epic, 1 feature
-- Phase 4 (Librarian): 0 (future)
-- Phase 5 (Intelligence): 0 (future)
-- Phase 6 (Management): 0 (future)
+- Phase 0 (Planning): 7 decision issues (5 completed, 2 open: #6, #14)
+- Phase 1 (Backend): 3 (Issue #10 epic in progress, #15 scaffolded, Event Bus pending)
+- Phase 2 (Data): 0 open (MCP integration ready after Phase 1)
+- Phase 3 (Frontend): 2 (Issue #11 epic, #8 feature - both need backend first)
+
+---
+
+## Critical Path & Dependencies
+
+**Recommended Work Order:**
+
+```
+Phase 1 Completion (Critical Path):
+1. Service Integration (Issue #15) ──┐
+                                      ├──> 3. Agent Implementation (Issue #10)
+2. Event Bus ─────────────────────────┘
+
+Supporting Work (Parallel):
+4. CI/CD Pipeline (Issue #18)
+5. Database Layer (not blocking)
+```
+
+**Why This Order:**
+- **#15 Service Integration:** Makes REST API functional, validates architecture
+- **Event Bus:** Required for multi-agent coordination (#10 needs this)
+- **#10 Agent Implementation:** Core intelligence, depends on #15 + Event Bus
+- **#18 CI/CD:** Can be done anytime, doesn't block other work
+- **Database:** Currently using mocks, not critical until production
 
 ## Dependencies Graph
 
+**Updated Critical Path (2025-11-06 23:15):**
+
 ```
-Phase 0 Decisions (#1, #2, #3, #4, #5 - DECIDED)
+Phase 0: Decisions (#1-5) ✅ COMPLETE
     ↓
-Issue #15 (REST API Implementation) - ✅ COMPLETED
+Issue #15: Service Integration (CRITICAL - Do First)
+    ├──> Connect Vector DB to API
+    ├──> Connect LLM Client to API  
+    └──> Validate with real data
     ↓
-Issue #18 (CI/CD Pipeline) - 🟡 NEW
+Event Bus Implementation (CRITICAL - Do Second)
+    ├──> Redis pub/sub
+    ├──> Event publishing
+    └──> Agent coordination
     ↓
-Issue #14 (Select specific LLM models)
+Issue #10: Agent Implementation (CRITICAL - Do Third)
+    ├──> Research Agent (needs #15 + Event Bus)
+    ├──> Analysis Agent
+    ├──> Summary Agent
+    └──> Recommendation Agent
     ↓
-Issue #10 (Phase 1: Backend Setup) - 🟡 In Progress
-    ↓
-Issue #9 (Initialize Vector DB) - ✅ COMPLETED
-    ↓
-Phase 2: MCP Integration (uses #5 decision)
-    ↓
-Issue #8 (Keyword Trends - Phase 5)
-    ↓
-Issue #11 (Visualization UI - Phase 3, needs #6 decision)
+Phase 1: COMPLETE ──> Phase 2: MCP Integration
+
+Parallel (Supporting Work):
+├── Issue #18: CI/CD Pipeline (helps quality, not blocking)
+├── Database Layer (not critical yet)
+└── WebSocket Handler (depends on Event Bus)
+
+Future Phases (Blocked by Phase 1):
+├── Issue #8: Keyword Trends (needs agents from #10)
+├── Issue #11: Viz UI (needs backend API working)
+└── Phase 2: MCP Integration (needs Phase 1 complete)
 ```
+
+**Key Insight:** Service Integration (#15) is the bottleneck. Everything else builds on having functional APIs.
 
 ## Quick Links
 

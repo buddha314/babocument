@@ -86,15 +86,37 @@
 
 ### 🟡 In Progress / Next
 
-**High Priority:**
-1. **CI/CD Pipeline (Issue #18)** - GitHub Actions for automated testing
-2. **Event Bus** - Redis pub/sub for agent coordination
-3. **Service Integration** - Connect APIs to Vector DB and LLM services
-4. **Database Layer** - Metadata storage (SQLite/PostgreSQL)
+**Critical Path (Do First):**
+1. **Service Integration (Issue #15)** - Connect API endpoints to Vector DB and LLM
+   - Why first: Makes REST API functional, validates architecture
+   - Blocks: All agent work, useful testing
+   - Time: 3-4 hours
 
-**Medium Priority:**
-5. **WebSocket Handler** - Real-time agent updates
-6. **Background Tasks** - Async processing for uploads/sync
+2. **Event Bus** - Redis pub/sub for agent coordination
+   - Why second: Enables multi-agent orchestration
+   - Blocks: Agent implementation, WebSocket updates
+   - Time: 2-3 hours
+
+3. **Agent Implementation (Issue #10)** - Complete Research/Analysis/Summary agents
+   - Why third: Core intelligence features
+   - Blocks: End-to-end workflows, user features
+   - Time: 4-6 hours
+
+**Supporting Infrastructure (Parallel Work):**
+4. **CI/CD Pipeline (Issue #18)** - Automated testing and validation
+   - Why: Can be done anytime, helps catch regressions
+   - No blockers, doesn't block others
+   - Time: 2-3 hours
+
+5. **Database Layer** - Metadata storage (SQLite/PostgreSQL)
+   - Why: Currently using mock data, not critical yet
+   - Blocks: Production deployment, data persistence
+   - Time: 3-4 hours
+
+6. **WebSocket Handler** - Real-time agent updates
+   - Why: Depends on Event Bus being complete
+   - Blocks: Real-time UI updates
+   - Time: 2-3 hours
 
 ---
 
@@ -189,23 +211,57 @@ ollama pull mistral:7b
 
 ## 🎯 Next Session Priorities
 
-### Option A: CI/CD Pipeline (Recommended)
-**Why:** Automated testing for all future work
-**Time:** 2-3 hours
-**Files:** `.github/workflows/server-ci.yml`, `.github/workflows/client-ci.yml`
-**Issue:** #18
+### Recommended: Service Integration First (Issue #15)
+**Why This Order:**
+- REST API is scaffolded but not functional
+- Need to validate Vector DB and LLM integration
+- Provides immediate user value (working search, summaries)
+- Tests become meaningful with real data
 
-### Option B: Event Bus Implementation
-**Why:** Enables agent coordination
+**What to Do:**
+1. Update `api/documents.py` to use `vector_db.search()`
+2. Update `api/documents.py` to use `llm_client.summarize()`
+3. Update repository endpoints to use mock MCP data
+4. Test end-to-end: Upload PDF → Vector DB → Search → Results
+5. Validate all 60 tests still pass with real services
+
+**Time:** 3-4 hours
+**Files:** `server/app/api/*.py` (connect to services)
+**Outcome:** Functional REST API with search and summarization
+
+---
+
+### Alternative A: Event Bus (Enables Agents)
+**Why:** Required for multi-agent coordination
+**What:** Implement Redis pub/sub event system
 **Time:** 2-3 hours
 **Files:** `server/app/utils/event_bus.py`
 **Blocks:** Agent implementation, WebSocket handler
 
-### Option C: Service Integration
-**Why:** Makes API endpoints functional
-**Time:** 3-4 hours
-**Files:** Update all `api/*.py` to use Vector DB and LLM services
-**Requires:** Understanding current service interfaces
+---
+
+### Alternative B: CI/CD Pipeline (Issue #18)
+**Why:** Good for long-term quality, but not blocking
+**What:** GitHub Actions workflows for server and client
+**Time:** 2-3 hours
+**Files:** `.github/workflows/server-ci.yml`, `.github/workflows/client-ci.yml`
+**Outcome:** Automated testing on every push
+
+---
+
+### Dependency Chain Summary
+
+```
+Service Integration (#15) ──┐
+                            ├──> Agent Implementation (#10) ──> Phase 1 Complete
+Event Bus ─────────────────┘
+
+CI/CD (#18) ──> (No blockers, helps all future work)
+
+Database Layer ──> (Not critical until production)
+
+WebSocket Handler ──> Depends on Event Bus
+```
 
 ---
 
