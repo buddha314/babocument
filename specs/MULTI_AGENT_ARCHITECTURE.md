@@ -31,13 +31,13 @@
 │   │  │  - Event bus (Redis pub/sub)         │   │           │
 │   │  │  - State management                  │   │           │
 │   │  │  - Task queue (Celery)               │   │           │
-│   │  └──┬───────────┬────────────┬──────────┘   │           │
-│   └─────┼───────────┼────────────┼──────────────┘           │
-│         │           │            │                           │
-│    ┌────▼────┐ ┌───▼─────┐ ┌───▼──────┐ ┌──────────────┐  │
-│    │Research │ │Analysis │ │ Summary  │ │Recommendation│  │
-│    │ Agent   │ │ Agent   │ │  Agent   │ │    Agent     │  │
-│    └────┬────┘ └───┬─────┘ └───┬──────┘ └──────┬───────┘  │
+│   │  └──┬───────────┬────────────┬─────────┬────┘           │
+│   └─────┼───────────┼────────────┼─────────┼────────────────┘
+│         │           │            │         │                 │
+│    ┌────▼────┐ ┌───▼─────┐ ┌───▼──────┐ ┌▼────────┐ ┌──────▼───────┐  │
+│    │Research │ │Analysis │ │ Summary  │ │WebSearch│ │Recommendation│  │
+│    │ Agent   │ │ Agent   │ │  Agent   │ │ Agent   │ │    Agent     │  │
+│    └────┬────┘ └───┬─────┘ └───┬──────┘ └─┬───────┘ └──────┬───────┘  │
 │         │          │            │               │           │
 │    ┌────▼──────────▼────────────▼───────────────▼───────┐  │
 │    │            Shared Resources                         │  │
@@ -71,11 +71,12 @@
 **Implementation:**
 ```python
 class AgentCoordinator:
-    def __init__(self, redis_client, vector_db, llm_client):
+    def __init__(self, redis_client, vector_db, llm_client, search_api_client):
         self.agents = {
             'research': ResearchAgent(redis_client, vector_db),
             'analysis': AnalysisAgent(redis_client, vector_db),
             'summary': SummaryAgent(redis_client, llm_client),
+            'websearch': WebSearchAgent(redis_client, search_api_client),
             'recommendation': RecommendationAgent(redis_client, vector_db)
         }
         self.event_bus = EventBus(redis_client)
@@ -96,6 +97,8 @@ class AgentCoordinator:
             result = await self.agents['research'].search(request, task_id)
         elif request.type == 'analyze':
             result = await self.agents['analysis'].analyze(request, task_id)
+        elif request.type == 'websearch':
+            result = await self.agents['websearch'].search(request, task_id)
         # ... etc
 
         # Publish completion
@@ -251,7 +254,103 @@ class AgentCoordinator:
 - Publishes: `summary.progress`, `summary.complete` events
 - Accesses: LLM for text generation
 
-### 5. Recommendation Agent
+### 5. Web Search Agent
+
+**Role:** General web search for scientific topics and emerging research
+
+**Responsibilities:**
+- Search the open web for scientific content
+- Find recent news, blog posts, and preprints
+- Discover emerging topics and trends
+- Search scientific websites and repositories
+- Extract and normalize web content
+- Complement academic database searches
+
+**Inputs:**
+```typescript
+{
+  "search_type": "web",
+  "query": "latest developments in bioink 3D printing",
+  "filters": {
+    "date_range": "past_year",
+    "domains": ["nature.com", "science.org", "*.edu"],
+    "content_type": ["articles", "news", "preprints"]
+  },
+  "max_results": 20
+}
+```
+
+**Outputs:**
+```typescript
+{
+  "task_id": "websearch_456",
+  "results": [
+    {
+      "url": "https://nature.com/articles/...",
+      "title": "Breakthrough in Bioink Stability...",
+      "snippet": "Researchers have developed...",
+      "published_date": "2025-10-15",
+      "source_domain": "nature.com",
+      "content_type": "article",
+      "relevance_score": 0.89
+    }
+  ],
+  "search_time_ms": 320
+}
+```
+
+**Communication Pattern:**
+- Subscribes to: `query.websearch.*` events
+- Publishes: `websearch.progress`, `websearch.complete` events
+- Accesses: Web search APIs (Google Scholar, Bing Academic, etc.)
+
+**Implementation:**
+```python
+class WebSearchAgent(BaseAgent):
+    def __init__(self, redis_client, search_api_client):
+        super().__init__(redis_client)
+        self.search_client = search_api_client
+
+    async def search(self, query: str, filters: dict, task_id: str):
+        # Publish progress
+        await self.publish_progress(task_id, 10, "Starting web search...")
+
+        # Execute web search
+        raw_results = await self.search_client.search(
+            query=query,
+            date_range=filters.get('date_range'),
+            domains=filters.get('domains')
+        )
+
+        # Filter and rank results
+        filtered = self._filter_scientific_content(raw_results)
+        ranked = self._rank_by_relevance(filtered, query)
+
+        # Publish progress
+        await self.publish_progress(task_id, 80, "Processing results...")
+
+        # Extract key information
+        enriched_results = await self._enrich_results(ranked)
+
+        return {
+            "task_id": task_id,
+            "results": enriched_results,
+            "total_found": len(raw_results),
+            "search_time_ms": self.timer.elapsed_ms()
+        }
+
+    def _filter_scientific_content(self, results):
+        # Filter for scientific content
+        scientific_domains = ['.edu', '.gov', 'nature.com', 'science.org', 'arxiv.org']
+        return [r for r in results if any(d in r['url'] for d in scientific_domains)]
+
+    def _rank_by_relevance(self, results, query):
+        # Rank by relevance using embeddings
+        # Can use vector similarity between query and result snippets
+        return sorted(results, key=lambda x: x.get('relevance_score', 0), reverse=True)
+```
+
+### 6. Recommendation Agent
 
 **Role:** Related paper suggestions and research gap identification
 
@@ -560,6 +659,7 @@ logger.info('task_completed', task_id=task_id, duration=duration, result_count=l
 ### REST Endpoints
 ```
 POST /api/v1/tasks/search
+POST /api/v1/tasks/websearch
 POST /api/v1/tasks/analyze
 POST /api/v1/tasks/summarize
 POST /api/v1/tasks/recommend
@@ -605,6 +705,7 @@ server/
 │   │   ├── research.py         # Research agent
 │   │   ├── analysis.py         # Analysis agent
 │   │   ├── summary.py          # Summary agent
+│   │   ├── websearch.py        # Web search agent
 │   │   └── recommendation.py   # Recommendation agent
 │   ├── api/
 │   │   ├── __init__.py
