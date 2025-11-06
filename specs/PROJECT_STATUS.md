@@ -212,12 +212,17 @@ client/
 - Word clouds and keyword trend line graphs
 - Temporal trend analysis across research corpus
 - ClinicalTrials.gov correlation
+- **Journal repository discovery and management**
+- **Add/edit/remove journal sources dynamically**
 
 ### Document Management
 - Open articles and explore embedded ideas
 - Create and manage research workspaces
 - View workspace associations
 - Save and analyze article summaries
+- **Organize journal repositories into workspace collections**
+- **Configure workspace-scoped repository searches**
+- **Track repository usage and contribution per workspace**
 
 ### Interactive Experience
 - Virtual "file room" descending through time

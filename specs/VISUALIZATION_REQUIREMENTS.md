@@ -114,7 +114,63 @@ Babocument provides rich data visualizations to help Beabadoo understand trends,
 - Filter documents by keyword (highlights in space)
 - Scrubbing timeline control (2D UI)
 
-### 4. Document Relationship Graphs
+### 4. Journal Repository Management
+
+**Purpose:** Allow Beabadoo to discover, list, edit, and organize journal repositories
+
+**User Story:**
+> As Beabadoo, I want to manage a list of journal repositories so I can discover new sources and organize them into workspaces for different research projects.
+
+**Requirements:**
+
+#### Repository Discovery
+- Search for and discover new journal repositories
+- Preview repository metadata (name, description, coverage)
+- Test repository connectivity and availability
+- View sample articles from repository
+
+#### Repository List Management
+- View all configured journal repositories
+- Add new repository connections
+  - arXiv (preprints)
+  - PubMed/PubMed Central
+  - bioRxiv/medRxiv
+  - Custom institutional repositories
+  - Custom API endpoints
+- Edit repository configuration
+  - Update API keys/credentials
+  - Modify search parameters
+  - Set priority/relevance for searches
+- Remove repositories from active list
+- Enable/disable repositories without deletion
+- Categorize repositories by research domain
+
+#### Workspace Integration
+- Assign repositories to specific workspaces
+- Workspace-scoped search (only selected repositories)
+- Global search (all active repositories)
+- Track which repositories contributed to each workspace
+- Repository usage statistics per workspace
+
+#### Data Management
+- **Storage:** Configuration stored in database
+- **API Endpoint:** `/api/repositories`
+  - `GET /api/repositories` - List all repositories
+  - `POST /api/repositories` - Add new repository
+  - `PUT /api/repositories/{id}` - Update repository
+  - `DELETE /api/repositories/{id}` - Remove repository
+  - `POST /api/repositories/{id}/test` - Test connection
+- **Permissions:** User-scoped repository lists
+- **Validation:** Test connectivity before saving
+
+#### UI Components
+- Repository management panel
+- Repository card with status indicators
+- Quick add from repository marketplace
+- Drag-and-drop to assign to workspaces
+- Connection status indicators (online/offline/rate-limited)
+
+### 5. Document Relationship Graphs
 
 **Purpose:** Visualize connections between research papers
 
@@ -124,7 +180,7 @@ Babocument provides rich data visualizations to help Beabadoo understand trends,
 - Show influence paths
 - Interactive exploration
 
-### 5. 3D Scientific Plots (Plotly.js)
+### 6. 3D Scientific Plots (Plotly.js)
 
 **Purpose:** Advanced scientific visualizations in immersive 3D space
 

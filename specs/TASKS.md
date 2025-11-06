@@ -192,6 +192,17 @@
   - Create workspace API
   - Workspace persistence
   - Workspace sharing/collaboration
+- [ ] **Journal repository management**
+  - List all configured repositories
+  - Add/edit/remove journal repositories dynamically
+  - Test repository connectivity
+  - Repository configuration UI
+  - Enable/disable repositories per workspace
+- [ ] **Workspace-scoped repository collections**
+  - Assign repositories to workspaces
+  - Configure workspace-specific source sets
+  - Track repository usage per workspace
+  - Repository contribution analytics
 - [ ] Document operations
   - Open and view documents
   - Annotation system
@@ -205,6 +216,7 @@
   - Full-text search
   - Metadata filtering
   - Timeline-based queries
+  - **Repository-scoped searches per workspace**
 - [ ] Analytics and visualization
   - Generate word clouds from corpus
   - Display keyword trend line graphs over time

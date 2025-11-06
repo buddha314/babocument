@@ -1,8 +1,8 @@
 # Session Handoff - Ready for Next Session
 
 **Date:** 2025-11-06
-**Last Updated:** 2025-11-06 (Phase 1 Backend Initialized + LLM Config)
-**Last Commit:** 63a66a1 - feat: Configure LLM model storage and initialize Phase 1 backend structure
+**Last Updated:** 2025-11-06 (Docker Decision + Requirements Update)
+**Last Commit:** Pending
 **Branch:** main
 
 ## 🔔 IMPORTANT MAINTENANCE TASK
@@ -18,7 +18,66 @@
 
 ## Most Recent Work
 
-### LLM Model Storage Configuration + Phase 1 Backend Initialization ✅ COMPLETED
+### Docker Decision + User Requirements Update ✅ COMPLETED
+
+**Session Date:** 2025-11-06
+
+#### Decision: Skip Docker/Devcontainer for Now ✅
+
+**Rationale:**
+- Issue #12 was already completed with PowerShell launch script (not a devcontainer)
+- Native Python venv + setup tooling works well for development
+- Only Redis needs Docker (simple one-liner: `docker run -d -p 6379:6379 --name babocument-redis redis:7-alpine`)
+- ChromaDB is embedded (no separate service)
+- Ollama runs natively on Windows
+- Phase 1 implementation is the priority, not containerization
+- Docker can be added later for production deployment
+
+**Environment Setup Completed:**
+- ✅ Fixed `server/requirements.txt` for Python 3.13 compatibility
+- ✅ Created Python virtual environment in `server/venv/`
+- ✅ Successfully installed all dependencies (FastAPI, ChromaDB, LiteLLM, PyTorch, etc.)
+- ✅ Ready for Phase 1 backend implementation
+
+#### Task 2: Added Journal Repository Management Requirements ✅
+
+**Objective:** Document Beabadoo's ability to discover, manage, and organize journal repositories
+
+**Changes Made:**
+
+1. **specs/VISUALIZATION_REQUIREMENTS.md** - Added new section:
+   - Section 4: Journal Repository Management
+   - Repository discovery and preview
+   - List management (add/edit/remove repositories)
+   - Workspace integration (assign repos to workspaces)
+   - Repository-scoped searches
+   - API endpoints: `/api/repositories` with full CRUD operations
+   - UI components for repository management panel
+
+2. **README.md** - Updated Key Features:
+   - Added "Discover and manage journal repositories"
+   - Added "Organize repositories into workspaces"
+   - Added "Collect journal repositories into workspace-specific collections"
+   - Added "Configure repository-scoped searches per workspace"
+
+3. **specs/PROJECT_STATUS.md** - Updated Key User Features:
+   - Added repository management features to Research & Discovery
+   - Added workspace-scoped repository features to Document Management
+   - Track repository usage per workspace
+
+4. **specs/TASKS.md** - Enhanced Phase 6:
+   - Added journal repository management task group
+   - Added workspace-scoped repository collections
+   - Added repository-scoped search capabilities
+   - Repository contribution analytics
+
+**Impact:**
+- Beabadoo can now dynamically add new journal sources as she discovers them
+- Workspaces can have different repository configurations
+- Enables flexible, project-specific research workflows
+- Repository management becomes a first-class feature
+
+### LLM Model Storage Configuration + Phase 1 Backend Initialization ✅ COMPLETED (Previous Session)
 
 **Session Date:** 2025-11-06
 
@@ -96,7 +155,53 @@
 
 ## What Was Completed (Full Session)
 
-### 1. LLM Model Storage Configuration ✅ COMPLETED
+### 1. Docker Decision ✅ DECIDED
+
+**Decision:** Skip Docker/devcontainer for current development phase
+- Native tooling (Python venv, npm) sufficient for development
+- Docker only needed for Redis (one command)
+- Can add Docker later for production deployment
+- Focus on Phase 1 implementation instead
+
+### 2. Python Environment Setup ✅ COMPLETED
+
+**Fixed and installed Python backend dependencies**
+- Updated `server/requirements.txt` for Python 3.13 compatibility
+- Created virtual environment in `server/venv/`
+- Successfully installed 100+ packages including:
+  - FastAPI 0.115+ with Uvicorn
+  - Pydantic 2.9+ (with prebuilt wheels for Python 3.13)
+  - ChromaDB 0.5+ with sentence-transformers
+  - LiteLLM 1.79+ for LLM integration
+  - PyTorch, Transformers, HuggingFace Hub
+  - Celery, Redis, WebSockets
+  - Testing and code quality tools
+
+**Time Investment:** ~30 minutes (troubleshooting + fixes)
+
+### 3. User Requirements: Journal Repository Management ✅ COMPLETED
+
+**Added comprehensive repository management features**
+- Created detailed requirements in `specs/VISUALIZATION_REQUIREMENTS.md`
+- Updated `README.md` with new user-facing features
+- Updated `specs/PROJECT_STATUS.md` with key features
+- Enhanced `specs/TASKS.md` Phase 6 with implementation tasks
+
+**New Capabilities:**
+- ✅ List and manage journal repositories dynamically
+- ✅ Add/edit/remove repositories as Beabadoo discovers new sources
+- ✅ Organize repositories into workspace-specific collections
+- ✅ Configure workspace-scoped searches
+- ✅ Track repository usage and contribution per workspace
+- ✅ API design: `/api/repositories` with full CRUD operations
+- ✅ UI components: Repository management panel with status indicators
+
+**Time Investment:** ~20 minutes
+**Files Updated:** 4 documentation files
+
+### Previous Session Work
+
+#### 1. LLM Model Storage Configuration ✅ COMPLETED
 
 **Configured Ollama to use `d:\models` for local model storage**
 - Created comprehensive environment configuration files
@@ -134,7 +239,7 @@
 - ✅ Ollama + LiteLLM setup (Issue #3)
 - ✅ ChromaDB configuration (Issue #4)
 
-### Previous Session Work
+### Previous Session Work (Earlier)
 
 #### Issue #4: Vector Database Selection ✅ COMPLETED
 
@@ -166,12 +271,21 @@
 
 ## Repository State
 
-**Clean Working Directory:** ✅ All changes committed and pushed
+**Clean Working Directory:** ❌ Pending commit
 
 **Git Status:**
 ```
-On branch main
-nothing to commit, working tree clean
+Modified files:
+- server/requirements.txt (Updated for Python 3.13)
+- server/setup.ps1 (Fixed but has issues - manual setup works)
+- specs/VISUALIZATION_REQUIREMENTS.md (Added repository management)
+- README.md (Updated with new features)
+- specs/PROJECT_STATUS.md (Added repository features)
+- specs/TASKS.md (Enhanced Phase 6)
+- SESSION_HANDOFF.md (This file)
+
+New files:
+- server/venv/ (Python virtual environment - not committed)
 ```
 
 **Recent Commits:**
@@ -417,32 +531,33 @@ cat SESSION_2025-11-06_PHASE1_INIT.md
 
 ## Session Statistics
 
-- **Session Focus:** LLM configuration + Phase 1 backend initialization
-- **Files Created:** 17 new files
-- **Lines Added:** 1,572 lines
-- **Time Investment:** ~60 minutes
-- **Commits:** 1 comprehensive commit
+- **Session Focus:** Docker decision + User requirements update + Python env setup
+- **Files Modified:** 7 documentation files
+- **New Features Added:** Journal repository management system
+- **Lines Added:** ~200 lines (documentation) + requirements.txt fixes
+- **Time Investment:** ~50 minutes
+- **Commits:** Pending (1 commit planned)
 - **Phase 0 Progress:** 86% complete (6/7 decisions)
-- **Phase 1 Progress:** 30% complete (foundation → ready for implementation)
-- **Configuration:** Ollama model storage set to d:\models
-- **Architecture:** Multi-agent system foundation implemented
-- **Documentation:** 3 comprehensive guides created
+- **Phase 1 Progress:** 30% complete (foundation ready, environment configured)
+- **Configuration:** Python 3.13 environment ready with all dependencies
+- **Decision:** Skip Docker for now, use native tooling
+- **Documentation:** Repository management fully specified
 
 ## Notes for Next Session
 
-1. **🎉 Phase 1 Foundation Complete!** Backend structure ready for implementation
-2. **✅ LLM Configuration Done:** Models will be stored in d:\models
-3. **✅ All Architectural Decisions Applied:** Multi-agent, REST+WS, Ollama, ChromaDB
-4. **Next Priority:** Run `server\setup.ps1` and implement core services
-5. **Estimated Time to Working Backend:** 12-18 hours development
-6. **Critical Path:** Vector DB Client → LLM Client → Event Bus → REST API → WebSocket
-7. **Testing Ready:** Can test with local Ollama models immediately
-8. **Documentation Complete:** SETUP.md has step-by-step instructions
-9. **Automated Setup Available:** setup.ps1 script handles environment creation
-10. **Session Documentation:** See SESSION_2025-11-06_PHASE1_INIT.md for details
+1. **✅ Docker Decision Made:** Skip containerization for now, use native tooling
+2. **✅ Python Environment Ready:** All dependencies installed in `server/venv/`
+3. **✅ New User Features Documented:** Repository management system specified
+4. **📝 Commit Pending:** Need to commit documentation updates and requirements.txt fix
+5. **Next Priority:** Continue Phase 1 backend implementation OR implement repository management APIs
+6. **Alternative:** Start with Vector Database Client or LLM Client implementation
+7. **Repository Management:** Can be implemented in Phase 6 or earlier as standalone feature
+8. **Setup Script:** Has syntax issues, but manual setup (`python -m venv venv; pip install -r requirements.txt`) works perfectly
+9. **Redis:** Can be started with: `docker run -d -p 6379:6379 --name babocument-redis redis:7-alpine`
+10. **Ollama Models:** Can download with: `ollama pull llama3.2:3b`
 
 ---
 
 **Ready for Next Session** ✅
 
-Phase 1 backend structure is initialized and ready for implementation. Run the setup script, start the required services, and begin implementing the core functionality. All architectural decisions are documented and applied. The foundation is solid!
+Docker decision made (skip for now), Python environment configured and working, user requirements for repository management fully documented. Commit pending, then ready to continue Phase 1 implementation or start building repository management APIs.

@@ -113,12 +113,16 @@ Beabadoo is a computational researcher in biomanufacturing at a major synthetic 
 - Generate word clouds and keyword trend line graphs of research over time
 - Track keyword frequency and evolution across temporal corpus
 - Search and correlate ClinicalTrials.gov data with current research
+- **Discover and manage journal repositories** - Add new sources as you find them
+- **Organize repositories into workspaces** - Different source sets for different projects
 
 ### Document Management
 - Open articles and explore embedded research ideas
 - Create and manage research workspaces
+- **Collect journal repositories into workspace-specific collections**
 - View workspace associations and relationships
 - Save and analyze article summaries for pattern detection
+- **Configure repository-scoped searches** per workspace
 
 ### Interactive Experience
 - Navigate a virtual "file room" descending through time
