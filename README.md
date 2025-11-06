@@ -6,7 +6,35 @@ Babocument combines cutting-edge 3D visualization with AI-powered research assis
 
 ## Quick Start
 
-### Client (BabylonJS + Next.js)
+### Automated Launch (Recommended)
+
+Use the unified launch script to start both client and server with automatic dependency management:
+
+```powershell
+# Launch both server and client (when server is implemented)
+.\launch.ps1
+
+# Launch only the client (current phase - server not yet implemented)
+.\launch.ps1 -ClientOnly
+
+# Launch without dependency checks
+.\launch.ps1 -NoInstall
+
+# Custom ports
+.\launch.ps1 -ClientPort 3001 -ServerPort 8001
+```
+
+The launch script will:
+- ✓ Validate Node.js, npm, and Python installations
+- ✓ Check and install dependencies automatically
+- ✓ Start services on configurable ports
+- ✓ Handle graceful shutdown with Ctrl+C
+
+**Current Status:** Server is not yet implemented (Phase 1). Use `-ClientOnly` flag or the script will automatically detect and launch client only.
+
+### Manual Launch
+
+#### Client (BabylonJS + Next.js)
 ```bash
 cd client
 npm install
@@ -14,10 +42,13 @@ npm run dev
 ```
 Visit [http://localhost:3000](http://localhost:3000)
 
-### Server (FastAgent - Coming Soon)
+#### Server (FastAgent - Coming Soon)
 ```bash
 cd server
-# Setup instructions coming soon
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python -m fastagent.app
 ```
 
 ### Documentation
