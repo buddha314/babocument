@@ -1,12 +1,20 @@
 # GitHub Issues Index
 
 **Repository:** https://github.com/buddha314/babocument/issues
-**Last Updated:** 2025-11-06 23:00
-**Total Issues:** 15 (7 completed, 8 open)
+**Last Updated:** 2025-11-06 23:30
+**Total Issues:** 18 GitHub (15 unique after cleanup)
 
-## Overview
+## 🚨 Immediate Actions Required
 
-Quick reference for all GitHub issues. **See [HANDOFF.md](HANDOFF.md) for current session status.**
+**GitHub Cleanup:**
+1. Close duplicate issues #16 and #17 (keep only #18 for CI/CD)
+2. Update Issue #15 status to "In Progress" with label
+3. Create new issues for:
+   - Event Bus implementation
+   - Service Integration (separate from #15 scaffolding)
+   - Agent completion tasks
+
+**See [specs/TASKS.md](specs/TASKS.md) for complete task breakdown with 21 TODO items**
 
 ---
 
