@@ -2,7 +2,7 @@
 
 **Repository:** https://github.com/buddha314/babocument/issues
 
-**Last Updated:** 2025-11-06 (Issues #1-5, #9, #12 completed; Issue #15 created; synced with TASKS.md)
+**Last Updated:** 2025-11-06 (Issues #1-5, #9, #12, #15 completed; Issue #18 created for CI/CD; API tests complete)
 
 ## Overview
 
@@ -287,10 +287,73 @@ Evaluate and select specific local LLM models for different agent tasks in the m
 ---
 
 ### [Issue #15: Implement REST API endpoints for document and repository management](https://github.com/buddha314/babocument/issues/15)
-**Status:** 🟡 Open | **Priority:** High | **Type:** Feature
+**Status:** ✅ COMPLETED | **Priority:** High | **Type:** Feature | **Completion Date:** 2025-11-06
 
 **User Story:**
 > As a developer/user, I need REST API endpoints to view, save, and manage documents and repositories, so that the multi-agent system can perform document operations programmatically.
+
+**Completed Implementation:**
+
+**API Modules Created:**
+- ✅ `server/app/api/documents.py` - 7 endpoints for document CRUD and search
+- ✅ `server/app/api/repositories.py` - 5 endpoints for repository management
+- ✅ `server/app/api/stats.py` - 5 endpoints for statistics and status
+
+**Test Coverage:**
+- ✅ 60 passing tests across all endpoints
+- ✅ 84% code coverage (301 statements, 48 missed)
+- ✅ All response models validated with Pydantic
+- ✅ Error handling tested (404, 400, 422, 500)
+
+**Documentation:**
+- ✅ OpenAPI/Swagger docs at `/docs`
+- ✅ SESSION_2025-11-06_REST_API_IMPLEMENTATION.md
+- ✅ SESSION_2025-11-06_REST_API_TESTS.md
+
+**Next Steps:**
+- Implement Event Bus for agent coordination
+- Connect endpoints to Vector DB and LLM services
+- Add database layer for metadata storage
+
+---
+
+## Phase 1: DevOps & Infrastructure
+
+### [Issue #18: Implement CI/CD pipeline with GitHub Actions](https://github.com/buddha314/babocument/issues/18)
+**Status:** 🟡 Open | **Priority:** High | **Type:** Enhancement
+
+**Summary:**
+Implement automated CI/CD pipeline using GitHub Actions to build, test, and validate both the server (Python/FastAPI) and client (Next.js/BabylonJS) components on every push and pull request.
+
+**Requirements:**
+
+**Server Pipeline:**
+- Run pytest with 84% coverage requirement
+- Python 3.13 environment
+- Linting (flake8/black/mypy)
+
+**Client Pipeline:**
+- Next.js build validation
+- Node.js 18+ environment
+- ESLint and TypeScript checking
+
+**Deliverables:**
+- `.github/workflows/server-ci.yml`
+- `.github/workflows/client-ci.yml`
+- Coverage reports as artifacts
+- PR status checks
+- CI/CD badges in README
+
+**Dependencies:**
+- ✅ Issue #15 (REST API) - COMPLETED
+- ✅ API test suite - COMPLETED (60 tests, 84% coverage)
+
+**Estimated Effort:** 2-3 hours
+
+---
+
+### [Issue #15: Implement REST API endpoints for document and repository management](https://github.com/buddha314/babocument/issues/15)
+**Status:** ✅ COMPLETED | **Priority:** High | **Type:** Feature | **ARCHIVED - See above**
 
 **Problem:**
 Currently, the server has only basic health check endpoints. Document management functions are either not implemented or not exposed via API, making it impossible to:
@@ -434,13 +497,17 @@ Build immersive data visualization UI with Plotly.js in BabylonJS
 ## Dependencies Graph
 
 ```
-Phase 0 Decisions (#1, #2, #3 - DECIDED)
+Phase 0 Decisions (#1, #2, #3, #4, #5 - DECIDED)
+    ↓
+Issue #15 (REST API Implementation) - ✅ COMPLETED
+    ↓
+Issue #18 (CI/CD Pipeline) - 🟡 NEW
     ↓
 Issue #14 (Select specific LLM models)
     ↓
-Issue #10 (Phase 1: Backend Setup)
+Issue #10 (Phase 1: Backend Setup) - 🟡 In Progress
     ↓
-Issue #9 (Initialize Vector DB)
+Issue #9 (Initialize Vector DB) - ✅ COMPLETED
     ↓
 Phase 2: MCP Integration (uses #5 decision)
     ↓

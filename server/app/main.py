@@ -122,9 +122,15 @@ async def global_exception_handler(request, exc):
     )
 
 
-# TODO: Import and register routers (Phase 1)
-# from app.api import rest, websocket
-# app.include_router(rest.router, prefix="/api/v1")
+# Register API routers
+from app.api import documents, repositories, stats
+
+app.include_router(documents.router)
+app.include_router(repositories.router)
+app.include_router(stats.router)
+
+# TODO: Add WebSocket handler (Phase 1)
+# from app.api import websocket
 # app.include_router(websocket.router)
 
 
