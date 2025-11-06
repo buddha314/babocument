@@ -120,9 +120,10 @@ class VectorDatabase:
         query: str,
         n_results: int = 10,
         filters: dict[str, Any] | None = None,
+        search_type: str = "semantic",
     ) -> list[dict[str, Any]]:
         """
-        Semantic search for papers.
+        Search for papers using semantic or keyword search.
         
         Args:
             query: Search query text
@@ -132,6 +133,7 @@ class VectorDatabase:
                     - year_max: Maximum publication year
                     - source: Data source filter
                     - authors: Author name filter
+            search_type: "semantic" (default) or "keyword"
         
         Returns:
             List of search results with similarity scores
@@ -141,28 +143,109 @@ class VectorDatabase:
             query=query[:100],
             n_results=n_results,
             filters=filters,
+            search_type=search_type,
         )
 
         try:
-            # Build where clause
-            where = self._build_filters(filters) if filters else None
+            if search_type == "keyword":
+                return self._keyword_search(query, n_results, filters)
+            else:
+                # Semantic search (default)
+                # Build where clause
+                where = self._build_filters(filters) if filters else None
 
-            # Perform search
-            results = self.collection.query(
-                query_texts=[query],
-                n_results=n_results,
-                where=where,
-                include=["documents", "metadatas", "distances"],
-            )
+                # Perform search
+                results = self.collection.query(
+                    query_texts=[query],
+                    n_results=n_results,
+                    where=where,
+                    include=["documents", "metadatas", "distances"],
+                )
 
-            # Format results
-            formatted = self._format_results(results)
+                # Format results
+                formatted = self._format_results(results)
 
-            logger.info("search_completed", results_count=len(formatted))
-            return formatted
+                logger.info("search_completed", results_count=len(formatted))
+                return formatted
 
         except Exception as e:
             logger.error("search_error", error=str(e))
+            raise
+    
+    def _keyword_search(
+        self,
+        query: str,
+        n_results: int = 10,
+        filters: dict[str, Any] | None = None,
+    ) -> list[dict[str, Any]]:
+        """
+        Simple keyword-based text search.
+        
+        Searches for query terms in document text and returns matches
+        ranked by term frequency.
+        
+        Args:
+            query: Search terms
+            n_results: Maximum results to return
+            filters: Optional metadata filters
+        
+        Returns:
+            List of matching documents with relevance scores
+        """
+        logger.info("keyword_search", query=query, n_results=n_results)
+        
+        try:
+            # Get all documents (with filters if specified)
+            where = self._build_filters(filters) if filters else None
+            all_docs = self.collection.get(
+                where=where,
+                include=["documents", "metadatas"],
+            )
+            
+            if not all_docs["ids"]:
+                return []
+            
+            # Score documents by keyword matches
+            query_terms = query.lower().split()
+            scored_docs = []
+            
+            for i, doc_id in enumerate(all_docs["ids"]):
+                document = all_docs["documents"][i] if all_docs["documents"] else ""
+                metadata = all_docs["metadatas"][i] if all_docs["metadatas"] else {}
+                
+                # Count term occurrences in document
+                doc_lower = document.lower()
+                score = sum(doc_lower.count(term) for term in query_terms)
+                
+                # Boost score if terms appear in title
+                title = str(metadata.get("title", "")).lower()
+                title_matches = sum(title.count(term) for term in query_terms)
+                score += title_matches * 5  # Title matches weighted higher
+                
+                if score > 0:
+                    scored_docs.append({
+                        "id": doc_id,
+                        "document": document,
+                        "metadata": metadata,
+                        "score": score,
+                    })
+            
+            # Sort by score and take top n_results
+            scored_docs.sort(key=lambda x: x["score"], reverse=True)
+            results = scored_docs[:n_results]
+            
+            # Normalize scores to 0-1 range
+            if results:
+                max_score = results[0]["score"]
+                for result in results:
+                    result["similarity"] = result["score"] / max_score if max_score > 0 else 0
+                    del result["score"]
+            
+            logger.info("keyword_search_completed", results_count=len(results))
+            return results
+            
+        except Exception as e:
+            logger.error("keyword_search_error", error=str(e))
             raise
 
     def find_similar(
@@ -369,9 +452,13 @@ class VectorDatabase:
         
         ChromaDB requires all metadata values to be strings, numbers, or bools.
         """
+        from datetime import datetime
+        
         metadata = {
             "title": paper.get("title", ""),
             "source": paper.get("source", "unknown"),
+            "created_at": paper.get("created_at", datetime.now().isoformat()),
+            "updated_at": paper.get("updated_at", datetime.now().isoformat()),
         }
 
         # Add optional fields if present

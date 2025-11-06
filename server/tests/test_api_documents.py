@@ -38,9 +38,11 @@ def client(vector_db, temp_storage_path, monkeypatch):
     
     # Mock LLM client
     mock_llm = Mock(spec=LLMClient)
-    mock_llm.generate = Mock(return_value={
-        "text": "SUMMARY: This is a test summary.\n\nKEY POINTS:\n- Point 1\n- Point 2\n- Point 3"
-    })
+    # Mock async method with AsyncMock
+    from unittest.mock import AsyncMock
+    mock_llm.summarize = AsyncMock(
+        return_value="This is a test summary.\n\nKey findings:\n- Point 1\n- Point 2\n- Point 3"
+    )
     
     def override_get_llm_client():
         return mock_llm

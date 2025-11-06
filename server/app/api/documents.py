@@ -134,6 +134,21 @@ async def list_documents(
         documents = []
         for paper in papers:
             metadata = paper.get("metadata", {})
+            
+            # Parse timestamps
+            created_at = datetime.now()
+            updated_at = datetime.now()
+            if metadata.get("created_at"):
+                try:
+                    created_at = datetime.fromisoformat(metadata["created_at"])
+                except:
+                    pass
+            if metadata.get("updated_at"):
+                try:
+                    updated_at = datetime.fromisoformat(metadata["updated_at"])
+                except:
+                    pass
+            
             doc = DocumentMetadata(
                 id=paper["id"],
                 title=metadata.get("title", "Untitled"),
@@ -144,8 +159,8 @@ async def list_documents(
                 doi=metadata.get("doi"),
                 url=None,
                 source=metadata.get("source", "unknown"),
-                created_at=datetime.now(),  # TODO: Store creation time in metadata
-                updated_at=datetime.now(),
+                created_at=created_at,
+                updated_at=updated_at,
                 file_path=metadata.get("file_path"),
                 indexed=True
             )
@@ -182,6 +197,21 @@ async def get_document(
             raise HTTPException(status_code=404, detail=f"Document {document_id} not found")
         
         metadata = paper.get("metadata", {})
+        
+        # Parse timestamps
+        created_at = datetime.now()
+        updated_at = datetime.now()
+        if metadata.get("created_at"):
+            try:
+                created_at = datetime.fromisoformat(metadata["created_at"])
+            except:
+                pass
+        if metadata.get("updated_at"):
+            try:
+                updated_at = datetime.fromisoformat(metadata["updated_at"])
+            except:
+                pass
+        
         return DocumentMetadata(
             id=paper["id"],
             title=metadata.get("title", "Untitled"),
@@ -192,8 +222,8 @@ async def get_document(
             doi=metadata.get("doi"),
             url=None,
             source=metadata.get("source", "unknown"),
-            created_at=datetime.now(),
-            updated_at=datetime.now(),
+            created_at=created_at,
+            updated_at=updated_at,
             file_path=metadata.get("file_path"),
             indexed=True
         )
@@ -224,6 +254,21 @@ async def get_document_content(
             raise HTTPException(status_code=404, detail=f"Document {document_id} not found")
         
         metadata = paper.get("metadata", {})
+        
+        # Parse timestamps
+        created_at = datetime.now()
+        updated_at = datetime.now()
+        if metadata.get("created_at"):
+            try:
+                created_at = datetime.fromisoformat(metadata["created_at"])
+            except:
+                pass
+        if metadata.get("updated_at"):
+            try:
+                updated_at = datetime.fromisoformat(metadata["updated_at"])
+            except:
+                pass
+        
         doc_metadata = DocumentMetadata(
             id=paper["id"],
             title=metadata.get("title", "Untitled"),
@@ -234,8 +279,8 @@ async def get_document_content(
             doi=metadata.get("doi"),
             url=None,
             source=metadata.get("source", "unknown"),
-            created_at=datetime.now(),
-            updated_at=datetime.now(),
+            created_at=created_at,
+            updated_at=updated_at,
             file_path=metadata.get("file_path"),
             indexed=True
         )
@@ -301,6 +346,7 @@ async def upload_document(
             final_year = year or parsed_metadata.get("year")
             
             # Prepare paper data for vector DB
+            now = datetime.now().isoformat()
             paper_data = {
                 "id": document_id,
                 "title": final_title,
@@ -310,6 +356,8 @@ async def upload_document(
                 "year": final_year,
                 "source": source,
                 "file_path": str(file_path),
+                "created_at": now,
+                "updated_at": now,
             }
             
             # Add to vector database
@@ -409,39 +457,62 @@ async def search_documents(
             raw_results = vector_db.search(
                 query=query.query,
                 n_results=query.limit,
-                filters=query.filters
+                filters=query.filters,
+                search_type="semantic"
+            )
+        elif query.search_type == "keyword":
+            # Perform keyword search using vector DB
+            raw_results = vector_db.search(
+                query=query.query,
+                n_results=query.limit,
+                filters=query.filters,
+                search_type="keyword"
+            )
+        else:
+            logger.warning("unknown_search_type", search_type=query.search_type)
+            raw_results = []
+        
+        # Convert to API response format
+        results = []
+        for result in raw_results:
+            metadata = result.get("metadata", {})
+            
+            # Parse timestamps
+            created_at = datetime.now()
+            updated_at = datetime.now()
+            if metadata.get("created_at"):
+                try:
+                    created_at = datetime.fromisoformat(metadata["created_at"])
+                except:
+                    pass
+            if metadata.get("updated_at"):
+                try:
+                    updated_at = datetime.fromisoformat(metadata["updated_at"])
+                except:
+                    pass
+            
+            document = DocumentMetadata(
+                id=result["id"],
+                title=metadata.get("title", "Untitled"),
+                authors=metadata.get("authors", "").split(", ") if metadata.get("authors") else None,
+                abstract=None,  # Not stored in metadata
+                year=metadata.get("year"),
+                journal=None,
+                doi=metadata.get("doi"),
+                url=None,
+                source=metadata.get("source", "unknown"),
+                created_at=created_at,
+                updated_at=updated_at,
+                file_path=metadata.get("file_path"),
+                indexed=True
             )
             
-            # Convert to API response format
-            results = []
-            for result in raw_results:
-                metadata = result.get("metadata", {})
-                document = DocumentMetadata(
-                    id=result["id"],
-                    title=metadata.get("title", "Untitled"),
-                    authors=metadata.get("authors", "").split(", ") if metadata.get("authors") else None,
-                    abstract=None,  # Not stored in metadata
-                    year=metadata.get("year"),
-                    journal=None,
-                    doi=metadata.get("doi"),
-                    url=None,
-                    source=metadata.get("source", "unknown"),
-                    created_at=datetime.now(),  # TODO: Store in metadata
-                    updated_at=datetime.now(),
-                    file_path=metadata.get("file_path"),
-                    indexed=True
-                )
-                
-                search_result = SearchResult(
-                    document=document,
-                    score=result["similarity"],
-                    highlights=None  # TODO: Add text highlighting
-                )
-                results.append(search_result)
-        else:
-            # TODO: Implement keyword search
-            logger.warning("keyword_search_not_implemented")
-            results = []
+            search_result = SearchResult(
+                document=document,
+                score=result["similarity"],
+                highlights=None  # TODO: Add text highlighting
+            )
+            results.append(search_result)
         
         execution_time = (time.time() - start_time) * 1000
         
@@ -488,52 +559,36 @@ async def generate_document_summary(
             content = content[:max_chars]
         
         # Generate summary using LLM
-        summary_prompt = f"""Please provide a concise summary of the following research paper in approximately {max_length} words.
-Also extract 3-5 key points as bullet points.
-
-Paper content:
-{content}
-
-Format your response as:
-SUMMARY: [your summary here]
-
-KEY POINTS:
-- [point 1]
-- [point 2]
-- [point 3]
-"""
-        
         try:
-            response = llm_client.generate(
-                prompt=summary_prompt,
-                max_tokens=max_length * 2,  # Allow extra tokens for key points
-                temperature=0.3  # Lower temperature for more focused summaries
+            response = await llm_client.summarize(
+                text=content,
+                max_length=max_length,
+                style="detailed"
             )
             
-            # Parse response
-            response_text = response.get("text", "")
+            if not response:
+                raise HTTPException(
+                    status_code=500,
+                    detail="Failed to generate summary - LLM returned no response"
+                )
             
-            # Extract summary and key points
-            summary = ""
+            # Parse response for key points (simple extraction)
             key_points = []
+            lines = response.split("\n")
+            for line in lines:
+                line = line.strip()
+                if line.startswith("-") or line.startswith("•") or line.startswith("*"):
+                    key_points.append(line.lstrip("-•*").strip())
             
-            if "SUMMARY:" in response_text and "KEY POINTS:" in response_text:
-                parts = response_text.split("KEY POINTS:")
-                summary = parts[0].replace("SUMMARY:", "").strip()
-                
-                # Parse key points
-                key_points_text = parts[1].strip()
-                for line in key_points_text.split("\n"):
-                    line = line.strip()
-                    if line.startswith("-") or line.startswith("•"):
-                        key_points.append(line.lstrip("-•").strip())
-            else:
-                summary = response_text
+            # If no bullet points found, use first 3 sentences as key points
+            if not key_points:
+                sentences = response.split(".")[:3]
+                key_points = [s.strip() + "." for s in sentences if s.strip()]
             
             return DocumentSummary(
                 document_id=document_id,
-                summary=summary,
-                key_points=key_points,
+                summary=response,
+                key_points=key_points[:5],  # Limit to 5 key points
                 generated_at=datetime.now()
             )
             
