@@ -1,7 +1,7 @@
 # Project Status - Babocument
 
-**Last Updated:** 2025-11-06
-**Session:** Clean session initialization
+**Last Updated:** 2025-11-06 (Issue #4 Vector Database Decision)
+**Session:** Phase 0 architectural decisions
 
 ## Project Overview
 
@@ -13,6 +13,20 @@ Babocument is an agentic VR/XR document management application for reviewing syn
 - ✅ Git repository initialized
 - ✅ .gitignore configured for Python, Node.js, and BabylonJS Editor
 - ✅ Base directory structure in place
+
+### Phase 0: Foundation & Planning Decisions
+
+**Completed (3/7):**
+- ✅ **Issue #4** - Vector Database Selection (ChromaDB)
+- ✅ **Issue #5** - MCP Integration Strategy (Hybrid community servers)
+- ✅ **Issue #12** - Launch Script (DevOps)
+
+**In Progress (4/7):**
+- 🟡 **Issue #1** - Communication Protocol (WebSockets vs REST)
+- 🟡 **Issue #2** - Multi-Agent Architecture Design
+- 🟡 **Issue #3** - LLM Hosting Solution
+- 🟡 **Issue #6** - Plotly.js Integration Strategy
+- 🟡 **Issue #7** - Blender Asset Pipeline
 
 ### Client Layer (/client)
 **Status:** Scaffolded - BabylonJS Editor + Next.js template
@@ -88,9 +102,39 @@ client/
 - lookbook/ - Visual style references
 - papers/ - Research documents
 
-## Technical Decisions Pending
+## Technical Decisions
 
-### High Priority
+### Completed Decisions ✅
+
+1. **MCP Integration for Document Repositories** ✅ DECIDED (2025-11-06)
+   - **Decision:** Hybrid approach using community MCP servers
+   - **Primary Sources:**
+     - BioMCP (PubMed + ClinicalTrials.gov + MyVariant.info)
+     - arXiv API MCP with LaTeX support
+     - bioRxiv/medRxiv MCP servers
+   - **Documentation:** [MCP_INTEGRATION_DECISION.md](MCP_INTEGRATION_DECISION.md)
+   - **Next Step:** Begin Phase 1 implementation (Week 1-2)
+
+2. **Vector Database Selection** ✅ DECIDED (2025-11-06)
+   - **Decision:** Use **ChromaDB** with **Sentence Transformers** (all-MiniLM-L6-v2)
+   - **Rationale:**
+     - Simplest setup (pip install, no separate server)
+     - Python-native (perfect for FastAgent backend)
+     - Configurable local storage paths
+     - Free and open source
+     - Sufficient for 100k+ documents
+   - **Embedding Model:** all-MiniLM-L6-v2 (384 dimensions, ~3000 sentences/sec)
+   - **Documentation:** [VECTOR_DATABASE_DECISION.md](VECTOR_DATABASE_DECISION.md)
+   - **Next Step:** Install ChromaDB and implement VectorDatabase wrapper class
+
+3. **Launch Script** ✅ COMPLETED (2025-11-06)
+   - **Implementation:** PowerShell launch script with full dependency management
+   - **File:** `launch.ps1`
+   - **Features:** Background job management, auto-detection, graceful shutdown
+   - **Usage:** `.\launch.ps1 -ClientOnly` (current phase)
+
+### Pending Decisions 🟡
+
 1. **Client-Server Communication Protocol**
    - Option A: WebSockets (real-time, bidirectional)
    - Option B: REST API with async (simpler, more standard)
@@ -105,21 +149,6 @@ client/
    - Asset creation workflow (Blender → BabylonJS)
    - Import/export formats (GLB via GLTF 2.0)
    - Asset optimization strategy
-
-4. **Vector Database Selection**
-   - Choose vector DB (Chroma, Weaviate, Qdrant, Pinecone, Milvus)
-   - Configurable local storage paths
-   - Embedding strategy selection
-   - Initialize with data/papers corpus
-
-5. **MCP Integration for Document Repositories** ✅ DECIDED
-   - **Decision:** Hybrid approach using community MCP servers
-   - **Primary Sources:**
-     - BioMCP (PubMed + ClinicalTrials.gov + MyVariant.info)
-     - arXiv API MCP with LaTeX support
-     - bioRxiv/medRxiv MCP servers
-   - **Documentation:** [MCP_INTEGRATION_DECISION.md](MCP_INTEGRATION_DECISION.md)
-   - **Next Step:** Begin Phase 1 implementation (Week 1-2)
 
 ### Medium Priority
 6. **Authentication & Authorization**
@@ -150,8 +179,8 @@ client/
 - [ ] Define communication protocol (WebSockets vs REST) - [Issue #1](https://github.com/buddha314/babocument/issues/1)
 - [ ] Design agent architecture - [Issue #2](https://github.com/buddha314/babocument/issues/2)
 - [ ] Choose LLM hosting solution - [Issue #3](https://github.com/buddha314/babocument/issues/3)
-- [ ] Select vector database - [Issue #4](https://github.com/buddha314/babocument/issues/4)
-- [x] Plan MCP integration - [Issue #5](https://github.com/buddha314/babocument/issues/5) ✅ COMPLETED
+- [x] Select vector database - [Issue #4](https://github.com/buddha314/babocument/issues/4) ✅ COMPLETED (ChromaDB)
+- [x] Plan MCP integration - [Issue #5](https://github.com/buddha314/babocument/issues/5) ✅ COMPLETED (Hybrid community servers)
 - [ ] Decide Plotly integration - [Issue #6](https://github.com/buddha314/babocument/issues/6)
 - [ ] Set up Blender pipeline - [Issue #7](https://github.com/buddha314/babocument/issues/7)
 

@@ -52,20 +52,48 @@ Select local LLM hosting: Ollama, HuggingFace Transformers, or LangGraph
 ---
 
 ### [Issue #4: Vector database selection](https://github.com/buddha314/babocument/issues/4)
-**Status:** 🟡 Open | **Priority:** High | **Type:** Decision
-**Recommendation:** ⭐ ChromaDB
+**Status:** ✅ DECIDED | **Priority:** High | **Type:** Decision
 
-Choose vector database for semantic search: Chroma, Weaviate, Qdrant, Pinecone, or Milvus
+**Decision Date:** 2025-11-06
 
-**Requirements:**
-- Local-first with configurable storage paths
-- Easy developer setup
-- Python-native (FastAgent backend)
-- Initialize from data/papers corpus
+**Decision:** Use **ChromaDB** with **Sentence Transformers** (all-MiniLM-L6-v2) for vector storage
 
-**Documentation:** [specs/VECTOR_DATABASE_SPEC.md](specs/VECTOR_DATABASE_SPEC.md) (18 KB)
+**Rationale:**
+- ✅ Simplest setup (pip install, no separate server)
+- ✅ Python-native (perfect for FastAgent backend)
+- ✅ Configurable local storage paths
+- ✅ Built-in embedding support
+- ✅ Free and open source
+- ✅ Sufficient performance for 100k+ documents
+- ✅ Easy migration path to Weaviate/Qdrant if needed
 
-**Impact:** Search performance, semantic quality, deployment complexity
+**Embedding Strategy:**
+- **Model:** all-MiniLM-L6-v2 (384 dimensions)
+- **Speed:** ~3000 sentences/sec on CPU
+- **Quality:** Good for general scientific text
+- **Cost:** $0 (local inference)
+
+**Storage Structure:**
+```
+server/data/chroma/
+├── chroma.sqlite3
+└── embeddings/
+```
+
+**Documentation:** 
+- [specs/VECTOR_DATABASE_DECISION.md](specs/VECTOR_DATABASE_DECISION.md) - Decision rationale and implementation
+- [specs/VECTOR_DATABASE_SPEC.md](specs/VECTOR_DATABASE_SPEC.md) - Comprehensive analysis
+
+**Next Steps:** 
+- Phase 1: Install ChromaDB and implement VectorDatabase wrapper class
+- Phase 2: Create initialization script for data/papers corpus
+- Phase 3: Integrate with Research Agent for semantic search
+
+**Unblocks:**
+- ✅ Issue #9 - Initialize vector database with local papers
+- ✅ Phase 1 - Backend setup can proceed
+- ✅ Phase 2 - MCP integration can use vector DB for caching
+- ✅ Issue #8 - Keyword trend analysis has data source
 
 ---
 
@@ -299,20 +327,22 @@ Build immersive data visualization UI with Plotly.js in BabylonJS
 
 **Total Issues:** 12
 
+**Completed:** 3 (Issues #4, #5, #12)
+
 **By Type:**
-- 🔷 Decisions: 6 (Issues #1-#6)
+- 🔷 Decisions: 6 (Issues #1-#6) - 2 decided, 4 open
 - 🔶 Setup: 1 (Issue #7)
 - ⚙️ Features: 2 (Issues #8-#9)
 - 📦 Epics: 2 (Issues #10-#11)
-- 🛠️ DevOps: 1 (Issue #12)
+- 🛠️ DevOps: 1 (Issue #12) - completed
 
 **By Priority:**
-- 🔴 Critical: 1 (Issue #12)
-- 🔴 High: 8
+- 🔴 Critical: 1 (Issue #12) - ✅ completed
+- 🔴 High: 8 (2 decided, 6 open)
 - 🟡 Medium: 3
 
 **By Phase:**
-- Phase 0 (Planning): 6 decision issues
+- Phase 0 (Planning): 6 decision issues (2 decided, 4 open)
 - Phase 1 (Backend): 1 epic, 1 implementation
 - Phase 2 (Data): 1 implementation
 - Phase 3 (Frontend): 1 epic, 1 feature
