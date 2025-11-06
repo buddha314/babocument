@@ -5,10 +5,12 @@ REST API for managing external data sources (MCP servers) and repository operati
 """
 
 from typing import List, Optional
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
 from pydantic import BaseModel, Field
 from datetime import datetime
 import structlog
+
+from app.services.vector_db import VectorDatabase, get_vector_db
 
 logger = structlog.get_logger(__name__)
 
@@ -76,7 +78,8 @@ class RepositoryDocuments(BaseModel):
 @router.get("", response_model=RepositoryList)
 async def list_repositories(
     status: Optional[str] = Query(None, description="Filter by status"),
-    type: Optional[str] = Query(None, description="Filter by repository type")
+    type: Optional[str] = Query(None, description="Filter by repository type"),
+    vector_db: VectorDatabase = Depends(get_vector_db)
 ):
     """
     List all configured repositories (MCP servers and local sources).
@@ -86,9 +89,34 @@ async def list_repositories(
     logger.info("list_repositories", status=status, type=type)
     
     try:
-        # TODO: Implement repository listing
-        # Query configured MCP servers and local repositories
-        repositories = []
+        # Get vector DB stats for local repository
+        db_stats = vector_db.get_stats()
+        total_papers = db_stats.get("total_papers", 0)
+        
+        # Create local repository entry
+        local_repo = RepositoryInfo(
+            id="local",
+            name="Local Documents",
+            type="local",
+            status="connected",
+            description="Locally uploaded and managed documents",
+            document_count=total_papers,
+            last_sync=None,
+            config={"storage_path": db_stats.get("storage_path")}
+        )
+        
+        repositories = [local_repo]
+        
+        # Apply filters
+        if type and type != "local":
+            repositories = []
+        if status and status != "connected":
+            repositories = []
+        
+        # TODO: Add MCP repositories when Phase 2 is implemented
+        # - BioMCP (PubMed, ClinicalTrials)
+        # - arXiv MCP
+        # - bioRxiv/medRxiv MCP
         
         return RepositoryList(
             repositories=repositories,
@@ -100,7 +128,10 @@ async def list_repositories(
 
 
 @router.get("/{repository_id}/status", response_model=RepositoryStatus)
-async def get_repository_status(repository_id: str):
+async def get_repository_status(
+    repository_id: str,
+    vector_db: VectorDatabase = Depends(get_vector_db)
+):
     """
     Get detailed status for a specific repository.
     
@@ -109,12 +140,38 @@ async def get_repository_status(repository_id: str):
     logger.info("get_repository_status", repository_id=repository_id)
     
     try:
-        # TODO: Implement status check
-        # 1. Ping MCP server or check local source
-        # 2. Query document counts
-        # 3. Check last sync timestamp
-        
-        raise HTTPException(status_code=404, detail=f"Repository {repository_id} not found")
+        if repository_id == "local":
+            # Get local repository status
+            db_stats = vector_db.get_stats()
+            total_papers = db_stats.get("total_papers", 0)
+            
+            repo_info = RepositoryInfo(
+                id="local",
+                name="Local Documents",
+                type="local",
+                status="connected",
+                description="Locally uploaded and managed documents",
+                document_count=total_papers,
+                last_sync=None,
+                config={"storage_path": db_stats.get("storage_path")}
+            )
+            
+            return RepositoryStatus(
+                repository=repo_info,
+                connection_status="healthy",
+                available_documents=None,  # Not applicable for local
+                indexed_documents=total_papers,
+                last_check=datetime.now(),
+                health={
+                    "vector_db": "connected",
+                    "embedding_model": db_stats.get("embedding_model"),
+                    "storage_accessible": True
+                }
+            )
+        else:
+            # TODO: Check MCP server repositories (Phase 2)
+            raise HTTPException(status_code=404, detail=f"Repository {repository_id} not found")
+            
     except HTTPException:
         raise
     except Exception as e:
@@ -158,7 +215,8 @@ async def sync_repositories(request: SyncRequest):
 async def list_repository_documents(
     repository_id: str,
     limit: int = Query(20, ge=1, le=100),
-    offset: int = Query(0, ge=0)
+    offset: int = Query(0, ge=0),
+    vector_db: VectorDatabase = Depends(get_vector_db)
 ):
     """
     List documents from a specific repository.
@@ -168,13 +226,32 @@ async def list_repository_documents(
     logger.info("list_repository_documents", repository_id=repository_id, limit=limit, offset=offset)
     
     try:
-        # TODO: Implement document listing by repository
-        # Query vector DB or database for documents with matching source
+        # Query vector DB for documents from this repository
+        # Use source filter to match repository_id
+        filters = {"source": repository_id} if repository_id != "all" else None
+        
+        papers, total = vector_db.get_all_papers(
+            limit=limit,
+            offset=offset,
+            filters=filters
+        )
+        
+        # Convert to dict format
+        documents = []
+        for paper in papers:
+            metadata = paper.get("metadata", {})
+            documents.append({
+                "id": paper["id"],
+                "title": metadata.get("title", "Untitled"),
+                "authors": metadata.get("authors"),
+                "year": metadata.get("year"),
+                "source": metadata.get("source", "unknown")
+            })
         
         return RepositoryDocuments(
             repository_id=repository_id,
-            documents=[],
-            total=0,
+            documents=documents,
+            total=total,
             limit=limit,
             offset=offset
         )
@@ -184,7 +261,10 @@ async def list_repository_documents(
 
 
 @router.post("/{repository_id}/test", response_model=dict)
-async def test_repository_connection(repository_id: str):
+async def test_repository_connection(
+    repository_id: str,
+    vector_db: VectorDatabase = Depends(get_vector_db)
+):
     """
     Test connection to a repository.
     
@@ -193,17 +273,34 @@ async def test_repository_connection(repository_id: str):
     logger.info("test_repository_connection", repository_id=repository_id)
     
     try:
-        # TODO: Implement connection test
-        # 1. Attempt to connect to MCP server or local source
-        # 2. Perform simple query or health check
-        # 3. Return connection status and any errors
-        
-        return {
-            "repository_id": repository_id,
-            "status": "unknown",
-            "message": "Connection test not implemented",
-            "timestamp": datetime.now().isoformat()
-        }
+        if repository_id == "local":
+            # Test local repository
+            try:
+                db_stats = vector_db.get_stats()
+                return {
+                    "repository_id": repository_id,
+                    "status": "connected",
+                    "message": f"Local repository is healthy with {db_stats.get('total_papers', 0)} documents",
+                    "timestamp": datetime.now().isoformat(),
+                    "details": db_stats
+                }
+            except Exception as e:
+                return {
+                    "repository_id": repository_id,
+                    "status": "error",
+                    "message": f"Failed to connect to local repository: {str(e)}",
+                    "timestamp": datetime.now().isoformat()
+                }
+        else:
+            # TODO: Test MCP server connections (Phase 2)
+            # For now, return not implemented for MCP repositories
+            return {
+                "repository_id": repository_id,
+                "status": "not_configured",
+                "message": "MCP repository testing will be implemented in Phase 2",
+                "timestamp": datetime.now().isoformat()
+            }
+            
     except Exception as e:
         logger.error("test_repository_connection_error", repository_id=repository_id, error=str(e))
         raise HTTPException(status_code=500, detail=f"Connection test failed: {str(e)}")
