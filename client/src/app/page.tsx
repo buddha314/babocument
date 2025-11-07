@@ -46,6 +46,7 @@ import { loadScene } from "babylonjs-editor-tools";
  */
 import { scriptsMap } from "@/scripts";
 import ApiTest from "@/components/ApiTest";
+import { ChatPanel3D } from "@/lib/ChatPanel3D";
 
 export default function Home() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -124,7 +125,12 @@ export default function Home() {
 			box.rotation.y += 0.01;
 		});
 
-		console.log("Scene created successfully");
+		// Create 3D Chat Panel
+		const chatPanel = new ChatPanel3D(scene, new Vector3(0, 2, 5));
+		// Make it face the camera
+		chatPanel.lookAt(camera.position);
+
+		console.log("Scene created successfully with chat panel");
 
 		if (scene.activeCamera) {
 			scene.activeCamera.attachControl();
@@ -133,16 +139,24 @@ export default function Home() {
 		// Initialize WebXR with default experience
 		try {
 			const xrHelper = await WebXRDefaultExperience.CreateAsync(scene, {
-				floorMeshes: scene.meshes.filter((mesh) => mesh.name.toLowerCase().includes("ground") || mesh.name.toLowerCase().includes("floor")),
-				// Optional: Configure teleportation
+				floorMeshes: [ground],
+				// Optional: Configure teleportation and interaction
 				optionalFeatures: true,
 			});
 
 			console.log("WebXR initialized successfully");
 
+			// Enable controller pointer selection for GUI interaction
+			if (xrHelper.pointerSelection) {
+				console.log("VR controller pointer selection enabled");
+			}
+
 			// Log when entering/exiting XR
 			xrHelper.baseExperience.onStateChangedObservable.add((state) => {
 				console.log("WebXR state changed:", state);
+				if (state === 2) { // IN_XR
+					console.log("Entered VR mode - chat panel is interactive with controllers");
+				}
 			});
 		} catch (error) {
 			console.warn("WebXR not supported or failed to initialize:", error);
