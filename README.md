@@ -3,6 +3,8 @@
 This is the server component of the Babocument project - a multi-agent AI system for academic paper analysis and research assistance.
 
 > **Note:** The BabylonJS client has been moved to a separate repository: [beabodocl-babylon](https://github.com/buddha314/beabodocl-babylon)
+> 
+> **Local Development:** Client is located at `C:\Users\b\src\beabodocl-babylon`
 
 ## Configuration
 
