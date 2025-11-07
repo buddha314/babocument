@@ -6,25 +6,37 @@ Babocument combines cutting-edge 3D visualization with AI-powered research assis
 
 ## Quick Start
 
-### Development Setup
+### Development Setup (Recommended)
 
-**Server (Phase 1 - 65% Complete):**
+**Launch Everything (Network-Accessible):**
 ```powershell
-cd server
-.\venv\Scripts\Activate.ps1
-python -m uvicorn app.main:app --reload --port 8000
+.\start-dev.ps1
+```
+
+This starts both server and client, accessible from other devices on your network (phones, VR headsets, etc.).
+
+**Manual Setup:**
+
+Server:
+```powershell
+.\run-server.ps1
 # Visit http://localhost:8000/docs for API
 ```
 
-**Client (BabylonJS + Next.js):**
+Client:
 ```powershell
 cd client
-npm install
-npm run dev
+npm run dev -- --hostname 0.0.0.0
 # Visit http://localhost:3000
 ```
 
-**See [HANDOFF.md](HANDOFF.md) for complete setup and status.**
+### Network Access
+
+Access from other devices (VR headsets, phones):
+- Run `.\check-network.ps1` to get your network URLs
+- See [NETWORK_ACCESS.md](NETWORK_ACCESS.md) for VR setup guide
+
+**See [HANDOFF_FINAL_2025-11-06.md](HANDOFF_FINAL_2025-11-06.md) for complete status.**
 
 ## Architecture
 

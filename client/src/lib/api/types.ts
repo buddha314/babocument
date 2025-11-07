@@ -88,9 +88,12 @@ export interface DocumentSummary {
 export interface SystemStats {
   total_documents: number;
   indexed_documents: number;
-  total_size_mb: number;
+  repositories_count?: number;
+  total_embeddings?: number;
+  storage_used_mb: number;  // Backend returns storage_used_mb, not total_size_mb
+  last_updated?: string;
   uptime_seconds: number;
-  environment: string;
+  environment?: string;
 }
 
 export interface AllStats {

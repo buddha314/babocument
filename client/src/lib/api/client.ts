@@ -7,7 +7,8 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import type { ApiError } from './types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+// Force network IP for VR headset access
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://192.168.1.200:8000';
 
 class ApiClient {
   private client: AxiosInstance;

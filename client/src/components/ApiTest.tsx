@@ -16,6 +16,7 @@ export default function ApiTest() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [apiUrl] = useState(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000');
 
   useEffect(() => {
     checkConnection();
@@ -31,7 +32,7 @@ export default function ApiTest() {
       setConnectionStatus(healthy ? 'connected' : 'disconnected');
 
       if (!healthy) {
-        setError('Backend server is not responding. Make sure it\'s running on http://localhost:8000');
+        setError(`Backend server is not responding. Make sure it's running on ${apiUrl}`);
         setLoading(false);
         return;
       }
@@ -82,6 +83,11 @@ export default function ApiTest() {
           </span>
         </div>
 
+        {/* API URL Display */}
+        <div className="text-xs text-gray-500 border-t pt-2">
+          <div>API: {apiUrl}</div>
+        </div>
+
         {/* Error Message */}
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
@@ -96,19 +102,19 @@ export default function ApiTest() {
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div>
                 <span className="text-gray-500">Documents:</span>
-                <span className="ml-2 font-medium">{stats.total_documents}</span>
+                <span className="ml-2 font-medium">{stats.total_documents ?? 0}</span>
               </div>
               <div>
                 <span className="text-gray-500">Indexed:</span>
-                <span className="ml-2 font-medium">{stats.indexed_documents}</span>
+                <span className="ml-2 font-medium">{stats.indexed_documents ?? 0}</span>
               </div>
               <div>
                 <span className="text-gray-500">Size:</span>
-                <span className="ml-2 font-medium">{stats.total_size_mb.toFixed(2)} MB</span>
+                <span className="ml-2 font-medium">{(stats.storage_used_mb ?? 0).toFixed(2)} MB</span>
               </div>
               <div>
                 <span className="text-gray-500">Uptime:</span>
-                <span className="ml-2 font-medium">{Math.floor(stats.uptime_seconds / 60)}m</span>
+                <span className="ml-2 font-medium">{Math.floor((stats.uptime_seconds ?? 0) / 60)}m</span>
               </div>
             </div>
           </div>
@@ -119,18 +125,24 @@ export default function ApiTest() {
           <div className="border-t pt-4">
             <h3 className="font-semibold text-gray-700 mb-2">Recent Documents ({documents.length})</h3>
             <div className="space-y-2 max-h-64 overflow-y-auto">
-              {documents.map((doc) => (
-                <div key={doc.id} className="p-2 bg-gray-50 rounded text-xs">
-                  <div className="font-medium text-gray-800 truncate">{doc.title}</div>
-                  <div className="text-gray-500 mt-1">
-                    {doc.authors.slice(0, 2).join(', ')}
-                    {doc.authors.length > 2 && ` +${doc.authors.length - 2} more`}
+              {documents.map((doc) => {
+                const authors = doc.authors || [];
+                const authorText = authors.length > 0 
+                  ? authors.slice(0, 2).join(', ') + (authors.length > 2 ? ` +${authors.length - 2} more` : '')
+                  : 'Unknown authors';
+                
+                return (
+                  <div key={doc.id} className="p-2 bg-gray-50 rounded text-xs">
+                    <div className="font-medium text-gray-800 truncate">{doc.title || 'Untitled'}</div>
+                    <div className="text-gray-500 mt-1">
+                      {authorText}
+                    </div>
+                    <div className="text-gray-400 mt-1">
+                      {doc.year || 'N/A'} • {doc.source || 'Unknown'}
+                    </div>
                   </div>
-                  <div className="text-gray-400 mt-1">
-                    {doc.year} • {doc.source}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}

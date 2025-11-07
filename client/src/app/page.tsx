@@ -87,10 +87,44 @@ export default function Home() {
 		const havok = await HavokPhysics();
 		scene.enablePhysics(new Vector3(0, -981, 0), new HavokPlugin(true, havok));
 
-		SceneLoaderFlags.ForceFullSceneLoadingForIncremental = true;
-		await loadScene("/scene/", "example.babylon", scene, scriptsMap, {
-			quality: "high",
+		// Import necessary classes
+		const { MeshBuilder, StandardMaterial, Color3, Texture, ArcRotateCamera, HemisphericLight } = await import("@babylonjs/core");
+
+		// Create camera
+		const camera = new ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 3, 10, new Vector3(0, 1, 0), scene);
+		camera.attachControl();
+		scene.activeCamera = camera;
+
+		// Create lighting
+		const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
+		light.intensity = 0.7;
+
+		// Create ground
+		const ground = MeshBuilder.CreateGround("ground", { width: 10, height: 10 }, scene);
+		const groundMaterial = new StandardMaterial("groundMaterial", scene);
+		groundMaterial.diffuseColor = new Color3(0.3, 0.3, 0.4);
+		ground.material = groundMaterial;
+
+		// Create a textured box
+		const box = MeshBuilder.CreateBox("box", { size: 2 }, scene);
+		box.position.y = 1;
+		const boxMaterial = new StandardMaterial("boxMaterial", scene);
+		
+		// Try to load the texture, fallback to color if it fails
+		try {
+			boxMaterial.diffuseTexture = new Texture("/assets/amiga.jpg", scene);
+		} catch (error) {
+			console.warn("Failed to load texture, using solid color:", error);
+			boxMaterial.diffuseColor = new Color3(0.8, 0.4, 0.2);
+		}
+		box.material = boxMaterial;
+
+		// Add some rotation animation
+		scene.registerBeforeRender(() => {
+			box.rotation.y += 0.01;
 		});
+
+		console.log("Scene created successfully");
 
 		if (scene.activeCamera) {
 			scene.activeCamera.attachControl();
