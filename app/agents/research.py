@@ -256,19 +256,40 @@ class ResearchAgent(BaseAgent):
         Returns:
             Extracted intent with confidence and parameters
         """
-        # TODO: Use LLM to classify intent
-        # Intents: search, summarize, analyze, recommend, explain, add_to_workspace
-
         query_lower = query.lower()
 
-        # Simple rule-based classification (to be replaced with LLM)
-        if any(word in query_lower for word in ["find", "search", "show me", "papers about"]):
+        # Enhanced keyword-based classification with more patterns
+        # Search patterns
+        if any(word in query_lower for word in [
+            "find", "search", "show me", "papers about", "look for",
+            "looking for", "need papers", "research on", "studies on"
+        ]):
             return {"intent": "search", "confidence": 0.8, "query": query}
-        elif any(word in query_lower for word in ["summarize", "summary", "tldr"]):
+        
+        # Summarize patterns
+        elif any(word in query_lower for word in [
+            "summarize", "summary", "tldr", "what does", "what is",
+            "explain", "tell me about", "overview", "what's in",
+            "describe", "give me a summary", "brief", "main points"
+        ]):
             return {"intent": "summarize", "confidence": 0.8}
-        elif any(word in query_lower for word in ["compare", "analyze", "difference"]):
+        
+        # Analyze patterns
+        elif any(word in query_lower for word in [
+            "compare", "analyze", "difference", "contrast",
+            "versus", "vs", "how do", "relation", "relationship"
+        ]):
             return {"intent": "analyze", "confidence": 0.8}
-        elif any(word in query_lower for word in ["recommend", "suggest", "related"]):
+        
+        # Recommend patterns
+        elif any(word in query_lower for word in [
+            "recommend", "suggest", "related", "similar",
+            "like this", "more like", "other papers"
+        ]):
             return {"intent": "recommend", "confidence": 0.8}
+        
+        # Default to summarize for general questions
         else:
-            return {"intent": "unknown", "confidence": 0.3, "query": query}
+            # If it's a question or statement, default to summarize
+            # This handles "What is X?", "Tell me about Y", etc.
+            return {"intent": "summarize", "confidence": 0.6, "query": query}

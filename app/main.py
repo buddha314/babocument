@@ -46,14 +46,17 @@ async def lifespan(app: FastAPI):
         port=settings.port,
     )
 
-    # Initialize Event Bus
+    # Initialize Event Bus (optional - server works without it)
+    event_bus_initialized = False
     from app.utils.event_bus import init_event_bus
     try:
         event_bus = await init_event_bus()
+        event_bus_initialized = True
         logger.info("event_bus_connected", redis_url=settings.redis_url)
     except Exception as e:
         logger.warning("event_bus_connection_failed", error=str(e))
         logger.info("continuing_without_event_bus")
+        # Don't raise - server can continue without event bus
 
     # TODO: Initialize resources (Phase 1)
     # - Initialize Vector Database ✅ (done in services)
@@ -65,10 +68,14 @@ async def lifespan(app: FastAPI):
     # Shutdown
     logger.info("shutting_down_server")
 
-    # Cleanup Event Bus
-    from app.utils.event_bus import shutdown_event_bus
-    await shutdown_event_bus()
-    logger.info("event_bus_disconnected")
+    # Cleanup Event Bus (only if it was initialized)
+    try:
+        if event_bus_initialized:
+            from app.utils.event_bus import shutdown_event_bus
+            await shutdown_event_bus()
+            logger.info("event_bus_disconnected")
+    except Exception as e:
+        logger.warning("event_bus_shutdown_error", error=str(e))
 
     # TODO: Cleanup resources
     # - Close Vector DB

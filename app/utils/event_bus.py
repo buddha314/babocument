@@ -120,13 +120,20 @@ class EventBus:
     
     async def disconnect(self) -> None:
         """Disconnect from Redis."""
-        if self.pubsub:
-            await self.pubsub.unsubscribe()
-            await self.pubsub.close()
-        if self.redis_client:
-            await self.redis_client.close()
-        self._connected = False
-        logger.info("Event Bus disconnected from Redis")
+        if not self._connected:
+            return  # Nothing to disconnect
+            
+        try:
+            if self.pubsub:
+                await self.pubsub.unsubscribe()
+                await self.pubsub.close()
+            if self.redis_client:
+                await self.redis_client.close()
+            self._connected = False
+            logger.info("Event Bus disconnected from Redis")
+        except Exception as e:
+            logger.warning(f"Error during disconnect: {e}")
+            self._connected = False
     
     def is_connected(self) -> bool:
         """Check if connected to Redis."""
@@ -351,6 +358,6 @@ async def init_event_bus(redis_url: Optional[str] = None) -> EventBus:
 async def shutdown_event_bus() -> None:
     """Shutdown the global event bus."""
     global _event_bus
-    if _event_bus:
+    if _event_bus and _event_bus.is_connected():
         await _event_bus.disconnect()
-        _event_bus = None
+    _event_bus = None

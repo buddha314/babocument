@@ -112,32 +112,110 @@ class SummaryAgent(BaseAgent):
         Returns:
             Generated summary with metadata
         """
-        await self.publish_progress(task_id, 30, "Generating summary...")
+        await self.publish_progress(task_id, 30, "Retrieving document...")
 
-        # TODO: Implement single document summarization
-        # - Retrieve document content from vector DB
-        # - Extract relevant sections (based on focus if provided)
-        # - Generate prompt based on summary_type:
-        #   - concise: High-level overview in 2-3 sentences
-        #   - detailed: Comprehensive summary covering all sections
-        #   - technical: Focus on methodology and technical details
-        #   - eli5: Explain like I'm 5, simplify complex concepts
-        # - Call LLM with prompt
-        # - Post-process and format response
-        # - Extract key terms and entities
-
-        # Placeholder result
-        result = {
-            "task_id": task_id,
-            "document_id": document_id,
-            "summary_type": summary_type,
-            "focus": focus,
-            "summary": f"Summary of document {document_id} (placeholder)",
-            "key_terms": [],
-            "word_count": 0,
-        }
-
-        return result
+        # Retrieve document from vector DB
+        if not self.vector_db:
+            return {
+                "error": "Vector database not available",
+                "task_id": task_id,
+            }
+        
+        try:
+            # Get document metadata and content (synchronous call)
+            document = self.vector_db.get_paper(document_id)
+            
+            if not document:
+                return {
+                    "error": f"Document {document_id} not found",
+                    "task_id": task_id,
+                }
+            
+            # Extract text content for summarization
+            doc_text = document.get("document", "")
+            metadata = document.get("metadata", {})
+            
+            title = metadata.get("title", "Unknown")
+            abstract = metadata.get("abstract", "")
+            
+            # Use abstract if available, otherwise use document excerpt
+            text_to_summarize = abstract if abstract else doc_text[:2000]
+            
+            if not text_to_summarize:
+                return {
+                    "error": "Document has no content to summarize",
+                    "task_id": task_id,
+                }
+            
+            await self.publish_progress(task_id, 50, "Generating summary...")
+            
+            # Generate summary using LLM
+            summary_text = None
+            if self.llm_client:
+                try:
+                    # Map summary_type to LLM style
+                    style_map = {
+                        "concise": "concise",
+                        "detailed": "detailed",
+                        "technical": "detailed",
+                        "eli5": "concise"
+                    }
+                    llm_style = style_map.get(summary_type, "concise")
+                    
+                    # Add context about focus area if specified
+                    prompt_text = text_to_summarize
+                    if focus:
+                        prompt_text = f"Focus on {focus}:\n\n{prompt_text}"
+                    
+                    summary_text = await self.llm_client.summarize(
+                        text=f"Title: {title}\n\n{prompt_text}",
+                        max_length=max_length,
+                        style=llm_style
+                    )
+                except Exception as e:
+                    self.logger.warning("llm_summarization_failed", error=str(e))
+                    summary_text = None
+            
+            # Fallback if no LLM available or LLM fails
+            if not summary_text:
+                # Return the abstract or content excerpt directly
+                if abstract:
+                    summary_text = f"Here's the abstract:\n\n{abstract}"
+                else:
+                    summary_text = f"Here's an excerpt from the paper:\n\n{text_to_summarize[:500]}..."
+                self.logger.info("using_fallback_summary", has_abstract=bool(abstract))
+            
+            await self.publish_progress(task_id, 90, "Extracting keywords...")
+            
+            # Extract keywords (only if LLM is available)
+            keywords = []
+            if self.llm_client:
+                try:
+                    extracted = await self.llm_client.extract_keywords(text_to_summarize, max_keywords=5)
+                    if extracted:
+                        keywords = extracted
+                except Exception as e:
+                    self.logger.debug("keyword_extraction_skipped", reason="llm_error", error=str(e))
+            
+            result = {
+                "task_id": task_id,
+                "document_id": document_id,
+                "title": title,
+                "summary_type": summary_type,
+                "focus": focus,
+                "summary": summary_text,
+                "key_terms": keywords,
+                "word_count": len(summary_text.split()) if summary_text else 0,
+            }
+            
+            return result
+            
+        except Exception as e:
+            self.logger.error("summarization_error", task_id=task_id, error=str(e))
+            return {
+                "error": f"Failed to summarize document: {str(e)}",
+                "task_id": task_id,
+            }
 
     async def _summarize_multiple(
         self,
@@ -202,21 +280,39 @@ class SummaryAgent(BaseAgent):
         Returns:
             Summary formatted for conversational response
         """
-        # TODO: Parse natural language query to extract parameters
-        # Examples:
-        # - "Summarize this paper" -> single doc, concise
-        # - "Give me a detailed summary" -> detailed type
-        # - "Explain the methodology" -> focus=methodology
-        # - "Summarize the top 3 papers" -> multiple docs
-        # - "Explain this in simple terms" -> eli5 type
-
         self.logger.info("conversational_summary", query=query)
 
-        # Extract document IDs from context
+        # If no specific documents selected, search for documents related to the query
         document_ids = context.get("selected_documents", [])
+        
+        if not document_ids and self.vector_db:
+            # Try to find relevant documents based on the query
+            try:
+                # Extract search terms from the query
+                search_terms = self._extract_search_terms(query)
+                if search_terms:
+                    self.logger.info("searching_for_documents", query=search_terms)
+                    # Use the vector DB search method (synchronous)
+                    search_results = self.vector_db.search(
+                        query=search_terms,
+                        n_results=3
+                    )
+                    
+                    if search_results:
+                        # Use the most relevant document
+                        document_ids = [search_results[0]["id"]]
+                        self.logger.info("found_documents", count=len(document_ids), doc_id=document_ids[0])
+            except Exception as e:
+                self.logger.warning("document_search_failed", error=str(e))
+
+        # If still no documents, provide helpful response
         if not document_ids:
             return {
-                "response": "Which paper would you like me to summarize?",
+                "response": "I can help you summarize research papers. You can ask me to:\n\n"
+                           "• Summarize a specific paper by name\n"
+                           "• Tell you about bioinks, bioprinting, or tissue engineering\n"
+                           "• Explain papers in simple terms\n\n"
+                           "What would you like to know about?",
                 "requires_clarification": True,
             }
 
@@ -241,6 +337,31 @@ class SummaryAgent(BaseAgent):
             "response": self._format_summary_response(result, query),
             "summary_data": result,
         }
+    
+    def _extract_search_terms(self, query: str) -> str:
+        """
+        Extract search terms from a query.
+
+        Args:
+            query: User's query
+
+        Returns:
+            Cleaned search terms
+        """
+        # Remove common question words and summarization keywords
+        stopwords = [
+            "summarize", "summary", "tell me about", "what is", "what are",
+            "explain", "describe", "give me", "show me", "a", "an", "the",
+            "can you", "could you", "please", "help", "me", "with"
+        ]
+        
+        query_lower = query.lower()
+        for word in stopwords:
+            query_lower = query_lower.replace(word, " ")
+        
+        # Clean up extra spaces
+        terms = " ".join(query_lower.split())
+        return terms if terms else query
 
     def _extract_summary_type(self, query: str) -> str:
         """
@@ -319,14 +440,26 @@ class SummaryAgent(BaseAgent):
         Returns:
             Natural language summary response
         """
-        # TODO: Generate engaging conversational response
-        # Include the summary with appropriate framing
-
         if "error" in summary_result:
             return f"I encountered an issue: {summary_result['error']}"
 
         summary_text = summary_result.get("summary") or summary_result.get("meta_summary", "")
-        return f"Here's a summary:\n\n{summary_text}"
+        title = summary_result.get("title", "")
+        key_terms = summary_result.get("key_terms", [])
+        
+        # Build response with title and summary
+        response = ""
+        
+        if title and title != "Unknown":
+            response += f"**{title}**\n\n"
+        
+        if summary_text:
+            response += f"{summary_text}\n\n"
+        
+        if key_terms:
+            response += f"*Key terms: {', '.join(key_terms)}*"
+        
+        return response if response else "I couldn't generate a summary for that document."
 
     async def explain_concept(
         self, concept: str, context: dict[str, Any], complexity: str = "simple"
