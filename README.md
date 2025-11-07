@@ -1,190 +1,172 @@
-# Babocument
+# Babocument Server Configuration
 
-> An immersive VR/XR document management platform for synthetic biology and biomanufacturing research
+This document explains how to configure the Babocument server for local development.
 
-Babocument combines cutting-edge 3D visualization with AI-powered research assistance to transform how computational scientists interact with academic literature. Navigate through time in a virtual file room, guided by an intelligent Librarian character, while multi-agent systems help you discover insights across thousands of research papers.
+## LLM Model Storage Configuration
 
-## Quick Start
+The server uses Ollama for local LLM hosting. By default, Ollama stores models in your user directory, but you can configure a custom storage location.
 
-### Development Setup (Recommended)
+### Setting Custom Model Storage Path
 
-**Launch Everything (Network-Accessible):**
+**Current Configuration:** Models are stored at `d:\models`
+
+To use this configuration:
+
+1. **Environment Variable Method (Recommended):**
+   - The `.env` file already sets `OLLAMA_MODELS=d:/models`
+   - Ollama will read this environment variable when started
+
+2. **System Environment Variable (Alternative):**
+   ```powershell
+   # Set permanently in PowerShell (requires restart)
+   [System.Environment]::SetEnvironmentVariable('OLLAMA_MODELS', 'd:\models', 'User')
+   ```
+
+3. **Docker Method (Future):**
+   ```yaml
+   # docker-compose.yml (when created)
+   services:
+     ollama:
+       environment:
+         - OLLAMA_MODELS=d:/models
+       volumes:
+         - d:/models:/root/.ollama/models
+   ```
+
+### Verify Configuration
+
+After setting up, verify the configuration:
+
 ```powershell
-.\start-dev.ps1
+# Check if Ollama is using the correct path
+ollama list
+
+# Check where models are stored
+dir d:\models
 ```
 
-This starts both server and client, accessible from other devices on your network (phones, VR headsets, etc.).
+### Downloading Models
 
-**Manual Setup:**
+Once configured, download the recommended models:
 
-Server:
 ```powershell
-.\run-server.ps1
-# Visit http://localhost:8000/docs for API
+# For summaries (fast, 2GB)
+ollama pull llama3.2:3b
+
+# For conversations (Librarian, 4.4GB)
+ollama pull qwen2.5:7b
+
+# For instruction following (4.1GB)
+ollama pull mistral:7b
+
+# For best quality (4.7GB)
+ollama pull llama3.1:8b
 ```
 
-Client:
-```powershell
-cd client
-npm run dev -- --hostname 0.0.0.0
-# Visit http://localhost:3000
+All models will be stored in `d:\models`.
+
+## Environment Configuration
+
+The server uses environment variables for configuration. Two files are provided:
+
+- **`.env.example`** - Template with all available configuration options
+- **`.env`** - Active configuration (gitignored, already configured)
+
+### Key Configuration Options
+
+#### LLM Settings
+- `OLLAMA_BASE_URL` - Ollama API endpoint (default: http://localhost:11434)
+- `OLLAMA_MODELS` - Model storage directory (set to: d:/models)
+- `LLM_MODEL` - Default model to use (default: ollama/llama3.2:3b)
+- `LLM_TEMPERATURE` - Generation temperature (default: 0.7)
+- `LLM_MAX_TOKENS` - Maximum tokens per response (default: 500)
+
+#### Vector Database Settings
+- `CHROMA_PERSIST_DIRECTORY` - ChromaDB storage path (default: ./data/chroma)
+- `EMBEDDING_MODEL` - Model for embeddings (default: all-MiniLM-L6-v2)
+
+#### Application Settings
+- `HOST` - Server bind address (default: 0.0.0.0)
+- `PORT` - Server port (default: 8000)
+- `ENVIRONMENT` - Environment type (default: development)
+- `LOG_LEVEL` - Logging verbosity (default: INFO)
+
+## Directory Structure
+
+```
+server/
+├── .env                    # Active configuration (gitignored)
+├── .env.example            # Configuration template
+├── config/                 # Configuration files directory
+├── data/                   # Data storage (gitignored)
+│   └── chroma/             # Vector database storage
+└── README.md               # This file
 ```
 
-### Network Access
+## Next Steps
 
-Access from other devices (VR headsets, phones):
-- Run `.\check-network.ps1` to get your network URLs
-- See [NETWORK_ACCESS.md](NETWORK_ACCESS.md) for VR setup guide
+After configuration:
 
-**See [HANDOFF_FINAL_2025-11-06.md](HANDOFF_FINAL_2025-11-06.md) for complete status.**
+1. **Install Ollama** (if not already installed):
+   ```powershell
+   # Download from: https://ollama.com/download
+   # Or use winget
+   winget install Ollama.Ollama
+   ```
 
-## Architecture
+2. **Download Models** (see above section)
 
-### Core Components
+3. **Install Python Dependencies** (Phase 1):
+   ```powershell
+   pip install chromadb sentence-transformers litellm
+   ```
 
-**Client Layer** ([/client](client/))
-- BabylonJS 8.33.2 with Havok physics engine
-- Next.js 14 + React 18 + TypeScript
-- Animated Librarian character guide
-- Immersive timeline-based file room
-- VR/XR support
+4. **Initialize Vector Database** (Phase 1):
+   ```powershell
+   python scripts/init_vector_db.py
+   ```
 
-**Server Layer** ([/server](server/)) - *In Planning*
-- FastAgent API framework
-- Multi-agent coordination system
-- Research data aggregation
-- Real-time analysis and recommendations
+## References
 
-**Integration Layer** - *Planned*
-- MCP (Model Context Protocol) plugins
-- Blender integration for 3D assets
-- BabylonJS Editor for scene composition
+- [LLM Hosting Decision](../specs/LLM_HOSTING_DECISION.md)
+- [Vector Database Decision](../specs/VECTOR_DATABASE_DECISION.md)
+- [Project Tasks](../specs/TASKS.md)
+- [Ollama Documentation](https://ollama.com/)
 
-**Communication** - *Decision Pending*
-- Option A: WebSockets (real-time, bidirectional)
-- Option B: REST API with async (simpler, more standard)
+## Troubleshooting
 
-## Primary User Persona
+### Models not found in d:\models
 
-### Beabadoo - Computational Research Scientist
+If Ollama doesn't use the configured path:
 
-Beabadoo is a computational researcher in biomanufacturing at a major synthetic biology corporation.
+1. Check environment variable:
+   ```powershell
+   $env:OLLAMA_MODELS
+   ```
 
-**Background:**
-- Graduate degree in computational chemistry
-- Works at intersection of chemistry, biology, and biomanufacturing
-- Strong mathematics and computational modeling skills
+2. Restart Ollama service:
+   ```powershell
+   # Stop Ollama (if running)
+   taskkill /F /IM ollama.exe
+   
+   # Start Ollama with environment variable
+   $env:OLLAMA_MODELS="d:\models"; ollama serve
+   ```
 
-**Daily Tasks:**
-- Supporting lab researchers with computational analyses
-- Bioinformatics and data pipeline work
-- Computational drug discovery modeling
-- Literature review and trend analysis
+3. Verify storage location:
+   ```powershell
+   ollama list
+   dir d:\models
+   ```
 
-**Pain Points:**
-- Information overload from multiple journal sources
-- Difficulty tracking research evolution over time
-- Lack of intuitive visualization for research trends
-- Isolated document review without spatial context
+### Permission Issues
 
-## Key Features
+Ensure the `d:\models` directory exists and is writable:
 
-### Research & Discovery
-- Query bioinks and academic journals with timeline visualization
-- Access sorted journal articles by publication year
-- Generate word clouds and keyword trend line graphs of research over time
-- Track keyword frequency and evolution across temporal corpus
-- Search and correlate ClinicalTrials.gov data with current research
-- **Discover and manage journal repositories** - Add new sources as you find them
-- **Organize repositories into workspaces** - Different source sets for different projects
+```powershell
+# Create directory if it doesn't exist
+New-Item -ItemType Directory -Force -Path d:\models
 
-### Document Management
-- Open articles and explore embedded research ideas
-- Create and manage research workspaces
-- **Collect journal repositories into workspace-specific collections**
-- View workspace associations and relationships
-- Save and analyze article summaries for pattern detection
-- **Configure repository-scoped searches** per workspace
-
-### Interactive Experience
-- Navigate a virtual "file room" descending through time
-- Glass-partitioned years create clear temporal boundaries
-- Enter virtual labs for collaborative research sessions
-- Upload videos for text and image extraction
-- View and interact with 3D models of laboratory equipment
-
-### Data Sources
-- Public journal repositories (configurable list)
-- Web search for scientific topics
-- Full-text academic articles (arXiv, PubMed, etc.)
-- ClinicalTrials.gov API integration
-
-## Virtual Environment Design
-
-### File Room
-A continuous hallway descending through time, where users walk through the evolution of research. Glass partitions separate different publication years, creating a physical timeline that can be explored intuitively.
-
-### Virtual Labs
-Collaborative spaces designed for team research sessions, featuring 3D models of biomanufacturing equipment and tools.
-
-### Visual Style
-Inspired by curated references in [./data/lookbook](data/lookbook/):
-- Clean, scientific aesthetic
-- Modern UI with minimal chrome
-- Smooth animations and transitions
-- Responsive across desktop, VR, and XR devices
-
-## Multi-Agent System
-
-The backend employs specialized AI agents working in concert:
-
-**Research Agent** - Query understanding and multi-source search
-**Analysis Agent** - Trend detection, word clouds, correlations
-**Summary Agent** - Article summarization and key insights
-**Recommendation Agent** - Related paper suggestions and gap identification
-**Coordination Agent** - Orchestrates agent collaboration
-
-## Technology Stack
-
-**Frontend:**
-- BabylonJS 8.33.2 (3D engine)
-- Next.js 14.2.32 (React framework)
-- TypeScript 5.8.3
-- Tailwind CSS 3.3.0
-- Plotly.js (scientific visualization, 3D plots)
-
-**Backend:** *(Planned)*
-- FastAgent (Python)
-- Multi-agent framework
-- Data integration APIs
-
-**Tools:**
-- BabylonJS Editor (scene creation)
-- Blender (3D modeling and GLB export)
-
-## Project Status
-
-**Phase:** Phase 1 Backend (65% Complete)
-**Last Updated:** 2025-11-06
-
-**Completed:**
-- ✅ Architecture decisions (Phase 0: 86%)
-- ✅ Vector DB with 4 papers indexed
-- ✅ LLM Client (Ollama integration)
-- ✅ REST API (17 endpoints)
-- ✅ Test suite (60 tests, 84% coverage)
-
-**Next Steps:**
-- CI/CD pipeline - [Issue #18](https://github.com/buddha314/babocument/issues/18)
-- Event Bus (Redis)
-- Service integration
-
-**For detailed status, see [HANDOFF.md](HANDOFF.md)**
-
-## Contributing
-
-This project is in active development. Check [specs/TASKS.md](specs/TASKS.md) for current priorities.
-
-## License
-
-*License TBD*
+# Check permissions
+icacls d:\models
+```

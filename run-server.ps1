@@ -4,12 +4,10 @@
 param([int]$Port = 8000)
 
 Write-Host "Starting Babocument Server..." -ForegroundColor Cyan
-if (-not (Test-Path "server/app/main.py")) {
+if (-not (Test-Path "app/main.py")) {
     Write-Host "Error: Run from project root" -ForegroundColor Red
     exit 1
 }
-
-Set-Location server
 
 if (-not (Test-Path "venv\Scripts\Activate.ps1")) {
     Write-Host "Error: Virtual environment not found" -ForegroundColor Red

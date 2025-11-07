@@ -1,4 +1,4 @@
-Set-Location 'C:\Users\b\src\babocument\server'
+Set-Location 'C:\Users\b\src\babocument'
 $Host.UI.RawUI.WindowTitle = 'Babocument - Backend Server'
 Write-Host '=== Babocument Backend Server ===' -ForegroundColor Cyan
 Write-Host ''
@@ -9,7 +9,7 @@ if (Test-Path 'venv\Scripts\Activate.ps1') {
     Write-Host 'Virtual environment activated' -ForegroundColor Green
 } else {
     Write-Host 'ERROR: Virtual environment not found!' -ForegroundColor Red
-    Write-Host 'Run: cd server; python -m venv venv; venv\Scripts\pip install -r requirements.txt' -ForegroundColor Yellow
+    Write-Host 'Run: python -m venv venv; venv\Scripts\pip install -r requirements.txt' -ForegroundColor Yellow
     Read-Host 'Press Enter to exit'
     exit 1
 }
