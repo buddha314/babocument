@@ -46,10 +46,18 @@ async def lifespan(app: FastAPI):
         port=settings.port,
     )
 
+    # Initialize Event Bus
+    from app.utils.event_bus import init_event_bus
+    try:
+        event_bus = await init_event_bus()
+        logger.info("event_bus_connected", redis_url=settings.redis_url)
+    except Exception as e:
+        logger.warning("event_bus_connection_failed", error=str(e))
+        logger.info("continuing_without_event_bus")
+
     # TODO: Initialize resources (Phase 1)
-    # - Connect to Redis
-    # - Initialize Vector Database
-    # - Start Agent Coordinator
+    # - Initialize Vector Database ✅ (done in services)
+    # - Start Agent Coordinator (needs Event Bus first)
     # - Load MCP clients (Phase 2)
 
     yield
@@ -57,8 +65,12 @@ async def lifespan(app: FastAPI):
     # Shutdown
     logger.info("shutting_down_server")
 
+    # Cleanup Event Bus
+    from app.utils.event_bus import shutdown_event_bus
+    await shutdown_event_bus()
+    logger.info("event_bus_disconnected")
+
     # TODO: Cleanup resources
-    # - Close Redis connections
     # - Close Vector DB
     # - Stop agents gracefully
 

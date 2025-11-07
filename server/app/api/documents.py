@@ -17,6 +17,7 @@ from app.services.vector_db import VectorDatabase, get_vector_db
 from app.services.llm_client import LLMClient, get_llm_client
 from app.config import settings
 from app.utils.pdf_processing import extract_text_from_pdf, extract_pdf_metadata, parse_research_paper_metadata
+from app.utils.event_bus import get_event_bus, EventType
 
 logger = structlog.get_logger(__name__)
 
@@ -365,6 +366,24 @@ async def upload_document(
             
             logger.info("document_indexed", document_id=document_id, title=final_title)
             
+            # Publish event
+            try:
+                event_bus = get_event_bus()
+                if event_bus.is_connected():
+                    await event_bus.publish(
+                        event_type=EventType.DOCUMENT_INDEXED,
+                        task_id=document_id,
+                        data={
+                            "document_id": document_id,
+                            "title": final_title,
+                            "authors": final_authors,
+                            "year": final_year,
+                            "source": source,
+                        }
+                    )
+            except Exception as e:
+                logger.warning("event_publish_failed", error=str(e))
+            
             return DocumentUploadResponse(
                 id=document_id,
                 status="completed",
@@ -515,6 +534,24 @@ async def search_documents(
             results.append(search_result)
         
         execution_time = (time.time() - start_time) * 1000
+        
+        # Publish search event
+        try:
+            event_bus = get_event_bus()
+            if event_bus.is_connected():
+                search_id = str(uuid.uuid4())
+                await event_bus.publish(
+                    event_type=EventType.SEARCH_COMPLETED,
+                    task_id=search_id,
+                    data={
+                        "query": query.query,
+                        "search_type": query.search_type,
+                        "results_count": len(results),
+                        "execution_time_ms": execution_time,
+                    }
+                )
+        except Exception as e:
+            logger.warning("event_publish_failed", error=str(e))
         
         return SearchResults(
             results=results,
