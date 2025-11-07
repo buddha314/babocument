@@ -135,11 +135,12 @@ async def global_exception_handler(request, exc):
 
 
 # Register API routers
-from app.api import documents, repositories, stats
+from app.api import documents, repositories, stats, agent
 
 app.include_router(documents.router)
 app.include_router(repositories.router)
 app.include_router(stats.router)
+app.include_router(agent.router)
 
 # TODO: Add WebSocket handler (Phase 1)
 # from app.api import websocket
@@ -156,3 +157,4 @@ if __name__ == "__main__":
         reload=settings.debug,
         log_level=settings.log_level.lower(),
     )
+

@@ -1,180 +1,112 @@
-# Babocument Server
+# Babocument
 
-This is the server component of the Babocument project - a multi-agent AI system for academic paper analysis and research assistance.
+**Multi-Agent AI System for Academic Paper Analysis and Research Assistance**
 
-> **Note:** The BabylonJS client has been moved to a separate repository: [beabodocl-babylon](https://github.com/buddha314/beabodocl-babylon)
-> 
-> **Local Development:** Client is located at `C:\Users\b\src\beabodocl-babylon`
+Babocument is a FastAPI-based backend server that provides AI-powered research assistance through a multi-agent system. It features semantic search, document analysis, and conversational AI for academic papers.
 
-## Configuration
+> **Client Repositories:**  
+> - **[beabodocl-babylon](https://github.com/buddha314/beabodocl-babylon)** - 3D VR/WebXR client (active development)
+> - Additional clients (mobile, desktop, CLI) - planned
+>
+> **Local Development:** Primary client is located at `C:\Users\b\src\beabodocl-babylon`
 
-This document explains how to configure the Babocument server for local development.
+## Overview
 
-## LLM Model Storage Configuration
+Babocument serves as the backend engine for multiple client applications. The first client, **beabodocl-babylon**, provides an immersive 3D/VR research interface using Babylon.js and WebXR.
 
-The server uses Ollama for local LLM hosting. By default, Ollama stores models in your user directory, but you can configure a custom storage location.
+### Architecture
 
-### Setting Custom Model Storage Path
+```
 
-**Current Configuration:** Models are stored at `d:\models`
+   Client Applications (Multiple)    
+   - beabodocl-babylon (3D/VR)       
+   - Mobile apps (planned)            
+   - Desktop apps (planned)           
+   - CLI tools (planned)              
 
-To use this configuration:
+                REST API
+               
 
-1. **Environment Variable Method (Recommended):**
-   - The `.env` file already sets `OLLAMA_MODELS=d:/models`
-   - Ollama will read this environment variable when started
+   Babocument (This Repo)             
+   - FastAPI Server                   
+   - Multi-Agent AI System            
+   - Vector Database (ChromaDB)       
+   - LLM Integration (Ollama)         
+   - Document Processing              
+-
+```
 
-2. **System Environment Variable (Alternative):**
-   ```powershell
-   # Set permanently in PowerShell (requires restart)
-   [System.Environment]::SetEnvironmentVariable('OLLAMA_MODELS', 'd:\models', 'User')
-   ```
+### Features
 
-3. **Docker Method (Future):**
-   ```yaml
-   # docker-compose.yml (when created)
-   services:
-     ollama:
-       environment:
-         - OLLAMA_MODELS=d:/models
-       volumes:
-         - d:/models:/root/.ollama/models
-   ```
+- **Multi-Agent AI System** - Specialized agents for different research tasks
+- **Semantic Search** - Vector-based paper search with ChromaDB
+- **Document Analysis** - PDF processing and metadata extraction
+- **Conversational Interface** - Natural language research assistance
+- **RESTful API** - Client-agnostic HTTP API
+- **Real-time Updates** - WebSocket support (planned)
 
-### Verify Configuration
+### Current Database
 
-After setting up, verify the configuration:
+The server includes 4 indexed research papers on 3D bioprinting:
+- AI applications in bioprinting
+- Bioink formulation and manufacturing
+- Bioengineering applications
+- Comprehensive bioinks overview
+
+See `data/papers/README.md` for details.
+
+## Quick Start
+
+### Starting the Server
+
+Use the simple start script:
 
 ```powershell
-# Check if Ollama is using the correct path
-ollama list
-
-# Check where models are stored
-dir d:\models
+# Windows PowerShell
+cd C:\Users\b\src\babocument
+.\start.ps1           # Default port 8000
+.\start.ps1 -Port 8001  # Custom port
+.\start.ps1 -Help       # Show help
 ```
 
-### Downloading Models
-
-Once configured, download the recommended models:
+Or use the development launcher with network configuration:
 
 ```powershell
-# For summaries (fast, 2GB)
-ollama pull llama3.2:3b
-
-# For conversations (Librarian, 4.4GB)
-ollama pull qwen2.5:7b
-
-# For instruction following (4.1GB)
-ollama pull mistral:7b
-
-# For best quality (4.7GB)
-ollama pull llama3.1:8b
+.\start-dev.ps1
 ```
 
-All models will be stored in `d:\models`.
-
-## Environment Configuration
-
-The server uses environment variables for configuration. Two files are provided:
-
-- **`.env.example`** - Template with all available configuration options
-- **`.env`** - Active configuration (gitignored, already configured)
-
-### Key Configuration Options
-
-#### LLM Settings
-- `OLLAMA_BASE_URL` - Ollama API endpoint (default: http://localhost:11434)
-- `OLLAMA_MODELS` - Model storage directory (set to: d:/models)
-- `LLM_MODEL` - Default model to use (default: ollama/llama3.2:3b)
-- `LLM_TEMPERATURE` - Generation temperature (default: 0.7)
-- `LLM_MAX_TOKENS` - Maximum tokens per response (default: 500)
-
-#### Vector Database Settings
-- `CHROMA_PERSIST_DIRECTORY` - ChromaDB storage path (default: ./data/chroma)
-- `EMBEDDING_MODEL` - Model for embeddings (default: all-MiniLM-L6-v2)
-
-#### Application Settings
-- `HOST` - Server bind address (default: 0.0.0.0)
-- `PORT` - Server port (default: 8000)
-- `ENVIRONMENT` - Environment type (default: development)
-- `LOG_LEVEL` - Logging verbosity (default: INFO)
-
-## Directory Structure
-
-```
-server/
-├── .env                    # Active configuration (gitignored)
-├── .env.example            # Configuration template
-├── config/                 # Configuration files directory
-├── data/                   # Data storage (gitignored)
-│   └── chroma/             # Vector database storage
-└── README.md               # This file
-```
-
-## Next Steps
-
-After configuration:
-
-1. **Install Ollama** (if not already installed):
-   ```powershell
-   # Download from: https://ollama.com/download
-   # Or use winget
-   winget install Ollama.Ollama
-   ```
-
-2. **Download Models** (see above section)
-
-3. **Install Python Dependencies** (Phase 1):
-   ```powershell
-   pip install chromadb sentence-transformers litellm
-   ```
-
-4. **Initialize Vector Database** (Phase 1):
-   ```powershell
-   python scripts/init_vector_db.py
-   ```
-
-## References
-
-- [LLM Hosting Decision](../specs/LLM_HOSTING_DECISION.md)
-- [Vector Database Decision](../specs/VECTOR_DATABASE_DECISION.md)
-- [Project Tasks](../specs/TASKS.md)
-- [Ollama Documentation](https://ollama.com/)
-
-## Troubleshooting
-
-### Models not found in d:\models
-
-If Ollama doesn't use the configured path:
-
-1. Check environment variable:
-   ```powershell
-   $env:OLLAMA_MODELS
-   ```
-
-2. Restart Ollama service:
-   ```powershell
-   # Stop Ollama (if running)
-   taskkill /F /IM ollama.exe
-   
-   # Start Ollama with environment variable
-   $env:OLLAMA_MODELS="d:\models"; ollama serve
-   ```
-
-3. Verify storage location:
-   ```powershell
-   ollama list
-   dir d:\models
-   ```
-
-### Permission Issues
-
-Ensure the `d:\models` directory exists and is writable:
+### Manual Start
 
 ```powershell
-# Create directory if it doesn't exist
-New-Item -ItemType Directory -Force -Path d:\models
+# Activate virtual environment
+.\venv\Scripts\Activate.ps1
 
-# Check permissions
-icacls d:\models
+# Start server
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
+
+### Access Points
+
+- **API Server:** http://localhost:8000
+- **API Documentation:** http://localhost:8000/docs
+- **Health Check:** http://localhost:8000/health
+
+## API Endpoints
+
+### Agent Chat
+- `POST /api/v1/agent/chat` - Chat with research assistant
+- `GET /api/v1/agent/conversations/{id}` - Get conversation history
+- `DELETE /api/v1/agent/conversations/{id}` - Delete conversation
+
+### Documents
+- `GET /api/v1/documents` - List all documents
+- `POST /api/v1/documents` - Upload new document
+- `GET /api/v1/documents/{id}` - Get document details
+- `DELETE /api/v1/documents/{id}` - Delete document
+
+### Search
+- `POST /api/v1/documents/search` - Semantic search
+- `GET /api/v1/stats` - Database statistics
+
+See full API documentation at `/docs` when server is running.
+
