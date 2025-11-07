@@ -237,6 +237,32 @@ Implement document management features in client using server REST API.
 
 ## P1 - HIGH (Agent Capabilities & VR)
 
+### Issue #46: 3D Chat Screen & Immersive VR Application ⭐⭐ **NEW**
+- **Time:** 20-28 hours (Chat: 12-16 hrs, VR: 8-12 hrs)
+- **Status:** Not started
+- **Priority:** P1 - Essential for VR agent experience
+- **Depends on:** #40 (Conversational Interface), #41 (Avatar)
+- **Link:** TBD
+
+**In-world 3D chat interface** for agent conversation in VR.
+
+**Components:**
+1. **3D Chat Panel (12-16 hrs):** Babylon.js GUI screen in world space, scrollable messages, text input, VR keyboard
+2. **WebXR Features (8-12 hrs):** Controller handling, hand tracking, teleportation, performance optimization (72+ FPS)
+3. **Mode Switching:** Auto-detect VR/desktop, adaptive UI
+
+**Technical:**
+- `AdvancedDynamicTexture.CreateForMesh()` for 3D GUI
+- High-res textures (2048x1536) for crisp text
+- Controller events (triggers, grips, thumbsticks)
+- VR performance monitoring and quality adjustment
+
+**Documentation:** `docs/sessions/VR_CHAT_INTERFACE_GUIDE.md` ✅ (complete implementation guide)
+
+**Deliverables:** Working 3D chat in VR, controller support, performance-optimized (72+ FPS)
+
+---
+
 ### Issue #43: Voice Interaction System ⭐⭐ **NEW**
 - **Time:** 8-12 hours
 - **Status:** Not started

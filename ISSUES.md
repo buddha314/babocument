@@ -898,6 +898,97 @@ Implement authentication/authorization for API endpoints.
 **Files to Create:**
 - `server/app/auth/` directory
 - `server/app/auth/models.py`
+
+---
+
+### Issue #46: 3D Chat Screen & Immersive VR Application ⭐⭐
+**Priority:** P1 | **Type:** Feature | **Timeline:** 20-28 hours
+
+Implement in-world 3D chat screen for agent conversation and enhance VR application with WebXR features.
+
+**User Story:** "As Beabadoo, I can talk to my research agent through an immersive 3D chat interface in VR, with full hand/controller support and spatial presence."
+
+**Components:**
+
+**1. 3D Chat Screen Implementation (12-16 hrs)**
+- In-world chat panel using Babylon.js GUI (`AdvancedDynamicTexture.CreateForMesh`)
+- Scrollable message history with user/agent differentiation
+- Text input field with virtual keyboard support
+- Send button and Enter key handling
+- Auto-scroll to latest messages
+- Word wrapping and proper text formatting
+- High-resolution texture (2048x1536) for crisp VR text
+- Panel positioning in front of user at eye level (1.5-3m distance)
+- Optional curved surface for better VR ergonomics
+
+**2. Enhanced WebXR VR Features (8-12 hrs)**
+- Controller input handling (triggers, grips, thumbsticks, A/X buttons)
+- Hand tracking support (Quest 2+, Quest Pro)
+- Near interaction (touching UI elements)
+- Teleportation with snap points
+- VR performance optimization (maintain 72+ FPS)
+- Adaptive quality adjustment based on frame rate
+- Haptic feedback for interactions
+- Spatial audio for agent voice
+
+**3. VR/Desktop Mode Switching (included)**
+- Detect VR state and switch UI modes automatically
+- 3D world-space panel for VR
+- Fullscreen overlay for desktop
+- Shared chat logic and state management
+
+**Technical Implementation:**
+
+**Files to Create:**
+- `client/src/lib/ChatPanel3D.ts` - 3D chat screen component
+- `client/src/lib/VRControllerManager.ts` - Controller input handling
+- `client/src/lib/VRPerformanceOptimizer.ts` - Performance monitoring
+- `client/src/lib/VRChatScene.ts` - Complete VR chat scene setup
+
+**API Integration:**
+- Connect to `POST /api/v1/agent/chat` endpoint
+- WebSocket streaming for real-time responses
+- Voice input/output integration (future)
+
+**VR Optimization:**
+- Minimum 24px font size for readability
+- High-contrast colors (white on dark background)
+- Panel at optimal distance (1.5-3m) and height (eye level)
+- Visual/haptic feedback for all interactions
+- Memory management (dispose resources on mode switch)
+
+**Testing Requirements:**
+- [ ] Desktop mode: Chat UI appears and is interactive
+- [ ] VR mode: Panel is readable and positioned correctly
+- [ ] Controllers are tracked and functional
+- [ ] Can type with virtual keyboard
+- [ ] Messages send and receive properly
+- [ ] Performance maintains >72 FPS in VR
+- [ ] Teleportation works smoothly
+- [ ] Audio is spatialized correctly
+
+**Device Compatibility:**
+- Meta Quest 2/3/Pro (primary targets)
+- PSVR2, PC VR (SteamVR)
+- Desktop fallback mode
+
+**Dependencies:**
+- Issue #40: Conversational Interface (backend chat API)
+- Issue #41: Agent Avatar (visual presence)
+- BabylonJS 8.33.2 already installed ✅
+- @babylonjs/gui package already installed ✅
+- WebXR imports already present ✅
+
+**Documentation:**
+- Complete implementation guide in `docs/sessions/VR_CHAT_INTERFACE_GUIDE.md` ✅
+- Babylon.js GUI examples and patterns
+- WebXR best practices
+
+**Deliverables:** 
+- Working 3D chat interface in VR environment
+- Enhanced WebXR features (controllers, hand tracking, teleportation)
+- Performance-optimized VR experience (72+ FPS)
+- Adaptive UI for VR/desktop modes
 - `server/app/auth/middleware.py`
 
 ---
