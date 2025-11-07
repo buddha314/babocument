@@ -1,4 +1,10 @@
-# Babocument Server Configuration
+# Babocument Server
+
+This is the server component of the Babocument project - a multi-agent AI system for academic paper analysis and research assistance.
+
+> **Note:** The BabylonJS client has been moved to a separate repository: [beabodocl-babylon](https://github.com/buddha314/beabodocl-babylon)
+
+## Configuration
 
 This document explains how to configure the Babocument server for local development.
 
