@@ -50,7 +50,7 @@ Babocument is an agentic VR/XR document management application for reviewing syn
 - 🟡 CI/CD pipeline (Issue #18) - NEW
 
 ### Client Layer (/client)
-**Status:** Scaffolded - BabylonJS Editor + Next.js template
+**Status:** Scaffolded - Planning Complete, Ready for Implementation
 
 **Technology Stack:**
 - Next.js 14.2.32 (React 18)
@@ -61,6 +61,9 @@ Babocument is an agentic VR/XR document management application for reviewing syn
 - BabylonJS Editor Tools (latest)
 - TypeScript 5.8.3
 - Tailwind CSS 3.3.0
+- **Axios** (HTTP client) - to be installed
+- **React Query (TanStack Query)** (data fetching) - to be installed
+- **Zod** (validation) - to be installed
 - Plotly.js (planned - 3D scientific visualization)
 
 **Current Structure:**
@@ -72,7 +75,7 @@ client/
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx   # Next.js layout
-│   │   └── page.tsx     # Main page
+│   │   └── page.tsx     # Main page with BabylonJS scene
 │   ├── scripts/
 │   │   └── box.ts       # BabylonJS scene script
 │   └── scripts.ts       # Script loader
@@ -82,12 +85,18 @@ client/
 ```
 
 **Implementation Status:**
-- 🟡 Basic Next.js app structure
-- 🟡 BabylonJS Editor integration template
+- ✅ Basic Next.js app structure
+- ✅ BabylonJS Editor integration template
+- ✅ WebXR support enabled
+- ✅ **CLIENT_API_INTEGRATION_PLAN.md** - Comprehensive integration plan ⭐ NEW
+- 🔴 API client infrastructure (Issue #30) - Not started
+- 🔴 Document API integration (Issue #32) - Not started
+- 🔴 Search integration (Issue #33) - Not started
+- 🔴 WebSocket real-time updates (Issue #34) - Not started
+- 🔴 3D Timeline visualization (Issue #35) - Not started
 - 🔴 Virtual environment (File Room) - Not started
 - 🔴 Librarian character animation - Not started
-- 🔴 UI components - Not started
-- 🔴 Timeline visualization - Not started
+- 🔴 Statistics dashboard (Issue #36) - Not started
 
 ### Server Layer (/server)
 **Status:** 65% Complete - REST API and tests implemented
@@ -121,12 +130,34 @@ client/
 - 🔴 Database layer - Not started
 
 ### Integration Layer
-**Status:** Not started
+**Status:** Planning Complete - Ready for Implementation ⭐ NEW
+
+**Documentation Created:**
+- ✅ **CLIENT_API_INTEGRATION_PLAN.md** - Comprehensive 1000+ line integration plan
+- ✅ **HANDOFF_2025-11-06_CLIENT_API.md** - Implementation handoff document
+- ✅ GitHub issue templates created for client work
 
 **Components:**
-- MCP plugin for Blender
-- BabylonJS Editor integration
-- Client-Server communication (WebSockets vs REST+async TBD)
+- API Client Infrastructure (Issue #30) - 4-6 hours
+- Document Management UI (Issue #32) - 8-12 hours  
+- Search Integration (Issue #33) - 6-8 hours
+- WebSocket Real-time Updates (Issue #34) - 4-6 hours
+- 3D Timeline Visualization (Issue #35) - 12-16 hours
+- Statistics Dashboard (Issue #36) - 6-8 hours
+- Repository Management UI (Issue #37) - 4-6 hours
+
+**Architecture Decisions:**
+- ✅ HTTP Client: Axios with interceptors
+- ✅ State Management: React Query + React Context
+- ✅ Type Safety: TypeScript (OpenAPI-generated or manual)
+- ✅ Real-time: WebSocket (native API)
+- ✅ Validation: Zod
+
+**Next Steps:**
+1. Install client dependencies (axios, react-query, zod)
+2. Implement Issue #30 (API Infrastructure)
+3. Implement Issue #32 (Document API)
+4. Follow 6-phase implementation plan
 
 ### Documentation (/specs)
 **Status:** In progress
@@ -206,45 +237,44 @@ client/
 
 ## Immediate Next Steps
 
-### Phase 0: DevOps & Setup (NEW - Critical Priority) ⭐
-- [ ] Create unified launch script - [Issue #12](https://github.com/buddha314/babocument/issues/12) - **CRITICAL**
-  - PowerShell script for Windows development
-  - Start server and client with single command
-  - Environment validation and dependency checks
-  - Supports `--client-only` flag for current work
+### Backend (Phase 1 - Final Push)
+- [ ] Complete Agent Implementation - [Issue #10](https://github.com/buddha314/babocument/issues/10) - 6-8 hours
+  - Create missing agent files (analysis.py, summary.py, recommendation.py)
+  - Complete ResearchAgent implementation
+  - Fix coordinator initialization
+  - **Completes Phase 1 Backend!** ✅
 
-### Phase 0 Decisions
-- [ ] Define communication protocol (WebSockets vs REST) - [Issue #1](https://github.com/buddha314/babocument/issues/1)
-- [ ] Design agent architecture - [Issue #2](https://github.com/buddha314/babocument/issues/2)
-- [ ] Choose LLM hosting solution - [Issue #3](https://github.com/buddha314/babocument/issues/3)
-- [x] Select vector database - [Issue #4](https://github.com/buddha314/babocument/issues/4) ✅ COMPLETED (ChromaDB)
-- [x] Plan MCP integration - [Issue #5](https://github.com/buddha314/babocument/issues/5) ✅ COMPLETED (Hybrid community servers)
-- [ ] Decide Plotly integration - [Issue #6](https://github.com/buddha314/babocument/issues/6)
-- [ ] Set up Blender pipeline - [Issue #7](https://github.com/buddha314/babocument/issues/7)
+### Client (Phase 2 - Begin Implementation) ⭐ NEW
+- [ ] Set up API Infrastructure - [Issue #30](https://github.com/buddha314/babocument/issues/30) - 4-6 hours
+  - Install dependencies (axios, react-query, zod)
+  - Create base API client
+  - Define TypeScript types
+  - Set up React Query provider
+  - Test server connectivity
 
-### MCP Integration (Phase 1 - Ready to Start)
-- [ ] Install and test BioMCP server
-- [ ] Install and test arXiv MCP server
-- [ ] Install and test bioRxiv/medRxiv MCP server
-- [ ] Create unified Research Agent interface
-- [ ] Integrate with vector database (pending Issue #4)
-- [ ] Build API endpoints for paper search
+- [ ] Document API Integration - [Issue #32](https://github.com/buddha314/babocument/issues/32) - 8-12 hours
+  - Create document API methods
+  - Create React Query hooks
+  - Build DocumentList, DocumentViewer, DocumentUploader components
+  - Test CRUD operations
 
-### Client Development
-- [ ] Design File Room virtual environment layout
-- [ ] Create Librarian character model/animation pipeline
-- [ ] Implement basic BabylonJS scene with timeline corridor
-- [ ] Build UI component library
+- [ ] Search Integration - [Issue #33](https://github.com/buddha314/babocument/issues/33) - 6-8 hours
+  - Create SearchBar and SearchResults components
+  - Implement semantic and keyword search
+  - Add filters
 
-### Server Development
-- [ ] Set up FastAgent project structure
-- [ ] Define API endpoints
-- [ ] Implement agent coordinator
-- [ ] Integrate data sources (journals, ClinicalTrials.gov)
+### DevOps & Quality
+- [ ] CI/CD Pipeline - [Issue #18](https://github.com/buddha314/babocument/issues/18) - 2-3 hours
+- [ ] Security Audit - [Issue #27](https://github.com/buddha314/babocument/issues/27) - 2-3 hours
+- [ ] Authentication - [Issue #23](https://github.com/buddha314/babocument/issues/23) - 4-6 hours
 
 ## Key User Features (Target)
 
 ### Research & Discovery
+- **Agent-assisted paper search** - Natural language queries to find relevant papers ⭐ NEW
+  - "Find papers about bioink formulation for 3D printing"
+  - AI-powered relevance ranking and explanations
+  - Voice input support for VR
 - Query bioinks and academic journals with timeline visualization
 - Timeline-sorted journal articles
 - Word clouds and keyword trend line graphs

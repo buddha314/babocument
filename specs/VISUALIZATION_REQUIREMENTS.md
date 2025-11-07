@@ -92,7 +92,86 @@ Babocument provides rich data visualizations to help Beabadoo understand trends,
 - Filter by document workspace
 - Export as image
 
-### 3. Timeline Visualization
+### 3. Agent-Assisted Paper Discovery
+
+**Purpose:** Enable natural language queries to find relevant scientific papers using AI agents
+
+**User Story:**
+> As Beabadoo, I want to ask the agent to find scientific papers for me using natural language, so I can quickly discover relevant research without manually searching through databases.
+
+**Requirements:**
+
+#### Query Interface
+- Natural language query input (e.g., "Find papers about bioink formulation published after 2020")
+- Voice input support for hands-free operation in VR
+- Query history and favorites
+- Suggested queries based on workspace context
+
+#### Agent Capabilities
+- **Research Agent** processes natural language queries
+- Semantic search across local corpus and external repositories
+- Relevance ranking using embedding similarity
+- Filter by year, author, journal, document type
+- Cross-reference with ClinicalTrials.gov for biomedical papers
+
+#### Query Types Supported
+- Keyword-based: "papers about CRISPR"
+- Author-based: "papers by Jennifer Doudna"
+- Topic-based: "recent advances in synthetic biology"
+- Comparative: "compare bioink materials for tissue engineering"
+- Time-ranged: "papers from last 5 years about biomanufacturing"
+- Citation-based: "papers citing [specific paper]"
+
+#### Response Format
+- Ranked list of relevant papers
+- Relevance score (0-1) displayed
+- Brief AI-generated summary for each result
+- Highlighting of query-relevant sections
+- "Why this matches" explanation from agent
+- Option to view full document or add to workspace
+
+#### Interactions
+- Click result to view full paper
+- Add to current workspace
+- Generate comparative summary of top results
+- Ask follow-up questions to refine search
+- Save search query for later reuse
+- Export results as bibliography (BibTeX, RIS)
+
+#### Visual Presentation
+- Results displayed in panel overlay
+- 3D timeline integration (highlight matching documents)
+- Agent avatar shows "thinking" animation during search
+- Progress indicator for multi-source searches
+- Result cards with metadata and thumbnails
+
+#### Technical Implementation
+- **Frontend:** SearchBar component with natural language support
+- **Backend:** Research Agent with LLM integration
+- **API Endpoints:**
+  - `POST /api/v1/agents/search` - Natural language query
+  - `GET /api/v1/agents/search/{task_id}` - Search progress
+  - `POST /api/v1/agents/search/{task_id}/refine` - Refine results
+- **Real-time Updates:** WebSocket events for search progress
+- **Caching:** Cache common queries and results
+
+#### Performance Requirements
+- Initial results within 2 seconds (local corpus)
+- External repository results within 5 seconds
+- Support concurrent searches
+- Queue management for multiple users
+
+#### Example Queries
+```
+"Find papers about bioink formulation for 3D printing"
+"Show me recent advances in CRISPR gene editing"
+"Papers by George Church about synthetic biology"
+"Compare different methods for tissue scaffolding"
+"What's new in biomanufacturing since 2023?"
+"Papers about CAR-T cell therapy with clinical trial data"
+```
+
+### 4. Timeline Visualization
 
 **Purpose:** Spatial representation of document distribution over time
 
