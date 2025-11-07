@@ -1,0 +1,356 @@
+"""
+Summary Agent
+
+Handles document summarization using LLM.
+"""
+
+from typing import Any
+
+from app.agents.base import BaseAgent
+
+
+class SummaryAgent(BaseAgent):
+    """
+    Summary Agent - Document summarization and explanation.
+
+    Responsibilities:
+    - Generate concise summaries of scientific papers
+    - Explain complex concepts in simpler terms
+    - Create multi-level summaries (abstract, detailed, technical)
+    - Summarize multiple papers together (meta-summary)
+    - Extract key takeaways and actionable insights
+    - Generate topic-specific summaries (e.g., just methodology)
+    """
+
+    def __init__(self, event_bus=None, llm_client=None, vector_db=None):
+        """
+        Initialize Summary Agent.
+
+        Args:
+            event_bus: Event bus for publishing updates
+            llm_client: LLM client for text generation
+            vector_db: Vector database for retrieving document content
+        """
+        super().__init__("summary", event_bus)
+        self.llm_client = llm_client
+        self.vector_db = vector_db
+
+    async def process_task(
+        self, task_id: str, params: dict[str, Any]
+    ) -> dict[str, Any]:
+        """
+        Process a summarization task.
+
+        Args:
+            task_id: Unique task identifier
+            params: Task parameters including:
+                - document_ids: List of document IDs to summarize
+                - summary_type: Type of summary ('concise', 'detailed', 'technical', 'eli5')
+                - focus: Optional focus area (methodology, results, conclusions)
+                - max_length: Maximum summary length in words
+
+        Returns:
+            Generated summaries with metadata
+        """
+        document_ids = params.get("document_ids", [])
+        summary_type = params.get("summary_type", "concise")
+        focus = params.get("focus")
+        max_length = params.get("max_length", 250)
+
+        self.logger.info(
+            "starting_summarization",
+            task_id=task_id,
+            document_count=len(document_ids),
+            summary_type=summary_type,
+        )
+        await self.publish_progress(task_id, 10, "Loading documents...")
+
+        if not document_ids:
+            error = "No documents provided for summarization"
+            await self.publish_error(task_id, error)
+            return {"error": error}
+
+        try:
+            if len(document_ids) == 1:
+                result = await self._summarize_single(
+                    task_id, document_ids[0], summary_type, focus, max_length
+                )
+            else:
+                result = await self._summarize_multiple(
+                    task_id, document_ids, summary_type, focus, max_length
+                )
+
+            await self.publish_progress(task_id, 100, "Summary complete")
+            await self.publish_completion(task_id, result)
+
+            return result
+
+        except Exception as e:
+            error_msg = f"Summarization failed: {str(e)}"
+            self.logger.error("summarization_error", task_id=task_id, error=error_msg)
+            await self.publish_error(task_id, error_msg)
+            return {"error": error_msg}
+
+    async def _summarize_single(
+        self,
+        task_id: str,
+        document_id: str,
+        summary_type: str,
+        focus: str | None,
+        max_length: int,
+    ) -> dict[str, Any]:
+        """
+        Summarize a single document.
+
+        Args:
+            task_id: Task identifier for progress tracking
+            document_id: Document ID to summarize
+            summary_type: Type of summary to generate
+            focus: Optional focus area
+            max_length: Maximum summary length
+
+        Returns:
+            Generated summary with metadata
+        """
+        await self.publish_progress(task_id, 30, "Generating summary...")
+
+        # TODO: Implement single document summarization
+        # - Retrieve document content from vector DB
+        # - Extract relevant sections (based on focus if provided)
+        # - Generate prompt based on summary_type:
+        #   - concise: High-level overview in 2-3 sentences
+        #   - detailed: Comprehensive summary covering all sections
+        #   - technical: Focus on methodology and technical details
+        #   - eli5: Explain like I'm 5, simplify complex concepts
+        # - Call LLM with prompt
+        # - Post-process and format response
+        # - Extract key terms and entities
+
+        # Placeholder result
+        result = {
+            "task_id": task_id,
+            "document_id": document_id,
+            "summary_type": summary_type,
+            "focus": focus,
+            "summary": f"Summary of document {document_id} (placeholder)",
+            "key_terms": [],
+            "word_count": 0,
+        }
+
+        return result
+
+    async def _summarize_multiple(
+        self,
+        task_id: str,
+        document_ids: list[str],
+        summary_type: str,
+        focus: str | None,
+        max_length: int,
+    ) -> dict[str, Any]:
+        """
+        Generate meta-summary of multiple documents.
+
+        Args:
+            task_id: Task identifier
+            document_ids: List of document IDs to summarize together
+            summary_type: Type of summary
+            focus: Optional focus area
+            max_length: Maximum summary length
+
+        Returns:
+            Meta-summary combining insights from all documents
+        """
+        await self.publish_progress(task_id, 30, "Generating meta-summary...")
+
+        # TODO: Implement multiple document summarization
+        # - Retrieve all document contents
+        # - Extract relevant sections from each
+        # - Identify common themes and unique contributions
+        # - Generate unified summary that:
+        #   - Synthesizes findings across papers
+        #   - Highlights agreements and disagreements
+        #   - Notes evolution of ideas (if chronological)
+        # - Call LLM with combined context
+        # - Format as coherent narrative
+
+        # Placeholder result
+        result = {
+            "task_id": task_id,
+            "document_ids": document_ids,
+            "summary_type": summary_type,
+            "focus": focus,
+            "meta_summary": f"Meta-summary of {len(document_ids)} documents (placeholder)",
+            "common_themes": [],
+            "unique_contributions": {},
+            "word_count": 0,
+        }
+
+        return result
+
+    async def summarize_for_conversation(
+        self, query: str, context: dict[str, Any]
+    ) -> dict[str, Any]:
+        """
+        Generate summary in response to conversational query.
+
+        Used by conversational agent interface for natural language summary requests.
+
+        Args:
+            query: Natural language summary request
+            context: Conversation context including documents and preferences
+
+        Returns:
+            Summary formatted for conversational response
+        """
+        # TODO: Parse natural language query to extract parameters
+        # Examples:
+        # - "Summarize this paper" -> single doc, concise
+        # - "Give me a detailed summary" -> detailed type
+        # - "Explain the methodology" -> focus=methodology
+        # - "Summarize the top 3 papers" -> multiple docs
+        # - "Explain this in simple terms" -> eli5 type
+
+        self.logger.info("conversational_summary", query=query)
+
+        # Extract document IDs from context
+        document_ids = context.get("selected_documents", [])
+        if not document_ids:
+            return {
+                "response": "Which paper would you like me to summarize?",
+                "requires_clarification": True,
+            }
+
+        # Parse query for summary type and focus
+        summary_type = self._extract_summary_type(query)
+        focus = self._extract_focus(query)
+        max_length = self._extract_length_preference(query, default=250)
+
+        # Generate task ID and process
+        task_id = context.get("conversation_id", "conv_unknown")
+        result = await self.process_task(
+            task_id,
+            {
+                "document_ids": document_ids,
+                "summary_type": summary_type,
+                "focus": focus,
+                "max_length": max_length,
+            },
+        )
+
+        return {
+            "response": self._format_summary_response(result, query),
+            "summary_data": result,
+        }
+
+    def _extract_summary_type(self, query: str) -> str:
+        """
+        Extract summary type from natural language query.
+
+        Args:
+            query: User query
+
+        Returns:
+            Summary type ('concise', 'detailed', 'technical', 'eli5')
+        """
+        query_lower = query.lower()
+
+        if any(word in query_lower for word in ["simple", "eli5", "explain like", "basic"]):
+            return "eli5"
+        elif any(word in query_lower for word in ["detailed", "comprehensive", "thorough"]):
+            return "detailed"
+        elif any(word in query_lower for word in ["technical", "methodology", "methods"]):
+            return "technical"
+        else:
+            return "concise"
+
+    def _extract_focus(self, query: str) -> str | None:
+        """
+        Extract focus area from query.
+
+        Args:
+            query: User query
+
+        Returns:
+            Focus area or None
+        """
+        query_lower = query.lower()
+
+        if "method" in query_lower:
+            return "methodology"
+        elif "result" in query_lower or "finding" in query_lower:
+            return "results"
+        elif "conclusion" in query_lower or "takeaway" in query_lower:
+            return "conclusions"
+        elif "introduction" in query_lower or "background" in query_lower:
+            return "introduction"
+
+        return None
+
+    def _extract_length_preference(self, query: str, default: int) -> int:
+        """
+        Extract length preference from query.
+
+        Args:
+            query: User query
+            default: Default length
+
+        Returns:
+            Maximum word count for summary
+        """
+        query_lower = query.lower()
+
+        if any(word in query_lower for word in ["brief", "short", "quick"]):
+            return 100
+        elif any(word in query_lower for word in ["long", "comprehensive", "detailed"]):
+            return 500
+
+        return default
+
+    def _format_summary_response(
+        self, summary_result: dict[str, Any], original_query: str
+    ) -> str:
+        """
+        Format summary for conversational response.
+
+        Args:
+            summary_result: Raw summary results
+            original_query: User's original query
+
+        Returns:
+            Natural language summary response
+        """
+        # TODO: Generate engaging conversational response
+        # Include the summary with appropriate framing
+
+        if "error" in summary_result:
+            return f"I encountered an issue: {summary_result['error']}"
+
+        summary_text = summary_result.get("summary") or summary_result.get("meta_summary", "")
+        return f"Here's a summary:\n\n{summary_text}"
+
+    async def explain_concept(
+        self, concept: str, context: dict[str, Any], complexity: str = "simple"
+    ) -> dict[str, Any]:
+        """
+        Explain a specific concept mentioned in documents.
+
+        Args:
+            concept: Concept to explain (e.g., "CRISPR", "bioink", "CAR-T therapy")
+            context: Context including relevant documents
+            complexity: Explanation complexity ('simple', 'moderate', 'technical')
+
+        Returns:
+            Explanation with examples and context
+        """
+        # TODO: Implement concept explanation
+        # - Find mentions of concept in documents
+        # - Extract definitions and usage
+        # - Generate explanation appropriate to complexity level
+        # - Provide examples from the papers
+
+        return {
+            "concept": concept,
+            "explanation": f"Explanation of {concept} (to be implemented)",
+            "examples": [],
+            "related_concepts": [],
+        }
