@@ -1,19 +1,169 @@
 # Project Task List - Babocument
 
-**Last Updated:** 2025-11-06 (Event Bus Complete)
-**Current Phase:** Phase 1 Backend - 85% Complete
-**GitHub Issues:** 18 open | 10 closed
+**Last Updated:** 2025-11-06 (Agent-First Redesign)
+**Current Phase:** Phase 1 Backend - 85% Complete → Phase 2 Agent Core  
+**Paradigm:** Agent-First Conversational Interface (Claude Desktop Model)
 
 **🎯 CRITICAL PATH:**
 1. ~~Issue #19: Event Bus~~ ✅ **COMPLETE** (3 hrs)
-2. Issue #10: Agents (6-8 hrs) ← **DO NEXT**
-3. **Phase 1 Complete!** (100%)
+2. Issue #10: Agents (8-12 hrs) ← **DO NEXT** (Enhanced for conversation)
+3. Issue #40: Conversational Agent Interface (16-24 hrs) ← **NEW P0**
+4. Issue #41: Agent Avatar & Spatial Presence (12-16 hrs) ← **NEW P0**
 
-**📊 See PRIORITY_ANALYSIS_2025-11-06.md for complete details**
+**📊 NEW APPROACH: See CLIENT_AGENT_FIRST_REDESIGN.md for complete paradigm shift**
+
+**⚠️ MAJOR CHANGE:** User interacts through conversational agent (like Claude Desktop), not traditional website UI. Many planned components deprecated in favor of agent-mediated interactions.
 
 ---
 
-## P0 - CRITICAL (Blocking Phase 1 & 2)
+## P0 - CRITICAL (Agent Core - NEW PARADIGM)
+
+### Issue #40: Conversational Agent Interface ⭐⭐⭐ **NEW - START HERE**
+- **Time:** 16-24 hours
+- **Status:** Not started
+- **Priority:** P0 - Core experience
+- **Phase:** Phase 2 - Agent Core
+- **Link:** TBD
+
+**THE PRIMARY INTERFACE** - User talks to agent (like Claude Desktop), not clicking UI.
+
+**Components:**
+1. **Agent Conversation Manager (Backend: 8-12 hrs)**
+   - Natural language query processing with LLM
+   - Intent classification (search, summarize, add, analyze, explain)
+   - Multi-turn conversation context and memory
+   - Task planning and execution
+   - Response generation and streaming
+
+2. **Chat Interface (Frontend: 8-12 hrs)**
+   - Text + voice input (Web Speech API)
+   - Conversation history panel (floating in VR)
+   - Agent response streaming with typing indicators
+   - Voice output (Text-to-Speech)
+   - VR-optimized UI (billboard panel)
+
+**API Endpoints:**
+```
+POST   /api/v1/agent/chat              # Send message to agent
+GET    /api/v1/agent/chat/{session_id} # Get conversation history  
+POST   /api/v1/agent/voice             # Voice input
+WS     /ws/agent/{session_id}          # Real-time chat stream
+```
+
+**Example Interactions:**
+- "Show me papers about bioink formulation" → Agent searches and presents
+- "Summarize the top 3" → Agent generates summaries
+- "Add that Kim paper to my workspace" → Agent performs action
+- "What's trending in biomanufacturing?" → Agent analyzes and explains
+
+**Deliverables:** Conversational API backend, chat UI (VR + desktop), voice I/O, context-aware responses
+
+---
+
+### Issue #41: Agent Avatar & Spatial Presence ⭐⭐⭐ **NEW**
+- **Time:** 12-16 hours
+- **Status:** Not started
+- **Priority:** P0 - Core VR experience
+- **Depends on:** BabylonJS scene
+- **Link:** TBD
+
+**Physical embodiment of agent** in VR library environment.
+
+**Components:**
+1. **Librarian Avatar (Frontend: 8-12 hrs)**
+   - 3D character model (stylized humanoid or abstract orb)
+   - Idle animations (breathing, looking around, gestures)
+   - Talking animations (lip sync or particle effects)
+   - Pointing gestures to indicate documents/areas
+   - Eye contact and gaze tracking
+   - Locomotion (follows user or stays at desk)
+
+2. **Spatial Audio (Frontend: 4 hrs)**
+   - Agent voice emanates from avatar position
+   - 3D spatialized responses
+   - Ambient library soundscape
+
+**Technical:** BabylonJS AnimationGroups, Text-to-speech with viseme data, IK for pointing, proximity detection
+
+**User Experience:** Agent feels like real research assistant with physical presence
+
+**Deliverables:** 3D agent character, animations, spatial audio, natural interaction
+
+---
+
+### Issue #42: Ambient Context UI ⭐⭐ **NEW**
+- **Time:** 10-14 hours
+- **Status:** Not started
+- **Priority:** P0 - Replaces traditional UI
+- **Depends on:** #40, #41
+- **Link:** TBD
+
+**Results and context appear spatially**, not in traditional menus/panels.
+
+**Components:**
+
+1. **Floating Result Cards (Frontend: 6-8 hrs)**
+   - Document cards appear near avatar when mentioned
+   - Hover for summary preview
+   - Grab to examine closely
+   - Dismiss with gesture
+   - Stack and organize in 3D space
+
+2. **Spatial Timeline (Frontend: 4-6 hrs)**
+   - Documents auto-arrange chronologically
+   - Agent highlights relevant papers (glow/pulse)
+   - "Walk through time" interaction
+   - Search results visualization
+
+**Replaces:** DocumentList, SearchBar, traditional CRUD UI
+
+**Deliverables:** Floating card system, spatial timeline, VR interaction model
+
+---
+
+## P0 - CRITICAL (Backend Foundation - CONTINUES)
+
+### ~~Issue #19: Event Bus Implementation~~ ✅ **COMPLETED**
+- **Time:** 3 hours (completed)
+- **Status:** ✅ Complete
+- **Completed:** 2025-11-06
+- **Link:** https://github.com/buddha314/babocument/issues/19
+
+Redis pub/sub for agent coordination implemented with tests. See HANDOFF_2025-11-06_EVENT_BUS.md
+
+### Issue #10: Complete Agents ⭐⭐⭐ **ENHANCED FOR CONVERSATION**
+- **Time:** 8-12 hours (was 6-8)
+- **Status:** 25% (base classes only)
+- **Priority:** P0 (elevated from P1)
+- **Depends on:** ~~#19~~ ✅
+- **Link:** https://github.com/buddha314/babocument/issues/10
+
+**ENHANCED:** Now includes conversational capabilities for agent-first interaction model.
+
+**Original Tasks:**
+- Create missing files (analysis.py, summary.py, recommendation.py)
+- Complete research.py
+- Fix coordinator initialization
+
+**New Conversational Requirements:**
+- Intent extraction from natural language
+- Context memory across conversation turns
+- Proactive suggestions ("Would you also like to see...")
+- Error recovery ("I didn't understand, did you mean...")
+- Personality/tone (professional but approachable)
+
+**New Methods:**
+```python
+async def process_natural_language_query(self, query: str, context: ConversationContext)
+async def suggest_next_actions(self, current_state: State) -> List[Suggestion]
+async def explain_reasoning(self, action: Action) -> str
+```
+
+**Deliverables:** Working agents with conversational intelligence
+
+---
+
+## P1 - HIGH (Agent Capabilities & VR)
 
 ### ~~Issue #19: Event Bus Implementation~~ ✅ **COMPLETED**
 - **Time:** 3 hours (completed)
@@ -86,71 +236,131 @@ Implement document management features in client using server REST API.
 
 ---
 
-## P1 - HIGH (Required for Production & Client Integration)
+## P1 - HIGH (Agent Capabilities & VR)
 
-### Issue #33: Search Integration (Client) ⭐ **NEW**
-- **Time:** 6-8 hours
+### Issue #43: Voice Interaction System ⭐⭐ **NEW**
+- **Time:** 8-12 hours
 - **Status:** Not started
-- **Depends on:** #32
+- **Priority:** P1 - Essential for VR
+- **Depends on:** #40
 - **Link:** TBD
 
-Implement semantic and keyword search in client with UI components.
+**Hands-free voice interaction** for VR environment.
 
-**Tasks:**
-- Create search API methods
-- Create useSearch hook
-- Build SearchBar component
-- Build SearchResults component
-- Add filters (year, source, type)
-- Test semantic & keyword search
-- Integrate with 3D scene
+**Components:**
 
-**Deliverables:** Functional search UI with result highlighting
+1. **Voice Input (Frontend: 4-6 hrs)**
+   - Web Speech API integration
+   - Wake word detection ("Hey Assistant")
+   - Push-to-talk button (VR controller)
+   - Noise cancellation
+   - Speech-to-text streaming
 
-### Issue #38: Agent-Assisted Paper Discovery ⭐ **NEW**
+2. **Voice Output (Frontend: 4-6 hrs)**
+   - Text-to-speech (local Coqui TTS or ElevenLabs)
+   - Natural prosody and emotion
+   - Speed/pitch controls
+   - Interrupt detection (user speaks during response)
+
+**VR Optimization:** Hands-free primary mode, visual waveform feedback, offline fallback, low-latency
+
+**Deliverables:** Voice I/O system, VR controller integration, wake word support
+
+---
+
+### Issue #38: Agent-Assisted Paper Discovery ⭐ **REFRAMED**
 - **Time:** 14-20 hours (Backend: 8-12, Frontend: 6-8)
 - **Status:** Not started
-- **Depends on:** #10 (Agents), #32 (Document API)
+- **Priority:** P1 (was P1, now CORE feature)
+- **Depends on:** #10 (Agents), #40 (Conversational Interface)
 - **Link:** TBD
 
-Enable natural language queries for finding scientific papers using AI agents.
+**PARADIGM SHIFT:** This IS how ALL search works now (not separate feature).
 
-**User Story:** "As Beabadoo, I want to ask the agent to find scientific papers for me using natural language."
+**User Story:** "As Beabadoo, I ask the agent to find papers using natural language"
 
-**Tasks:**
-- Enhance Research Agent with NLP query processing
-- Add intent extraction (keywords, authors, time ranges)
-- Create agent search API endpoints
-- Build AgentSearchBar UI component
-- Build AgentSearchResults with AI explanations
-- Add "why this matches" explanations
-- Support voice input in VR
-- Integrate with existing search
+**Changed Approach:**
+- NOT a separate "agent search" UI component
+- Integrated into conversational interface (#40)
+- No separate SearchBar needed (deprecated)
+- All search is agent-mediated
 
-**Example Queries:**
-- "Find papers about bioink formulation for 3D printing"
-- "Show me recent advances in CRISPR gene editing"
-- "Compare different methods for tissue scaffolding"
+**Enhanced Focus:**
+- Better intent understanding and query parsing
+- Multi-source federation (local corpus + external repos)
+- Relevance scoring and ranking
+- "Why this matches" explanations
+- Follow-up question handling
+- Context-aware refinement
 
-**Deliverables:** Natural language search with AI-powered results
+**Example Conversations:**
+```
+User: "Find papers about bioink formulation published after 2020"
+Agent: "I found 23 papers on bioink formulation from 2021-2025. 
+        The most cited is 'Advanced Hydrogel Composites' by Kim et al. 
+        Would you like me to show you the top 5 or filter by a specific application?"
 
-### Issue #34: WebSocket Real-time Updates (Client) ⭐ **NEW**
-- **Time:** 4-6 hours
+User: "Show me the top 5"
+Agent: [Displays 5 floating cards] "Here are the most relevant papers. 
+        Paper 1 introduces a novel alginate blend improving cell viability by 40%..."
+```
+
+**Deliverables:** Enhanced natural language search, relevance explanations, conversational refinement
+
+---
+
+### Issue #44: Workspace Management via Conversation ⭐ **NEW**
+- **Time:** 6-8 hours
 - **Status:** Not started
-- **Depends on:** #30, Server #21 (WebSocket Handler)
+- **Priority:** P1
+- **Depends on:** #40
 - **Link:** TBD
 
-Implement WebSocket connection for real-time agent updates and task progress.
+**User manages workspaces through agent**, not menus.
+
+**Example Interactions:**
+```
+"Create a new workspace for cancer immunotherapy research"
+"Move these papers to my bioprinting workspace"
+"Show me what's in my Q4 2024 workspace"
+"Archive old workspaces from 2023"
+```
+
+**Backend (4-5 hrs):**
+- Workspace CRUD via agent commands
+- Document assignment with NLP parsing
+- Smart workspace suggestions
+- Auto-tagging and organization
+
+**Frontend (2-3 hrs):**
+- Workspace visualization (spatial folders or areas in VR)
+- Drag-and-drop as secondary interaction
+- Voice commands primary
+
+**Deliverables:** Conversational workspace management, spatial visualization
+
+---
+
+### Issue #34: WebSocket Real-time Updates ⭐ **SIMPLIFIED**
+- **Time:** 2-3 hours (was 4-6)
+- **Status:** Not started
+- **Priority:** P1 → P2 (simplified scope)
+- **Depends on:** #40
+- **Link:** TBD
+
+**SIMPLIFIED:** Only for agent chat streaming and presence, not complex event subscriptions.
 
 **Tasks:**
-- Create WebSocket manager with auto-reconnect
-- Create useWebSocket hook
-- Subscribe to event types (task progress, document indexed, etc.)
-- Update UI on events
-- Show notifications for background tasks
-- Test event flow end-to-end
+- WebSocket for agent chat streaming
+- Typing indicators
+- Presence/connection status
+- Auto-reconnect logic
 
-**Deliverables:** Real-time notifications and progress updates
+**Removed:** Complex event subscriptions (task progress, document indexed) - agent narrates these instead
+
+**Deliverables:** Real-time chat communication
+
+---
 
 ### Issue #27: Security Audit & Hardening
 - **Time:** 2-3 hours
@@ -178,7 +388,226 @@ SQLAlchemy models, migrations, persistent metadata.
 
 ---
 
-## P2 - MEDIUM (Quality Improvements & Advanced Features)
+## P2 - MEDIUM (Enhanced Experiences)
+
+### Issue #45: Proactive Agent Behaviors ⭐ **NEW**
+- **Time:** 8-12 hours
+- **Status:** Not started
+- **Priority:** P2
+- **Depends on:** #40, #10
+- **Link:** TBD
+
+**Agent anticipates needs** and makes proactive suggestions.
+
+**Examples:**
+- "I noticed you've been reading about CAR-T therapy. There are 3 new papers this week."
+- "These 5 papers cite each other—would you like me to show their relationship?"
+- "You searched for this last month but didn't find much. New results are available now."
+- "This paper contradicts your earlier findings—shall I explain the differences?"
+
+**Technical:**
+- User activity tracking and pattern recognition
+- Notification system (ambient, non-intrusive)
+- Contextual suggestion engine
+- Machine learning for personalization
+
+**Deliverables:** Proactive notification system, intelligent suggestions, context awareness
+
+---
+
+### Issue #35: 3D Timeline Visualization ⭐ **SIMPLIFIED**
+- **Time:** 8-12 hours (was 12-16)
+- **Status:** Not started
+- **Priority:** P1 → P2 (deprioritized)
+- **Depends on:** #42 (Ambient UI)
+- **Link:** TBD
+
+**SIMPLIFIED:** Timeline is secondary to conversation. Agent guides user through timeline verbally.
+
+**Reduced Scope:**
+- Basic spatial arrangement by year (simple corridor)
+- Agent highlights relevant papers (glow effect)
+- Less complex interactive UI needed
+- Focus on agent-guided navigation ("Let me show you papers from 2023...")
+
+**Removed:**
+- Complex timeline scrubbing controls
+- Elaborate density visualizations
+- Heavy interactive filtering
+
+**Deliverables:** Simple chronological arrangement, agent-guided navigation
+
+---
+
+### Issue #21: WebSocket Handler (Server)
+- **Time:** 2-3 hours
+- **Depends on:** #19
+- **Link:** https://github.com/buddha314/babocument/issues/21
+
+Real-time updates for agent tasks.
+
+### Issue #22: Background Task Processing
+- **Time:** 2-3 hours
+- **Depends on:** #19
+- **Link:** https://github.com/buddha314/babocument/issues/22
+
+Celery for async PDF processing.
+
+### Issue #25: Error Handling Standardization
+- **Time:** 2-3 hours
+- **Link:** https://github.com/buddha314/babocument/issues/25
+
+Consistent error responses across APIs.
+
+### Issue #28: Resolve All TODOs
+- **Time:** 2-3 hours
+- **Link:** https://github.com/buddha314/babocument/issues/28
+
+Clean up 19 TODO comments in codebase.
+
+### Issue #24: API Documentation & Usage Guide
+- **Time:** 2-3 hours
+- **Link:** https://github.com/buddha314/babocument/issues/24
+
+Create docs/API_USAGE_GUIDE.md with examples.
+
+### Issue #14: Select Optimal LLM Models
+- **Time:** Research + benchmarking
+- **Link:** https://github.com/buddha314/babocument/issues/14
+
+Benchmark models for each agent type.
+
+---
+
+## P3 - LOW (Future Work & Advanced Features)
+
+### Issue #39: DICOM Medical Imaging Support
+- **Time:** 38-54 hours (Backend: 18-26, Frontend: 20-28)
+- **Status:** Not started
+- **Priority:** P2 → P3 (advanced feature)
+- **Depends on:** #10 (Agents), #40 (Agent Interface), #38 (Agent Search)
+- **Link:** TBD
+
+Enable viewing DICOM medical imaging files and searching medical imaging repositories like TCIA.
+
+**Note:** Still agent-mediated. User says "Find CT scans of lung cancer" to agent.
+
+**Deliverables:** DICOM file viewing, 3D volume rendering in VR, TCIA repository search
+
+---
+
+### Issue #30: Client API Infrastructure **SIMPLIFIED & DEPRIORITIZED**
+- **Time:** 2-3 hours (was 4-6)
+- **Status:** Not started
+- **Priority:** P0 → P3 (minimal need)
+- **Link:** TBD
+
+**SIMPLIFIED:** Most API calls go through agent backend, not direct from UI.
+
+**Reduced Scope:**
+- Basic fetch client (minimal)
+- WebSocket for agent chat (covered in #34)
+- Minimal types for agent messages
+- NO React Query (not needed without CRUD UI)
+- NO complex interceptors
+
+**Deliverables:** Minimal API client for agent communication
+
+---
+
+### Issue #36: Statistics Dashboard **DEPRIORITIZED**
+- **Time:** 3-4 hours (was 6-8)
+- **Status:** Not started
+- **Priority:** P2 → P3
+- **Depends on:** #40
+- **Link:** TBD
+
+**DEPRIORITIZED:** Agent can verbally report stats. Complex dashboards less important.
+
+**Simplified:**
+- Agent answers "How many papers do I have?"
+- Generates simple charts on demand
+- No permanent dashboard needed
+- Ambient stat display (minimal)
+
+**Deliverables:** Agent-narrated statistics, simple on-demand charts
+
+---
+
+### Issue #37: Repository Management UI **DEPRIORITIZED**
+- **Time:** 2-3 hours (was 4-6)
+- **Status:** Not started
+- **Priority:** P2 → P3
+- **Depends on:** #40
+- **Link:** TBD
+
+**DEPRIORITIZED:** Agent manages repositories conversationally.
+
+**Examples:**
+```
+"Connect to the new arXiv feed"
+"Sync my PubMed repository"
+"Show me which repos have new papers"
+```
+
+**Minimal UI:**
+- Simple status indicators (ambient)
+- Agent handles complexity
+
+**Deliverables:** Conversational repo management, minimal status UI
+
+---
+
+## DEPRECATED (Replaced by Agent-First Model)
+
+### ~~Issue #30: Client API Infrastructure~~ → **SIMPLIFIED** (see P3)
+**Why:** Agent backend mediates most API calls
+
+### ~~Issue #32: Document API Integration~~ → **DEPRECATED**
+- **Time:** 8-12 hours
+- **Status:** Not needed
+
+**DEPRECATED:** User doesn't directly call document API. Agent handles all document operations server-side.
+
+**What remains:**
+- Agent calls document API internally
+- No frontend document CRUD UI needed
+- Documents appear through agent conversation
+
+---
+
+### ~~Issue #33: Search Integration~~ → **DEPRECATED**
+- **Time:** 6-8 hours  
+- **Status:** Not needed
+
+**DEPRECATED:** No search bar. Search IS conversation with agent (Issue #38).
+
+**Replaced by:** Issue #40 (Conversational Interface) + Issue #38 (Agent Discovery)
+
+---
+
+## ✅ Completed
+- **Time:** 38-54 hours (Backend: 18-26, Frontend: 20-28)
+- **Status:** Not started
+- **Depends on:** #10 (Agents), #32 (Document API), #38 (Agent Search)
+- **Link:** TBD
+
+Enable viewing DICOM medical imaging files and searching medical imaging repositories like The Cancer Imaging Archive (TCIA).
+
+**User Story:** "As Beabadoo, I can view DICOM medical images and search open-source imaging repositories."
+
+**Tasks:**
+- **DICOM File Support (8-12 hrs):** Parse with pydicom, anonymize, convert to web formats, REST endpoints
+- **DICOM Visualization (12-16 hrs):** 2D slice viewer, 3D volume rendering, VR support, measurement tools
+- **TCIA Integration (10-14 hrs):** TCIA API client, search by modality/body part, download series, link to papers
+- **Imaging Search UI (8-12 hrs):** Natural language search, preview thumbnails, metadata display, VR voice search
+
+**Example Queries:**
+- "Find CT scans of lung cancer patients"
+- "Show me brain MRIs with glioblastoma"
+- "Load this CT scan and show it in 3D"
+
+**Deliverables:** DICOM file viewing, 3D volume rendering in VR, TCIA repository search, integrated medical research workflow
 
 ### Issue #35: 3D Timeline Visualization (Client) ⭐ **NEW**
 - **Time:** 12-16 hours
@@ -359,24 +788,71 @@ Complete BabylonJS + Plotly integration.
 
 ## Quick Reference
 
-**Total Issues:** 36 (26 open, 10 closed)
+**Total Issues:** 40 (30 open, 10 closed)
+
+**NEW ISSUES ADDED:**
+- Issue #40: Conversational Agent Interface (P0) ⭐⭐⭐
+- Issue #41: Agent Avatar & Spatial Presence (P0) ⭐⭐⭐
+- Issue #42: Ambient Context UI (P0) ⭐⭐
+- Issue #43: Voice Interaction System (P1) ⭐⭐
+- Issue #44: Workspace Management via Conversation (P1) ⭐
+- Issue #45: Proactive Agent Behaviors (P2) ⭐
+
+**DEPRECATED ISSUES:**
+- Issue #32: Document API Integration (agent handles server-side)
+- Issue #33: Search Integration (search IS conversation now)
 
 **Priority Distribution:**
-- P0: 4 issues (18-26 hours) - 2 backend, 2 client
-- P1: 8 issues (46-68 hours) - 4 backend, 4 client
-- P2: 9 issues (36-54 hours) - 3 backend, 6 client
-- P3: 7 issues (future)
+- P0: 6 issues (46-64 hours) - 4 agent core, 2 backend
+- P1: 7 issues (45-65 hours) - 4 agent capabilities, 3 backend
+- P2: 8 issues (30-46 hours) - enhanced experiences
+- P3: 6 issues (45-68 hours) - future work
 
-**Time to Phase 1 (Backend):** 9-12 hours  
-**Time to Phase 2 (Client Integration):** 32-46 hours (includes agent search)
-**Time to Production:** 64-94 hours
+**Time Estimates:**
+**Time to Phase 1 (Backend):** 11-15 hours (Enhanced agents)
+**Time to Phase 2 (Agent Core):** 46-64 hours (Issues #40, #41, #42)  
+**Time to Phase 3 (Agent Capabilities):** 31-48 hours (Issues #43, #38, #44)
+**Time to Production (MVP):** 88-127 hours (Phases 1-3)
+
+**Old Plan Total:** 102-148 hours (traditional website)
+**New Plan Total:** 88-127 hours (agent-first)
+**Savings:** 14-21 hours (simpler, more focused)
+
+**Critical Path (MVP):**
+1. Issue #10: Complete Agents (8-12 hrs) - Enhanced for conversation
+2. Issue #40: Conversational Interface (16-24 hrs) - Primary UI
+3. Issue #41: Agent Avatar (12-16 hrs) - VR presence
+4. Issue #42: Ambient UI (10-14 hrs) - Spatial results
+5. Issue #43: Voice System (8-12 hrs) - VR interaction
+6. Issue #38: Paper Discovery (14-20 hrs) - Core capability
+**Total Critical Path:** 68-98 hours
 
 **Next Action:** 
-- **Backend:** Start Issue #10 (Agents)
-- **Client:** Start Issue #30 (API Infrastructure)
-- **Feature:** Issue #38 (Agent Paper Discovery) - After #10 and #32
+- **Backend:** Complete Issue #10 (Agents with conversation)
+- **Frontend:** Start Issue #40 (Conversational Interface)
+- **Design:** Agent personality, avatar design, voice selection
 
 ---
 
-For detailed dependency graph, risk assessment, and week-by-week plan, see:
-**PRIORITY_ANALYSIS_2025-11-06.md**
+**Paradigm Shift Summary:**
+
+**OLD MODEL (Traditional Website):**
+- User clicks buttons and menus
+- CRUD operations via forms
+- SearchBar components
+- Document management UI
+- Statistics dashboards
+
+**NEW MODEL (Agent-First):**
+- User talks to intelligent agent (voice + text)
+- Agent performs operations on user's behalf
+- Natural language for everything
+- Ambient spatial UI shows context
+- Agent proactively assists and suggests
+
+**Key References:**
+- **CLIENT_AGENT_FIRST_REDESIGN.md** - Complete paradigm analysis
+- **CLIENT_API_INTEGRATION_PLAN.md** - Original plan (for reference)
+- **VISUALIZATION_REQUIREMENTS.md** - Updated for agent interactions
+
+---
