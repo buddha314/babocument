@@ -45,6 +45,7 @@ import { loadScene } from "babylonjs-editor-tools";
  * loaded objects (scene, meshes, transform nodes, lights, cameras, etc.).
  */
 import { scriptsMap } from "@/scripts";
+import ApiTest from "@/components/ApiTest";
 
 export default function Home() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -124,6 +125,7 @@ export default function Home() {
 				ref={canvasRef}
 				className="w-full h-full outline-none select-none"
 			/>
+			<ApiTest />
 		</main>
 	);
 }
