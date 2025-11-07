@@ -1,616 +1,309 @@
-# GitHub Issues Index# GitHub Issues Index
+# GitHub Issues Index
 
+**Repository:** https://github.com/buddha314/babocument/issues
+**Last Updated:** 2025-11-06 (Review Complete)
+**Total Issues:** 8 open on GitHub (need to close completed ones)
 
+## 🚨 Immediate Actions Required
 
-**Repository:** https://github.com/buddha314/babocument/issues  **Repository:** https://github.com/buddha314/babocument/issues
-
-**Last Updated:** 2025-11-06 (Reprioritization Complete)  **Last Updated:** 2025-11-06 (Review Complete)
-
-**Total Issues:** 28 (18 open, 10 closed)**Total Issues:** 8 open on GitHub (need to close completed ones)
-
-
-
----## 🚨 Immediate Actions Required
-
-
-
-## 📊 Quick Summary**GitHub Cleanup:**
-
+**GitHub Cleanup:**
 1. ✅ Close issue #9 - Vector DB initialization COMPLETED
-
-**Status:**2. ✅ Close issue #15 - Service Integration COMPLETED  
-
-- **Open:** 18 issues3. ✅ Close issue #17 - Duplicate of #18 (CI/CD)
-
-- **Closed:** 10 issues4. ✅ Create new issue for Event Bus implementation (critical path #2)
-
-- **All Outstanding Work Tracked:** ✅5. ✅ Create new issue for Database Layer
-
+2. ✅ Close issue #15 - Service Integration COMPLETED  
+3. ✅ Close issue #17 - Duplicate of #18 (CI/CD)
+4. ✅ Create new issue for Event Bus implementation (critical path #2)
+5. ✅ Create new issue for Database Layer
 6. ✅ Create new issue for WebSocket Handler
+7. ⚠️ Update issue #10 description - Note agent files are missing
 
-**Priority Breakdown:**7. ⚠️ Update issue #10 description - Note agent files are missing
-
-- **P0 (Critical):** 2 issues - Blocking Phase 1
-
-- **P1 (High):** 4 issues - Required for production**See [specs/TASKS.md](specs/TASKS.md) for complete task breakdown with 21 TODO items**
-
-- **P2 (Medium):** 6 issues - Quality improvements
-
-- **P3 (Low):** 6 issues - Future work---
-
-
-
-**Critical Path:**  ## Phase 0: Foundation & Planning Decisions
-
-Issue #19 (Event Bus) → Issue #10 (Agents) → Phase 1 Complete
-
-Critical architectural decisions that must be made before implementation.
+**See [specs/TASKS.md](specs/TASKS.md) for complete task breakdown with 21 TODO items**
 
 ---
 
+## Phase 0: Foundation & Planning Decisions
+
+Critical architectural decisions that must be made before implementation.
+
 ### [Issue #1: Choose client-server communication protocol](https://github.com/buddha314/babocument/issues/1)
+**Status:** ✅ DECIDED | **Priority:** High | **Type:** Decision
 
-## P0 - CRITICAL PRIORITY**Status:** ✅ DECIDED | **Priority:** High | **Type:** Decision
-
-
-
-### #19: Event Bus Implementation ⭐ **DO FIRST****Decision Date:** 2025-11-06
-
-**Status:** Open | **Priority:** P0 | **Time:** 3-4 hours
+**Decision Date:** 2025-11-06
 
 Choose between WebSockets (real-time) vs REST API with async (simpler)
 
-Implement Redis pub/sub for agent coordination and real-time updates.
-
 **Impact:** Backend architecture, real-time capabilities, agent communication
-
-**Why Critical:** Blocks agent initialization and WebSocket implementation.**Blocking:** Phase 1 server implementation
-
-
-
-**Created:** 2025-11-06  ---
-
-**Link:** https://github.com/buddha314/babocument/issues/19
-
-### [Issue #2: Design multi-agent architecture](https://github.com/buddha314/babocument/issues/2)
-
----**Status:** ✅ DECIDED | **Priority:** High | **Type:** Decision
-
-
-
-### #10: Phase 1 - Set up FastAgent backend ⭐ **DO SECOND****Decision Date:** 2025-11-06
-
-**Status:** Open (75% complete) | **Priority:** P0 | **Time:** 6-8 hours
-
-Design FastAgent multi-agent system for coordinating Research, Analysis, Summary, and Recommendation agents.
-
-Complete agent implementation - 3 of 4 agent files missing.
-
-**Decisions needed:**
-
-**Why Critical:** Core intelligence layer. Phase 1 can't complete without this.- Agent roles and responsibilities
-
-- Communication patterns
-
-**Critical Finding:** analysis.py, summary.py, recommendation.py don't exist - must create.- State management approach
-
-
-
-**Link:** https://github.com/buddha314/babocument/issues/10**Impact:** Agent intelligence, system complexity, scalability
-
 **Blocking:** Phase 1 server implementation
 
 ---
 
----
-
-## P1 - HIGH PRIORITY (Production Required)
-
-### [Issue #3: Choose local LLM hosting solution](https://github.com/buddha314/babocument/issues/3)
-
-### #27: Security Audit & Hardening**Status:** ✅ DECIDED | **Priority:** High | **Type:** Decision
-
-**Status:** Open | **Priority:** P1 | **Time:** 2-3 hours
+### [Issue #2: Design multi-agent architecture](https://github.com/buddha314/babocument/issues/2)
+**Status:** ✅ DECIDED | **Priority:** High | **Type:** Decision
 
 **Decision Date:** 2025-11-06
 
-Security hardening before production deployment.
+Design FastAgent multi-agent system for coordinating Research, Analysis, Summary, and Recommendation agents.
+
+**Decisions needed:**
+- Agent roles and responsibilities
+- Communication patterns
+- State management approach
+
+**Impact:** Agent intelligence, system complexity, scalability
+**Blocking:** Phase 1 server implementation
+
+---
+
+### [Issue #3: Choose local LLM hosting solution](https://github.com/buddha314/babocument/issues/3)
+**Status:** ✅ DECIDED | **Priority:** High | **Type:** Decision
+
+**Decision Date:** 2025-11-06
 
 Select local LLM hosting: Ollama, HuggingFace Transformers, or LangGraph
 
-**Link:** https://github.com/buddha314/babocument/issues/27
-
 **Options:**
-
----- **Ollama:** Easy setup, local inference, privacy-focused
-
+- **Ollama:** Easy setup, local inference, privacy-focused
 - **HuggingFace:** Model hub access, research flexibility
-
-### #23: Authentication & Authorization Framework- **LangGraph:** Agentic workflows, state management
-
-**Status:** Open | **Priority:** P1 | **Time:** 4-6 hours
+- **LangGraph:** Agentic workflows, state management
 
 **Impact:** Agent capabilities, deployment complexity, hosting costs
 
-Implement auth - currently all endpoints are open.
-
 ---
 
-**Link:** https://github.com/buddha314/babocument/issues/23
-
 ### [Issue #4: Vector database selection](https://github.com/buddha314/babocument/issues/4)
+**Status:** ✅ DECIDED | **Priority:** High | **Type:** Decision
 
----**Status:** ✅ DECIDED | **Priority:** High | **Type:** Decision
-
-
-
-### #18: Implement CI/CD pipeline**Decision Date:** 2025-11-06
-
-**Status:** Open | **Priority:** P1 | **Time:** 2-3 hours
+**Decision Date:** 2025-11-06
 
 **Decision:** Use **ChromaDB** with **Sentence Transformers** (all-MiniLM-L6-v2) for vector storage
 
-GitHub Actions for automated testing.
-
 **Rationale:**
-
-**Note:** Issues #16, #17 closed as duplicates.- ✅ Simplest setup (pip install, no separate server)
-
+- ✅ Simplest setup (pip install, no separate server)
 - ✅ Python-native (perfect for FastAgent backend)
-
-**Link:** https://github.com/buddha314/babocument/issues/18- ✅ Configurable local storage paths
-
+- ✅ Configurable local storage paths
 - ✅ Built-in embedding support
-
----- ✅ Free and open source
-
+- ✅ Free and open source
 - ✅ Sufficient performance for 100k+ documents
-
-### #20: Database Layer for Metadata- ✅ Easy migration path to Weaviate/Qdrant if needed
-
-**Status:** Open | **Priority:** P1 | **Time:** 3-4 hours
+- ✅ Easy migration path to Weaviate/Qdrant if needed
 
 **Embedding Strategy:**
-
-SQLAlchemy models for persistent metadata.- **Model:** all-MiniLM-L6-v2 (384 dimensions)
-
+- **Model:** all-MiniLM-L6-v2 (384 dimensions)
 - **Speed:** ~3000 sentences/sec on CPU
-
-**Link:** https://github.com/buddha314/babocument/issues/20- **Quality:** Good for general scientific text
-
+- **Quality:** Good for general scientific text
 - **Cost:** $0 (local inference)
 
----
-
 **Storage Structure:**
-
-## P2 - MEDIUM PRIORITY (Quality)```
-
+```
 server/data/chroma/
+├── chroma.sqlite3
+└── embeddings/
+```
 
-### #21: WebSocket Handler for Real-time Updates├── chroma.sqlite3
-
-**Status:** Open | **Priority:** P2 | **Time:** 2-3 hours  └── embeddings/
-
-**Depends on:** #19```
-
-
-
-**Link:** https://github.com/buddha314/babocument/issues/21**Documentation:** 
-
+**Documentation:** 
 - [specs/VECTOR_DATABASE_DECISION.md](specs/VECTOR_DATABASE_DECISION.md) - Decision rationale and implementation
+- [specs/VECTOR_DATABASE_SPEC.md](specs/VECTOR_DATABASE_SPEC.md) - Comprehensive analysis
 
----- [specs/VECTOR_DATABASE_SPEC.md](specs/VECTOR_DATABASE_SPEC.md) - Comprehensive analysis
-
-
-
-### #22: Background Task Processing with Celery**Next Steps:** 
-
-**Status:** Open | **Priority:** P2 | **Time:** 2-3 hours  - Phase 1: Install ChromaDB and implement VectorDatabase wrapper class
-
-**Depends on:** #19- Phase 2: Create initialization script for data/papers corpus
-
+**Next Steps:** 
+- Phase 1: Install ChromaDB and implement VectorDatabase wrapper class
+- Phase 2: Create initialization script for data/papers corpus
 - Phase 3: Integrate with Research Agent for semantic search
 
-**Link:** https://github.com/buddha314/babocument/issues/22
-
 **Unblocks:**
-
----- ✅ Issue #9 - Initialize vector database with local papers
-
+- ✅ Issue #9 - Initialize vector database with local papers
 - ✅ Phase 1 - Backend setup can proceed
-
-### #25: Error Handling Standardization- ✅ Phase 2 - MCP integration can use vector DB for caching
-
-**Status:** Open | **Priority:** P2 | **Time:** 2-3 hours- ✅ Issue #8 - Keyword trend analysis has data source
-
-
-
-**Link:** https://github.com/buddha314/babocument/issues/25---
-
-
-
----### [Issue #5: MCP integration strategy for document repositories](https://github.com/buddha314/babocument/issues/5)
-
-**Status:** ✅ DECIDED | **Priority:** High | **Type:** Decision
-
-### #28: Resolve All TODO Comments in Codebase
-
-**Status:** Open | **Priority:** P2 | **Time:** 2-3 hours**Decision Date:** 2025-11-06
-
-
-
-Clean up 19 TODO comments.**Decision:** Hybrid approach using community MCP servers with custom extensions
-
-
-
-**Link:** https://github.com/buddha314/babocument/issues/28**Selected Community Servers:**
-
-- **BioMCP** - Primary biomedical source (PubMed + ClinicalTrials.gov + MyVariant.info)
-
----- **arXiv API MCP** - Physics, CS, biology papers with LaTeX support
-
-- **bioRxiv/medRxiv MCP** - Biology and medicine preprints
-
-### #24: API Documentation & Usage Guide
-
-**Status:** Open | **Priority:** P2 | **Time:** 2-3 hours**Rationale:**
-
-- ✅ Leverage existing, maintained community servers
-
-**Link:** https://github.com/buddha314/babocument/issues/24- ✅ BioMCP purpose-built for biomedical research (perfect match)
-
-- ✅ Faster implementation (weeks vs months)
-
----- ✅ Focus development on Babocument-specific features
-
-- ✅ Build custom servers only when needed
-
-### #14: Decision: Select optimal local LLMs
-
-**Status:** Open | **Priority:** P2 | **Time:** Research**Documentation:** [specs/MCP_INTEGRATION_DECISION.md](specs/MCP_INTEGRATION_DECISION.md) (6 KB)
-
-
-
-**Link:** https://github.com/buddha314/babocument/issues/14**Implementation Plan:**
-
-- **Week 1-2:** Install and test 3 community MCP servers
-
----- **Week 3-4:** Build Research Agent with unified interface
-
-- **Week 5-6:** Integrate vector database and caching
-
-## P3 - LOW PRIORITY (Future)- **Week 7-8:** Create API endpoints
-
-
-
-### #29: Code Linting & Formatting Setup**Impact:** Accelerates Phase 2 (data integration), enables Phase 5 (intelligence features)
-
-**Status:** Open | **Priority:** P3 | **Time:** 1 hour
-
-**Next Steps:** Begin Phase 1 MCP server installation and testing
-
-**Link:** https://github.com/buddha314/babocument/issues/29
+- ✅ Phase 2 - MCP integration can use vector DB for caching
+- ✅ Issue #8 - Keyword trend analysis has data source
 
 ---
+
+### [Issue #5: MCP integration strategy for document repositories](https://github.com/buddha314/babocument/issues/5)
+**Status:** ✅ DECIDED | **Priority:** High | **Type:** Decision
+
+**Decision Date:** 2025-11-06
+
+**Decision:** Hybrid approach using community MCP servers with custom extensions
+
+**Selected Community Servers:**
+- **BioMCP** - Primary biomedical source (PubMed + ClinicalTrials.gov + MyVariant.info)
+- **arXiv API MCP** - Physics, CS, biology papers with LaTeX support
+- **bioRxiv/medRxiv MCP** - Biology and medicine preprints
+
+**Rationale:**
+- ✅ Leverage existing, maintained community servers
+- ✅ BioMCP purpose-built for biomedical research (perfect match)
+- ✅ Faster implementation (weeks vs months)
+- ✅ Focus development on Babocument-specific features
+- ✅ Build custom servers only when needed
+
+**Documentation:** [specs/MCP_INTEGRATION_DECISION.md](specs/MCP_INTEGRATION_DECISION.md) (6 KB)
+
+**Implementation Plan:**
+- **Week 1-2:** Install and test 3 community MCP servers
+- **Week 3-4:** Build Research Agent with unified interface
+- **Week 5-6:** Integrate vector database and caching
+- **Week 7-8:** Create API endpoints
+
+**Impact:** Accelerates Phase 2 (data integration), enables Phase 5 (intelligence features)
+
+**Next Steps:** Begin Phase 1 MCP server installation and testing
 
 ---
 
 ### [Issue #6: Plotly.js integration strategy for 3D visualization](https://github.com/buddha314/babocument/issues/6)
-
-### #26: Documentation Cleanup & Consolidation**Status:** 🟡 Open | **Priority:** Medium | **Type:** Decision
-
-**Status:** Open | **Priority:** P3 | **Time:** 1-2 hours
+**Status:** 🟡 Open | **Priority:** Medium | **Type:** Decision
 
 Determine how to integrate Plotly.js scientific visualizations into BabylonJS 3D scenes
 
-**Link:** https://github.com/buddha314/babocument/issues/26
-
 **Strategies:**
-
----- **A:** Canvas texture mapping (best for VR)
-
+- **A:** Canvas texture mapping (best for VR)
 - **B:** HTML overlay (best for desktop)
+- **C:** Native BabylonJS conversion (maximum performance)
+- **Recommended:** Hybrid (auto-detect mode)
 
-### #6: Decision: Plotly.js integration strategy- **C:** Native BabylonJS conversion (maximum performance)
+**Documentation:** [docs/PLOTLY_BABYLONJS_INTEGRATION.md](docs/PLOTLY_BABYLONJS_INTEGRATION.md) (16 KB)
 
-**Status:** Open | **Priority:** P3 | **Type:** Decision (Phase 3)- **Recommended:** Hybrid (auto-detect mode)
-
-
-
-**Link:** https://github.com/buddha314/babocument/issues/6**Documentation:** [docs/PLOTLY_BABYLONJS_INTEGRATION.md](docs/PLOTLY_BABYLONJS_INTEGRATION.md) (16 KB)
-
-
-
----**Impact:** Visualization capabilities, performance, UX
-
-
-
-### #7: Setup: Blender asset pipeline---
-
-**Status:** Open | **Priority:** P3 | **Type:** Setup (Phase 3)
-
-### [Issue #7: Setup Blender asset pipeline](https://github.com/buddha314/babocument/issues/7)
-
-**Link:** https://github.com/buddha314/babocument/issues/7**Status:** 🟡 Open | **Priority:** Medium | **Type:** Setup
-
-
-
----Establish Blender → GLTF 2.0 → GLB export workflow for 3D assets
-
-
-
-### #8: Implement keyword trend line graphs**Tasks:**
-
-**Status:** Open | **Priority:** P3 | **Type:** Feature (Phase 5)  - Create directory structure for .blend sources and .glb exports
-
-**Depends on:** #10- Document export settings
-
-- Update .gitignore
-
-**Link:** https://github.com/buddha314/babocument/issues/8- Create contributor guidelines
-
-
-
----**Assets needed:**
-
-- Phase 3: File Room environment
-
-### #11: Phase 3: Implement data visualization UI- Phase 4: Librarian character (rigged, animated)
-
-**Status:** Open | **Priority:** P3 | **Type:** Epic (Phase 3)- Phase 7: Lab equipment models
-
-
-
-**Link:** https://github.com/buddha314/babocument/issues/11**Documentation:**
-
-- [BLENDER_INTEGRATION_PLAN.md](BLENDER_INTEGRATION_PLAN.md)
-
----- [docs/BLENDER_WORKFLOW.md](docs/BLENDER_WORKFLOW.md) (7 KB)
-
-
-
-## ✅ CLOSED ISSUES---
-
-
-
-### #17: CI/CD pipeline (duplicate)## Feature Implementation Issues
-
-**Status:** Closed | **Closed:** 2025-11-06  
-
-**Reason:** Duplicate of #18### [Issue #8: Implement keyword trend line graphs](https://github.com/buddha314/babocument/issues/8)
-
-**Status:** 🟡 Open | **Priority:** High | **Type:** Feature
+**Impact:** Visualization capabilities, performance, UX
 
 ---
+
+### [Issue #7: Setup Blender asset pipeline](https://github.com/buddha314/babocument/issues/7)
+**Status:** 🟡 Open | **Priority:** Medium | **Type:** Setup
+
+Establish Blender → GLTF 2.0 → GLB export workflow for 3D assets
+
+**Tasks:**
+- Create directory structure for .blend sources and .glb exports
+- Document export settings
+- Update .gitignore
+- Create contributor guidelines
+
+**Assets needed:**
+- Phase 3: File Room environment
+- Phase 4: Librarian character (rigged, animated)
+- Phase 7: Lab equipment models
+
+**Documentation:**
+- [BLENDER_INTEGRATION_PLAN.md](BLENDER_INTEGRATION_PLAN.md)
+- [docs/BLENDER_WORKFLOW.md](docs/BLENDER_WORKFLOW.md) (7 KB)
+
+---
+
+## Feature Implementation Issues
+
+### [Issue #8: Implement keyword trend line graphs](https://github.com/buddha314/babocument/issues/8)
+**Status:** 🟡 Open | **Priority:** High | **Type:** Feature
 
 Enable Beabadoo to visualize keyword frequency trends over time across research corpus
 
-### #16: CI/CD pipeline (duplicate)
+**User Story:**
+> As Beabadoo, I want to see how frequently specific keywords appear in research papers over time, so I can understand the evolution and popularity of research topics in biomanufacturing.
 
-**Status:** Closed | **Closed:** 2025-11-06  **User Story:**
-
-**Reason:** Duplicate of #18> As Beabadoo, I want to see how frequently specific keywords appear in research papers over time, so I can understand the evolution and popularity of research topics in biomanufacturing.
-
-
-
----**Features:**
-
+**Features:**
 - Compare up to 10 keywords simultaneously
-
-### #15: Implement REST API endpoints- Interactive hover, zoom, pan
-
-**Status:** Closed | **Completed:** 2025-11-06- Export as PNG/SVG and CSV/JSON
-
+- Interactive hover, zoom, pan
+- Export as PNG/SVG and CSV/JSON
 - Desktop (HTML overlay) and VR (3D texture) modes
-
-Service integration complete. 17 endpoints, 92 tests, 84% coverage.
 
 **Phases:** 5 (Backend), 3 & 6 (Frontend)
 
----
-
 **Dependencies:** [#6](#issue-6-plotlyjs-integration-strategy-for-3d-visualization), [#4](#issue-4-vector-database-selection)
 
-### #12: Develop devcontainer
+**Documentation:** [specs/VISUALIZATION_REQUIREMENTS.md](specs/VISUALIZATION_REQUIREMENTS.md)
 
-**Status:** Closed | **Completed:** 2025-11-06**Documentation:** [specs/VISUALIZATION_REQUIREMENTS.md](specs/VISUALIZATION_REQUIREMENTS.md)
+---
 
-
-
-Launch scripts created.---
-
-
-
----### [Issue #9: Initialize vector database with local papers](https://github.com/buddha314/babocument/issues/9)
-
+### [Issue #9: Initialize vector database with local papers](https://github.com/buddha314/babocument/issues/9)
 **Status:** ✅ COMPLETED | **Priority:** High | **Type:** Implementation
-
-### #9: Initialize vector database**Completed:** 2025-11-06
-
-**Status:** Closed | **Completed:** 2025-11-06
+**Completed:** 2025-11-06
 
 **✅ ACTION:** Close this issue on GitHub - work is complete
 
-4 papers indexed, semantic search working.
-
 Create initialization script to populate vector database from data/papers directory
 
----
-
 **Completed:**
-
-### #5: Decision: MCP integration strategy- ✅ Parse PDFs from `data/papers/` (4 papers indexed)
-
-**Status:** Closed | **Decided:** 2025-11-06- ✅ Extract full text and metadata
-
+- ✅ Parse PDFs from `data/papers/` (4 papers indexed)
+- ✅ Extract full text and metadata
 - ✅ Generate embeddings using Sentence Transformers (all-MiniLM-L6-v2)
-
-Use community MCP servers (BioMCP, arXiv, bioRxiv).- ✅ Configurable storage paths (server/data/chroma/)
-
+- ✅ Configurable storage paths (server/data/chroma/)
 - ✅ Semantic search functionality implemented and tested
 
----
-
 **Deliverables:**
-
-### #4: Decision: Vector database selection- `server/scripts/init_vector_db.py` - Initialization script
-
-**Status:** Closed | **Decided:** 2025-11-06- `server/scripts/test_vector_search.py` - Search testing script
-
+- `server/scripts/init_vector_db.py` - Initialization script
+- `server/scripts/test_vector_search.py` - Search testing script
 - `server/app/services/vector_db.py` - ChromaDB service wrapper
+- 4 papers from data/papers/ successfully indexed
 
-ChromaDB with Sentence Transformers.- 4 papers from data/papers/ successfully indexed
+**Phases:** 1 (Backend - Complete)
 
-
-
----**Phases:** 1 (Backend - Complete)
-
-
-
-### #3: Decision: LLM hosting solution**Dependencies:** [#4](#issue-4-vector-database-selection) ✅
-
-**Status:** Closed | **Decided:** 2025-11-06
+**Dependencies:** [#4](#issue-4-vector-database-selection) ✅
 
 **Documentation:** [specs/VECTOR_DATABASE_SPEC.md](specs/VECTOR_DATABASE_SPEC.md)
-
-Ollama + LiteLLM.
-
----
 
 ---
 
 ### [Issue #12: Develop devcontainer for server application](https://github.com/buddha314/babocument/issues/12)
+**Status:** ✅ Completed | **Priority:** High | **Type:** DevOps
+**Completed:** 2025-11-06
 
-### #2: Decision: Multi-agent architecture**Status:** ✅ Completed | **Priority:** High | **Type:** DevOps
+Create development container configuration for FastAgent server with all Python dependencies and MCP server integrations.
 
-**Status:** Closed | **Decided:** 2025-11-06**Completed:** 2025-11-06
-
-
-
-Event-driven coordinator with specialized agents.Create development container configuration for FastAgent server with all Python dependencies and MCP server integrations.
-
-
-
----**Requirements:**
-
+**Requirements:**
 - Python 3.11+ environment
-
-### #1: Decision: Client-server communication- FastAgent dependencies
-
-**Status:** Closed | **Decided:** 2025-11-06- ChromaDB and vector database tools
-
+- FastAgent dependencies
+- ChromaDB and vector database tools
 - MCP server integration support
+- Development tools and extensions
 
-REST + WebSocket hybrid.- Development tools and extensions
-
-
-
----**Deliverables:**
-
+**Deliverables:**
 - `.devcontainer/devcontainer.json` - Container configuration
-
-## 📈 Progress Tracking- `server/requirements.txt` - Python dependencies
-
+- `server/requirements.txt` - Python dependencies
 - Documentation in README.md
 
-**Phase 1 Backend:**
-
-- Current: 75% complete**Benefits:**
-
-- After #19 (Event Bus): ~85%- Consistent development environment
-
-- After #10 (Agents): 100% ✅- Simplified onboarding for contributors
-
+**Benefits:**
+- Consistent development environment
+- Simplified onboarding for contributors
 - Isolated dependency management
+- Works with VS Code Remote Containers
 
-**Production Readiness:**- Works with VS Code Remote Containers
-
-- Phase 1: 75% → 100% (9-12 hours)
-
-- P1 Tasks: 11-16 hours**Phases:** 0 (DevOps), applies to Phase 1+
-
-- **Total:** 20-28 hours to production-ready
+**Phases:** 0 (DevOps), applies to Phase 1+
 
 **Dependencies:** None (can implement immediately)
 
 ---
 
----
-
-## 🎯 Recommended Work Order
-
 ### [Issue #14: Select optimal local LLMs for research paper analysis](https://github.com/buddha314/babocument/issues/14)
+**Status:** 🟡 Open | **Priority:** High | **Type:** Decision
 
-**Week 1: Complete Phase 1****Status:** 🟡 Open | **Priority:** High | **Type:** Decision
+Evaluate and select specific local LLM models for different agent tasks in the multi-agent system.
 
-1. Issue #19: Event Bus (3-4 hours)
+**Agent-Specific Requirements:**
+- **Research Agent:** Query understanding, semantic search
+- **Analysis Agent:** Trend analysis, pattern detection
+- **Summary Agent:** Document summarization, key insight extraction
+- **Recommendation Agent:** Related paper suggestions, gap identification
 
-2. Issue #10: Agents (6-8 hours)Evaluate and select specific local LLM models for different agent tasks in the multi-agent system.
-
-
-
-**Week 2: Production Readiness (P1)****Agent-Specific Requirements:**
-
-3. Issue #27: Security Audit (2-3 hours)- **Research Agent:** Query understanding, semantic search
-
-4. Issue #23: Authentication (4-6 hours)- **Analysis Agent:** Trend analysis, pattern detection
-
-5. Issue #18: CI/CD (2-3 hours)- **Summary Agent:** Document summarization, key insight extraction
-
-6. Issue #20: Database Layer (3-4 hours)- **Recommendation Agent:** Related paper suggestions, gap identification
-
-
-
-**Week 3: Quality & Enhancement (P2)****Evaluation Criteria:**
-
-7. Issues #21, #22, #25, #28, #24, #14- Model size vs performance trade-offs
-
+**Evaluation Criteria:**
+- Model size vs performance trade-offs
 - Inference speed for real-time responses
-
-**Ongoing: (P3)**- Context window size for long documents
-
-- Low priority cleanup and future features- Fine-tuning potential for scientific domain
-
+- Context window size for long documents
+- Fine-tuning potential for scientific domain
 - Local hosting feasibility
 
+**Candidate Models:**
+- Llama 3.1 (8B, 70B variants)
+- Mistral 7B / Mixtral 8x7B
+- Qwen 2.5 (specialized models)
+- Domain-specific models (BioGPT, SciBERT embeddings)
+
+**Impact:** Agent intelligence quality, response speed, resource requirements
+
+**Dependencies:** [#3](#issue-3-choose-local-llm-hosting-solution) (hosting solution)
+
 ---
 
-**Candidate Models:**
-
-## 🔗 Quick Links- Llama 3.1 (8B, 70B variants)
-
-- Mistral 7B / Mixtral 8x7B
-
-**View All Issues:** https://github.com/buddha314/babocument/issues  - Qwen 2.5 (specialized models)
-
-**Create New Issue:** https://github.com/buddha314/babocument/issues/new  - Domain-specific models (BioGPT, SciBERT embeddings)
-
-**Priority Analysis:** PRIORITY_ANALYSIS_2025-11-06.md  
-
-**Task List:** specs/TASKS.md**Impact:** Agent intelligence quality, response speed, resource requirements
-
-
-
----**Dependencies:** [#3](#issue-3-choose-local-llm-hosting-solution) (hosting solution)
-
-
-
-## 📝 Notes---
-
-
-
-- All outstanding work now tracked in GitHub### [Issue #15: Implement REST API endpoints for document and repository management](https://github.com/buddha314/babocument/issues/15)
-
-- Clear dependency chain established**Status:** ✅ COMPLETED | **Priority:** High | **Type:** Feature
-
-- Priority tiers align with project goals**Completed:** 2025-11-06
-
-- Next action: Start Issue #19
+### [Issue #15: Implement REST API endpoints for document and repository management](https://github.com/buddha314/babocument/issues/15)
+**Status:** ✅ COMPLETED | **Priority:** High | **Type:** Feature
+**Completed:** 2025-11-06
 
 **✅ ACTION:** Close this issue on GitHub - work is complete
-
-**Last Review:** 2025-11-06
 
 **What Was Completed:**
 - ✅ 17 REST endpoints defined with Pydantic models
