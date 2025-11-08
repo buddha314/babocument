@@ -10,9 +10,12 @@ Babocument is a FastAPI-based backend server that provides AI-powered research a
 
 > **Client Repositories:**  
 > - **[beabodocl-babylon](https://github.com/buddha314/beabodocl-babylon)** - 3D VR/WebXR client (active development)
+> - **[beabodocl-unity](https://github.com/buddha314/beabodocl-unity)** - Unity VR client
 > - Additional clients (mobile, desktop, CLI) - planned
 >
-> **Local Development:** Primary client is located at `C:\Users\b\src\beabodocl-babylon`
+> **Local Development:**  
+> - Babylon.js client: `C:\Users\b\src\beabodocl-babylon`
+> - Unity client: `C:\Users\b\src\beabodocl-unity`
 
 ## Overview
 
