@@ -37,13 +37,28 @@ if (-not (Test-Path "venv/Scripts/python.exe")) {
     exit 1
 }
 
+# Get local IP address
+$localIP = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.InterfaceAlias -notlike "*Loopback*" -and $_.IPAddress -notlike "169.254.*" } | Select-Object -First 1).IPAddress
+
 Write-Host "Starting server on port $Port..." -ForegroundColor Green
-Write-Host "Access at: http://localhost:$Port" -ForegroundColor Cyan
-Write-Host "API Docs:  http://localhost:$Port/docs" -ForegroundColor Cyan
 Write-Host ""
+Write-Host "Local Access:" -ForegroundColor Cyan
+Write-Host "  http://localhost:$Port" -ForegroundColor White
+Write-Host "  http://localhost:$Port/docs (API Documentation)" -ForegroundColor White
+Write-Host ""
+if ($localIP) {
+    Write-Host "Network Access:" -ForegroundColor Cyan
+    Write-Host "  http://${localIP}:$Port" -ForegroundColor White
+    Write-Host "  http://${localIP}:$Port/docs" -ForegroundColor White
+    Write-Host ""
+}
 Write-Host "Press Ctrl+C to stop the server" -ForegroundColor Yellow
 Write-Host ""
 
 # Activate venv and start server
 & ".\venv\Scripts\Activate.ps1"
 python -m uvicorn app.main:app --host 0.0.0.0 --port $Port --reload
+
+# Display network info again after server stops
+Write-Host ""
+Write-Host "Server stopped." -ForegroundColor Yellow
