@@ -10,7 +10,7 @@ Of all the industries and technologies out there, the video game industry has na
 
 Riding the wave of increased attention to mental health. Let's build applications that are enjoyable. Enjoyment creates engagement and engagement engenders curiosity, which leads to knowledge.  Also, allowing the brain to think in a way it has been shaped to over millions of years might somehow pay off.
 
-Back to the topic at hand: Babodocument is an attempt to push boundaries on how we interact with information. Many of these pushes will be fruitless or downright silly. But, ya know, FAF&O.
+Back to the topic at hand: Babodocument is an attempt to push boundaries on how we interact with information. Many of these pushes will be fruitless or downright silly. But, ya know, FA&FO.
 
 
 ### Note To Contributors
