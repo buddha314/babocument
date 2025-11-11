@@ -5,10 +5,11 @@
 
 ## Quick Navigation
 
-### 🎯 Essential Reading
+### 🎯 Essential Reading (Start Here)
 - **Architecture**: `MULTI_AGENT_ARCHITECTURE.md` - Agent system design
-- **Project Status**: `PROJECT_STATUS.md` - Current state and roadmap
-- **Tasks**: `TASKS.md` - Development tasks and priorities
+- **Project Status**: `PROJECT_STATUS.md` - Current state (✅ Production Ready)
+- **Tasks**: `TASKS.md` - Active development tasks and priorities
+- **Agent Design**: `CLIENT_AGENT_FIRST_REDESIGN.md` - Conversational interface paradigm
 
 ### 🔧 Technical Specifications
 - **Vector Database**: `VECTOR_DATABASE_SPEC.md` & `VECTOR_DATABASE_DECISION.md`
@@ -16,16 +17,16 @@
 - **MCP Integration**: `MCP_INTEGRATION_SPEC.md` & `MCP_INTEGRATION_DECISION.md`
 - **Communication**: `COMMUNICATION_PROTOCOL_DECISION.md`
 
-### 📋 Historical Context
-- **Handoffs**: `HANDOFF_*.md` - Development session summaries
-- **Repository Split**: `REPOSITORY_SPLIT_DOCUMENTATION.md`
-- **Issues**: `ISSUES.md` & `GITHUB_ISSUES_TO_CREATE.md`
+### 📋 Development History
+- **Recent Handoffs**: `HANDOFF_2025-11-07_*.md` - Recent development sessions
+- **Repository Split**: `REPOSITORY_SPLIT_DOCUMENTATION.md` - Monorepo → separate repos
+- **Archived Tasks**: `TASKS_CLIENT_BABYLONJS.old` - Previous BabylonJS-focused tasks
 
 ---
 
 ## Document Categories
 
-### Architecture & Design
+### Current & Active
 
 **Core Architecture:**
 - `MULTI_AGENT_ARCHITECTURE.md` - Multi-agent system design
@@ -53,57 +54,45 @@
 ### Task Management
 
 **Active:**
-- `TASKS.md` - Current development tasks and priorities
-- `GITHUB_ISSUES_TO_CREATE.md` - Planned GitHub issues
-- `ISSUES.md` - Issue tracking and categorization
+- `TASKS.md` - Current development tasks and priorities (server-focused, updated Nov 11)
 
-**Historical:**
-- `TASKS_OLD.md` - Previous task list (archived)
-- `TASKS_OLD_DETAILED.md` - Detailed old tasks (archived)
-- `ISSUES_OLD.md` - Old issue tracking (archived)
+**Archived:**
+- `TASKS_CLIENT_BABYLONJS.old` - Previous BabylonJS-focused tasks (archived Nov 11)
+- `GITHUB_ISSUES_BABYLONJS.old` - BabylonJS-focused GitHub issues (archived Nov 11)
+- `ISSUES_BABYLONJS.old` - BabylonJS-focused issue tracker (archived Nov 11)
 
 ### Feature Specifications
 
-**User Stories:**
+**Active User Stories:**
 - `USER_STORY_AGENT_PAPER_DISCOVERY.md` - Agent-assisted search feature
-- `USER_STORY_DICOM_VISUALIZATION.md` - Medical imaging support (future)
 
-**Client Integration** (Historical - now in Godot repo):
-- `CLIENT_AGENT_FIRST_REDESIGN.md` - Conversational UI paradigm
-- `CLIENT_API_INTEGRATION_PLAN.md` - API client architecture
-- `BLENDER_INTEGRATION_PLAN.md` - 3D asset pipeline (BabylonJS era)
-- `WEBXR_IMPLEMENTATION_GUIDE.txt` - WebXR setup (BabylonJS era)
-- `GITHUB_ISSUE_46_VR_CHAT.md` - VR chat implementation (BabylonJS era)
-- `VISUALIZATION_REQUIREMENTS.md` - Data viz requirements
+**Client Integration Paradigms:**
+- `CLIENT_AGENT_FIRST_REDESIGN.md` - Conversational UI paradigm (applies to all clients)
 
-### Utilities & Notes
-
-**Development Tools:**
-- `HOW_TO_CREATE_ISSUES.md` - Issue creation guide
-- `ISSUE_12_LAUNCH_SCRIPT.md` - Launch script notes
-- `NETWORK_ACCESS.md` - Network configuration notes
+**Note:** Client-specific implementation docs (BabylonJS, Unity, WebXR) have been removed as the primary client is now [beabodocl-godot](https://github.com/buddha314/beabodocl-godot).
 
 ---
 
 ## Document Status
 
 ### ✅ Current & Maintained
-- Architecture specifications
-- Task lists
-- Project status
-- Handoff documents (latest)
+- Architecture specifications (MULTI_AGENT_ARCHITECTURE.md, etc.)
+- Technical decisions (VECTOR_DATABASE_DECISION.md, LLM_HOSTING_DECISION.md, etc.)
+- Current task list (TASKS.md - updated Nov 11)
+- Project status (PROJECT_STATUS.md - updated Nov 11)
+- Handoff documents (HANDOFF_2025-11-07_*.md)
 
 ### 📦 Archived (Historical Reference)
-- Old task lists
-- Old issues
-- Previous client integration docs (BabylonJS/Unity)
-- Development utility guides
+- TASKS_CLIENT_BABYLONJS.old - Previous BabylonJS-focused task list
+- GITHUB_ISSUES_BABYLONJS.old - BabylonJS-focused issues
+- ISSUES_BABYLONJS.old - BabylonJS-focused issue tracker
 
-### 🔄 Client-Specific (Move to Godot Repo)
-- BabylonJS integration plans
-- WebXR guides  
-- Unity-specific docs
-- 3D visualization requirements
+### 🗑️ Removed (Nov 11 cleanup)
+- TASKS_OLD.md, TASKS_OLD_DETAILED.md, ISSUES_OLD.md - Completely obsolete task files
+- BLENDER_INTEGRATION_PLAN.md, WEBXR_IMPLEMENTATION_GUIDE.txt - BabylonJS-specific
+- GITHUB_ISSUE_46_VR_CHAT.md, CLIENT_API_INTEGRATION_PLAN.md - BabylonJS client plans
+- USER_STORY_DICOM_VISUALIZATION.md, VISUALIZATION_REQUIREMENTS.md - Client-specific features
+- NETWORK_ACCESS.md, HOW_TO_CREATE_ISSUES.md, ISSUE_12_LAUNCH_SCRIPT.md - Dev utility docs
 
 ---
 
