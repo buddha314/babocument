@@ -1,13 +1,13 @@
 # Repository Split: Documentation & Issue Distribution
 
-**Date:** November 7, 2025  
+**Date:** November 11, 2025  
+**Updated:** Godot client is now primary  
 **Server Repo:** https://github.com/buddha314/babocument  
-**Client Repo:** https://github.com/buddha314/beabodocl-babylon  
-**Local Client Path:** `C:\Users\b\src\beabodocl-babylon`
+**Client Repo:** https://github.com/buddha314/beabodocl-godot
 
 ## Overview
 
-This document outlines which documentation files and GitHub issues belong to which repository after the monorepo split.
+This document outlines the organization of documentation after the repository split. The Godot Engine client (beabodocl-godot) is now the primary client application.
 
 ---
 
