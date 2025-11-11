@@ -3,6 +3,8 @@
 **Date:** 2025-11-06  
 **Paradigm Shift:** Traditional Website → Conversational Agent Interface (Claude Desktop Model)
 
+> **Note (2025-11-11):** This document describes the agent-first conversational interface paradigm that applies to all Babocument clients (Godot, BabylonJS, etc.). While examples reference BabylonJS (the client at time of writing), the core concepts apply universally. Current primary client: [beabodocl-godot](https://github.com/buddha314/beabodocl-godot).
+
 ---
 
 ## Executive Summary
