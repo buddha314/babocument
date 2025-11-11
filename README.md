@@ -1,8 +1,25 @@
 # Babocument Server# Babocument
 
+## Mision Statement
+
+Babodocument is an experiment in next-generation information analysis. Advances in GenAI have shown that we can now interact with computers in a more natural way: By speaking to them. This comes with the same limitations as all natural language interactions in that the listening might not understand what we are trying to convey. But the new conversational interaction allows us to progress quickly through these valleys.
+
+So natural language lowers the barrier along one dimension of human-computer interaction. Another dimension is that of spatial thinking.  Animal brains have evolved to position themselves in space and time.  E.g. There is a predator over "there" that is going to be "here" "soon" if I don't haul ass out of "here" "right now".  Pretty fundamental. So let's take a brief detour on that.
+
+Of all the industries and technologies out there, the video game industry has nailed two extremely important points of interest: Beautiful & Delightful user experiences and spatial thinking.  It's not like we don't know HOW to take a human brain and put it into an artificial environment that allows it to think more naturally about information, it's that we don't LIKE doing it enterprise applications because, well, we LIKE that kind of thing and pleasing interactions violoate our the antinquated puritanical sense of what it means to do "business". Long ago, society decided that you are worth your income, so work should not be "fun".  Kinda like that, I guess.
+
+Riding the wave of increased attention to mental health. Let's build applications that are enjoyable. Enjoyment creates engagement and engagement engenders curiosity, which leads to knowledge.  Also, allowing the brain to think in a way it has been shaped to over millions of years might somehow pay off.
+
+Back to the topic at hand: Babodocument is an attempt to push boundaries on how we interact with information. Many of these pushes will be fruitless or downright silly. But, ya know, FAF&O.
 
 
-**Multi-Agent AI System for Academic Paper Analysis****Multi-Agent AI System for Academic Paper Analysis and Research Assistance**
+### Note To Contributors
+
+There will be many twists and turns. There is no "right" way to do this. Branch this bad boy if you're feelin' it and share any ideas you may have. If anyone shows up here, I'll put out snacks. 
+
+On to the show... 
+
+**Multi-Agent AI System for Academic Paper Analysis**
 
 
 
