@@ -1,6 +1,6 @@
 # Babocument Server# Babocument
 
-## Mision Statement
+## Mission Statement
 
 Babodocument is an experiment in next-generation information analysis. Advances in GenAI have shown that we can now interact with computers in a more natural way: By speaking to them. This comes with the same limitations as all natural language interactions in that the listening might not understand what we are trying to convey. But the new conversational interaction allows us to progress quickly through these valleys.
 
